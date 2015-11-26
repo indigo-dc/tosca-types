@@ -24,13 +24,13 @@ tosca.nodes.Database.MySQL:
         node: tosca.nodes.DBMS.MySQL
   interfaces:
     Standard:
-      configure:
+      create:
         implementation: mysql/mysql_db_configure.yml
         inputs:
-          password: { get_property: [ SELF, password ] }
-          name: { get_property: [ SELF, name ] }
-          user: { get_property: [ SELF, user ] }
-          root_password: { get_property: [ SELF, root_password ] }
+          db_password: { get_property: [ SELF, password ] }
+          db_name: { get_property: [ SELF, name ] }
+          db_user: { get_property: [ SELF, user ] }
+          db_root_password: { get_property: [ SELF, root_password ] }
 
          
 tosca.nodes.DBMS.MySQL:
@@ -62,7 +62,10 @@ tosca.nodes.WebServer.Apache:
   derived_from: tosca.nodes.WebServer
   interfaces:
     Standard:
-      create: apache/apache_install.yml
+      create: 
+        implementation: apache/apache_install.yml
+      start:
+        implementation: apache/apache_start.yml
 
 # INDIGO non normative types
 
