@@ -47,8 +47,8 @@ topology_template:
             mem_size: 512 MB
             publish_ports:
                - protocol: tcp
-                 target: [80]
-                 source: [80]
+                 target: 80
+                 source: 80
                - protocol: tcp
-                 target: [22]
-                 source: [22]
+                 target: 22
+                 source: 22

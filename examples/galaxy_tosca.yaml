@@ -21,7 +21,9 @@ topology_template:
         - host: galaxy_server
  
     galaxy_server:
-      type: tosca.nodes.Compute
+      type: tosca.nodes.indigo.Compute
+      properties:
+         public_ip: yes
       capabilities:
         # Host container properties
         host:
