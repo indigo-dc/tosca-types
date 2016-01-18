@@ -86,8 +86,12 @@
       
       # CLUES IM configuration
     - file: path=/usr/local/ec3 state=directory mode=755
-    # TODO: check this
-    - copy: dest=/usr/local/ec3/auth.dat content="type = InfrastructureManager; username = user; password = pass"
+    
+      # CLUES INDIGO Orchestrator plugin configuration
+    - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_DEPLOY_ID value={{ec3_deployment_id}}
+      notify: restart cluesd
+    - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_MAX_INSTANCES value={{ec3_max_instances}}
+      notify: restart cluesd        
 
     - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
       notify: restart cluesd

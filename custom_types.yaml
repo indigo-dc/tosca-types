@@ -69,6 +69,23 @@ tosca.nodes.WebServer.Apache:
 
 # INDIGO non normative types
 
+tosca.capabilities.indigo.Scalable:
+  derived_from: tosca.capabilities.Scalable
+  properties:
+    min_instances:
+      type: integer
+      default: 1
+      required: no
+    max_instances:
+      type: integer
+      default: 1
+      required: no
+    count:
+      type: integer
+      description: the number of resources
+      required: no
+      defailt: 1
+
 tosca.nodes.indigo.Compute:
   derived_from: tosca.nodes.Compute
   properties:
@@ -76,6 +93,19 @@ tosca.nodes.indigo.Compute:
       type: boolean
       required: no
       default: no
+  capabilities:
+    scalable:
+      type: tosca.capabilities.indigo.Scalable
+# we must define all the properties untill the parser correctly processes it
+    host:
+      type: tosca.capabilities.Container
+      valid_source_types: [tosca.nodes.SoftwareComponent]
+    endpoint:
+      type: tosca.capabilities.Endpoint.Admin
+    os:
+      type: tosca.capabilities.OperatingSystem
+    binding:
+      type: tosca.capabilities.network.Bindable
 
 tosca.nodes.indigo.GalaxyPortal:
   derived_from: tosca.nodes.WebServer
@@ -167,7 +197,7 @@ tosca.capabilities.indigo.LRMS:
       - valid_values: [ torque, slurm, sge ]
 
  
-tosca.nodes.indigo.ElasticCluster:
+tosca.nodes.indigo.ElasticCluster.FrontEnd:
   derived_from: tosca.nodes.Root
   properties:
     secret_token:
@@ -175,6 +205,10 @@ tosca.nodes.indigo.ElasticCluster:
       description: Token to access CLUES web interface
       default: not_very_secret_token
       required: false
+    deployment_id:
+      type: string
+      description: ID of the deployment of this elastic cluster in the orchestrator 
+      required: true
   interfaces:
     Standard:
       create: ec3/ec3_install.yml
@@ -183,21 +217,16 @@ tosca.nodes.indigo.ElasticCluster:
         inputs:
           clues_secret_token: { get_property: [ SELF, secret_token ] }
           clues_queue_system: { get_property: [ SELF, lrms, type ] }
-          max_instances: { get_property: [ SELF, scalable, max_instances] }
-          wn_host_info: { get_property: [ SELF, wn, host ] }
-          wn_os_info: { get_property: [ SELF, wn, os ] }
-          wn_name: { get_property: [ SELF, wn, name ] }
-          wn_node_type: { get_property: [ SELF, wn, type ] }
+          ec3_max_instances: { get_property: [ SELF, wn, max_instances] }
+          ec3_deployment_id: { get_property: [ SELF, deployment_id] }
       start: ec3/ec3_start.yml
   capabilities:
-      scalable:
-        type: tosca.capabilities.Scalable
       lrms:
         type: tosca.capabilities.indigo.LRMS
   requirements:
     - wn:
-        capability: tosca.capabilities.indigo.WorkerNode
-        node: tosca.nodes.indigo.ElasticCluster.WorkerNode
+        capability: tosca.capabilities.Scalable
+        node: tosca.nodes.indigo.LRMS.WorkerNode
         relationship: tosca.relationships.indigo.Manages
     - host:
         capability: tosca.capabilities.Container
@@ -205,43 +234,35 @@ tosca.nodes.indigo.ElasticCluster:
         relationship: tosca.relationships.HostedOn
 
 
-tosca.nodes.indigo.ElasticCluster.WorkerNode:
+tosca.nodes.indigo.LRMS.WorkerNode:
   derived_from: tosca.nodes.Root
   capabilities:
       wn:
-        type: tosca.capabilities.indigo.WorkerNode
+        type: tosca.capabilities.Scalable
         valid_source_types: [tosca.nodes.indigo.ElasticCluster.FrontEnd]
-        
+  requirements:
+    - host:
+        capability: tosca.capabilities.Container
+        node: tosca.nodes.Compute
+        relationship: tosca.relationships.HostedOn
         
 tosca.nodes.indigo.LRMS.WorkerNode.Torque:
-  derived_from: tosca.nodes.Compute
+  derived_from: tosca.nodes.indigo.LRMS.WorkerNode
   interfaces:
     Standard:
       create: lrms/torque_wn_install.yml
       configure: lrms/torque_wn_configure.yml
       start: lrms/torque_wn_start.yml
-        
-
-tosca.capabilities.indigo.WorkerNode:
-  derived_from: tosca.capabilities.Root
-  properties:
-    name:
-      required: yes
-      type: string
-    type:
-      required: yes
-      type: string
-    host:
-      required: no
-      type: tosca.capabilities.Container
-    os:
-      required: no
-      type: tosca.capabilities.OperatingSystem
-
  
 tosca.relationships.indigo.Manages:
   derived_from: tosca.relationships.Root
-  
+
+
+tosca.artifacts.Implementation.YAML:
+  derived_from: tosca.artifacts.Implementation
+  description: YAML Ansible recipe artifact
+  mime_type: text/yaml
+  file_ext: [ yaml, yml ]  
 
 # Docker types from TOSCA standard not in tosca-parser
 

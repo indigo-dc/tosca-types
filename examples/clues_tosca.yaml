@@ -3,20 +3,22 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 description: TOSCA CLUES test for the IM
 
 topology_template:
- 
+
+  inputs:
+    orchestrator_deployment_id:
+      type: string
+      default: incorrect_value_only_for_tests
+
   node_templates:
 
-    elastic_cluster:
-      type: tosca.nodes.indigo.ElasticCluster
+    elastic_cluster_front_end:
+      type: tosca.nodes.indigo.ElasticCluster.FrontEnd
+      properties:
+        deployment_id: { get_input: orchestrator_deployment_id }
       capabilities:
         lrms:
           properties:
             type: torque
-        scalable:
-          properties:
-            max_instances: 5
-            min_instances: 0
-            default_instances: 0
       requirements:
         - host: torque_server
         - wn: wn_node
@@ -27,9 +29,9 @@ topology_template:
         public_ip: yes
       capabilities:
         host:
-         properties:
-           num_cpus: 1
-           mem_size: 1 GB
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
         os:
           properties:
             # host Operating System image properties
@@ -38,13 +40,30 @@ topology_template:
             #version: 6.6
 
     wn_node:
-      type: tosca.nodes.indigo.ElasticCluster.WorkerNode
+      type: tosca.nodes.indigo.LRMS.WorkerNode.Torque
       capabilities:
         wn:
-         properties:
-           name: vnode
-           type: tosca.nodes.indigo.LRMS.WorkerNode.Torque
-           host:
-             num_cpus: 1
-           os:
-             type: linux
+          properties:
+            max_instances: 5
+            min_instances: 0
+      requirements:
+        - host: torque_wn
+            
+    torque_wn:
+      type: tosca.nodes.indigo.Compute
+      properties:
+        public_ip: yes
+      capabilities:
+        scalable:
+          properties:
+            count: 0
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            # host Operating System image properties
+            type: linux 
+            #distribution: scientific 
+            #version: 6.6
