@@ -96,16 +96,6 @@ tosca.nodes.indigo.Compute:
   capabilities:
     scalable:
       type: tosca.capabilities.indigo.Scalable
-# we must define all the properties untill the parser correctly processes it
-    host:
-      type: tosca.capabilities.Container
-      valid_source_types: [tosca.nodes.SoftwareComponent]
-    endpoint:
-      type: tosca.capabilities.Endpoint.Admin
-    os:
-      type: tosca.capabilities.OperatingSystem
-    binding:
-      type: tosca.capabilities.network.Bindable
 
 tosca.nodes.indigo.GalaxyPortal:
   derived_from: tosca.nodes.WebServer
