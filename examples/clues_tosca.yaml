@@ -4,17 +4,12 @@ description: TOSCA CLUES test for the IM
 
 topology_template:
 
-  inputs:
-    orchestrator_deployment_id:
-      type: string
-      default: incorrect_value_only_for_tests
-
   node_templates:
 
     elastic_cluster_front_end:
       type: tosca.nodes.indigo.ElasticCluster.FrontEnd
       properties:
-        deployment_id: { get_input: orchestrator_deployment_id }
+        deployment_id: orchestrator_deployment_id
       capabilities:
         lrms:
           properties:

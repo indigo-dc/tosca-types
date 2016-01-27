@@ -198,7 +198,7 @@ tosca.nodes.indigo.ElasticCluster.FrontEnd:
     deployment_id:
       type: string
       description: ID of the deployment of this elastic cluster in the orchestrator 
-      required: true
+      required: false
   interfaces:
     Standard:
       create: ec3/ec3_install.yml
