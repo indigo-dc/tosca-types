@@ -1,7 +1,6 @@
 - tasks:
     - name: Install Apache Web Services with PHP support
-      apt: name=apache2 update_cache=yes state=present
-    - apt: name=php5 state=present  
+      apt: name=apache2,php5,php5-mysql update_cache=yes state=present  
     - name: Retrieve Web Application from download url
       get_url: url={{download_url}} dest=/tmp
     - name: Unpacking Web Application 
@@ -10,11 +9,13 @@
       replace:
         dest: /var/www/html/cellar-webapp-sql/api/index.php
         regexp: "{{ item.regexp }}"
-        replace: "{{ item.line }}"
+        replace: "{{ item.replace }}"
       with_items:
-        - regexp: '.*$dbhost=;'
-          replace: '	$dbuser="{{db_user}}";'
-        - regexp: '.*dbpass='
-          replace: '	$dbpass="{{db_password}}";'
-        - regexp: '.*dbname='
-          replace: '	$dbname="{{db_name}}";'
+        - regexp: '.*\$dbuser=.*'
+          replace: ' $dbuser="{{db_user}}";'
+        - regexp: '.*\$dbpass=.*'
+          replace: ' $dbpass="{{db_password}}";'
+        - regexp: '.*\$dbname=.*'
+          replace: ' $dbname="{{db_name}}";'
+        - regexp: '.*\$dbhost=.*'
+          replace: ' $dbhost="{{db_host}}";'

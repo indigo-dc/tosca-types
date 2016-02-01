@@ -32,7 +32,7 @@ topology_template:
             implementation: webapps/cellar-mysql.yml
             inputs:
               download_url: { get_input: download_url }
-              db_host: { get_input: db_host }
+              db_host: { get_attribute: [ db_server, private_address ] }
               db_name: { get_input: db_name }
               db_user: { get_input: db_user }
               db_password: { get_input: db_password }
@@ -55,7 +55,7 @@ topology_template:
             distribution: ubuntu 
  
     test_db:
-      type: tosca.nodes.Database.MySQL
+      type: tosca.nodes.indigo.Database.MySQL
       properties:
         name: { get_input: db_name }
         user: { get_input: db_user }
@@ -100,18 +100,3 @@ topology_template:
            architecture: x86_64
            type: linux
            distribution: ubuntu
-      requirements:
-        # contextually this can only be a relationship type
-        - local_storage:
-            # capability is provided by Compute Node Type
-            node: my_block_storage           
-            relationship:
-              type: AttachesTo
-              properties:
-                location: /mnt/disk
-                device: hdb
-
-    my_block_storage:
-      type: BlockStorage
-      properties:
-        size: 1 GB
