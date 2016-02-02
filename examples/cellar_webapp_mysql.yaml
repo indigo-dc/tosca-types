@@ -18,7 +18,7 @@ topology_template:
       default: mypass
     download_url:
       type: string
-      default: https://s3.amazonaws.com/cursoscloudupv/cloudformation/cellar-webapp-sql.tgz
+      default: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/webapps/cellar-webapp-sql.tgz
       
   node_templates:
   

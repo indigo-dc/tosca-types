@@ -5,7 +5,7 @@ topology_template:
   inputs:
     download_url:
       type: string
-      default: https://s3.amazonaws.com/cursoscloudupv/cloudformation/cellar-webapp-mem.tgz
+      default: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/webapps/cellar-webapp-sql.tgz
       
   node_templates:
     apache:
