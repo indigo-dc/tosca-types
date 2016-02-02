@@ -106,3 +106,7 @@ topology_template:
            architecture: x86_64
            type: linux
            distribution: ubuntu
+
+  outputs:
+    server_url:
+      value: { concat: [ 'http://', get_attribute: [ web_server, public_address ], '/cellar-webapp-sql' ] }
