@@ -22,10 +22,11 @@ topology_template:
       
   node_templates:
   
-    apache:
-      type: tosca.nodes.WebServer.Apache
+    cellar_app:
+      type: tosca.nodes.WebApplication
       requirements:
-        - host: web_server
+        - host: apache
+        - dependency: test_db
       interfaces:
         Standard:
           configure: 
@@ -36,6 +37,11 @@ topology_template:
               db_name: { get_input: db_name }
               db_user: { get_input: db_user }
               db_password: { get_input: db_password }
+  
+    apache:
+      type: tosca.nodes.WebServer.Apache
+      requirements:
+        - host: web_server
  
     web_server:
       type: tosca.nodes.indigo.Compute
@@ -63,7 +69,7 @@ topology_template:
         root_password: { get_input: mysql_root_password }
       artifacts:
         db_content:
-          file: https://raw.githubusercontent.com/ccoenraets/wine-cellar-php/master/cellar.sql
+          file: https://s3.amazonaws.com/cursoscloudupv/cloudformation/cellar.sql
           type: tosca.artifacts.File
       requirements:
         - host:

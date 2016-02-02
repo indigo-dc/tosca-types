@@ -1,5 +1,5 @@
 - tasks:
-    - name: Install Apache Web Services with PHP support
+    - name: Check for apache presence and install PHP support
       apt: name=apache2,php5,php5-mysql update_cache=yes state=present  
     - name: Retrieve Web Application from download url
       get_url: url={{download_url}} dest=/tmp
@@ -19,3 +19,14 @@
           replace: ' $dbname="{{db_name}}";'
         - regexp: '.*\$dbhost=.*'
           replace: ' $dbhost="{{db_host}}";'
+        - regexp: '.*\?>.*'
+          replace: '*/?>'
+    - name: Modify apache configuration to allow rewrite
+      replace:
+        dest: /etc/apache2/apache2.conf
+        regexp: "None"
+        replace: "All"
+    - name: Enable rewrite module in apache
+      command: /usr/sbin/a2enmod rewrite
+    - name: Restart apache
+      service: name=apache2 state=restarted
