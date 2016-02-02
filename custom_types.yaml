@@ -4,19 +4,6 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 tosca.nodes.Database.MySQL:
   derived_from: tosca.nodes.Database
-  properties:
-    password:
-      type: string
-      required: true
-    name:
-      type: string
-      required: true
-    user:
-      type: string
-      required: true
-    root_password:
-      type: string
-      required: true
   requirements:
     - host:
         capability: tosca.capabilities.Container
@@ -30,8 +17,8 @@ tosca.nodes.Database.MySQL:
           db_password: { get_property: [ SELF, password ] }
           db_name: { get_property: [ SELF, name ] }
           db_user: { get_property: [ SELF, user ] }
-          db_root_password: { get_property: [ SELF, root_password ] }
-
+          db_root_password: ""
+          db_access_host: "%"
          
 tosca.nodes.DBMS.MySQL:
   derived_from: tosca.nodes.DBMS
@@ -68,6 +55,32 @@ tosca.nodes.WebServer.Apache:
         implementation: apache/apache_start.yml
 
 # INDIGO non normative types
+
+tosca.nodes.indigo.Database.MySQL:
+  derived_from: tosca.nodes.Database.MySQL
+  properties:
+    access_host:
+      type: string
+      required: no
+      default: "%"
+    root_password:
+      type: string
+      required: true
+  requirements:
+    - host:
+        capability: tosca.capabilities.Container
+        relationship: tosca.relationships.HostedOn
+        node: tosca.nodes.DBMS.MySQL
+  interfaces:
+    Standard:
+      create:
+        implementation: mysql/mysql_db_configure.yml
+        inputs:
+          db_password: { get_property: [ SELF, password ] }
+          db_name: { get_property: [ SELF, name ] }
+          db_user: { get_property: [ SELF, user ] }
+          db_root_password: { get_property: [ SELF, root_password ] }
+          db_access_host: { get_property: [ SELF, access_host ] }
 
 tosca.capabilities.indigo.Scalable:
   derived_from: tosca.capabilities.Scalable
