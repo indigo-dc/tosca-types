@@ -14,14 +14,6 @@
     apt: pkg=mysql-server,python-mysqldb update_cache=yes
     when: ansible_os_family == "Debian"
     
-  - name: Start MySQL service
-    service: name=mysql state=started
-    when: ansible_os_family == "Debian"
-    
   - name: MySQL | Make sure the MySQL packages are installed
     apt: yum=mysql-server,MySQL-python
-    when: ansible_os_family == "RedHat"
-    
-  - name: Start MySQL service
-    service: name=mysqld state=started
     when: ansible_os_family == "RedHat"
