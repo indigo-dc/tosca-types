@@ -43,7 +43,7 @@ topology_template:
             distribution: ubuntu 
  
     test_db:
-      type: tosca.nodes.Database.MySQL
+      type: tosca.nodes.indigo.Database.MySQL
       properties:
         name: { get_input: db_name }
         user: { get_input: db_user }
