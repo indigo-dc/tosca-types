@@ -69,7 +69,7 @@ topology_template:
         root_password: { get_input: mysql_root_password }
       artifacts:
         db_content:
-          file: https://s3.amazonaws.com/cursoscloudupv/cloudformation/cellar.sql
+          file: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/webapps/cellar.sql
           type: tosca.artifacts.File
       requirements:
         - host:
