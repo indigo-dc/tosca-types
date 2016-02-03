@@ -197,7 +197,7 @@ tosca.capabilities.indigo.LRMS:
       type: string
       required: true
       constraints:
-      - valid_values: [ torque, slurm, sge ]
+      - valid_values: [ torque, slurm, sge, condor ]
 
  
 tosca.nodes.indigo.ElasticCluster.FrontEnd:
