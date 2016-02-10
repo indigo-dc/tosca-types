@@ -35,6 +35,13 @@
       - clues
       - cpyutils
 
+    # CLUES2 INDIGO Orchestrator plugin      
+    - get_url: url=https://raw.githubusercontent.com/indigo-dc/orchestrator-clues-plugin/master/indigo_orchestrator.py dest=/tmp/clues-master/cluesplugins/indigo_orchestrator.py
+      register: result
+      until: result|success
+      retries: 5
+      delay: 1
+
     - command: python setup.py install chdir=/tmp/clues-master creates=/usr/local/bin/cluesserver
     - command: python setup.py install chdir=/tmp/cpyutils-master
     
