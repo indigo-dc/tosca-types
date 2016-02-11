@@ -1,0 +1,19 @@
+---
+ - tasks:
+    - set_fact: TORQUE_PATH="/var/spool/torque"
+      when: ansible_os_family == "Debian"
+    - set_fact: TORQUE_PATH="/var/lib/torque"
+      when: ansible_os_family == "RedHat"
+      
+    - name: Set the Torque server name
+      copy: content=torqueserver dest=/etc/torque/server_name
+    - name: Create the mom_priv/config file
+      copy:
+        dest: "{{TORQUE_PATH}}/mom_priv/config"
+        content: |
+            $clienthost torqueserver
+            $max_conn_timeout_micro_sec 10000
+            $mom_host {{IM_NODE_HOSTNAME}}
+        mode: 0644
+        owner: root
+        group: root

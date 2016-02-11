@@ -203,7 +203,7 @@ tosca.capabilities.indigo.LRMS:
       type: string
       required: true
       constraints:
-      - valid_values: [ torque, slurm, sge, condor ]
+      - valid_values: [ torque, slurm, sge, condor, mesos ]
 
  
 tosca.nodes.indigo.ElasticCluster.FrontEnd:
@@ -259,9 +259,9 @@ tosca.nodes.indigo.LRMS.WorkerNode.Torque:
   derived_from: tosca.nodes.indigo.LRMS.WorkerNode
   interfaces:
     Standard:
-      create: lrms/torque_wn_install.yml
-      configure: lrms/torque_wn_configure.yml
-      start: lrms/torque_wn_start.yml
+      create: lrms/torque/torque_wn_install.yml
+      configure: lrms/torque/torque_wn_configure.yml
+      start: lrms/torque/torque_wn_start.yml
  
 tosca.relationships.indigo.Manages:
   derived_from: tosca.relationships.Root

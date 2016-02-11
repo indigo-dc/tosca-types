@@ -5,8 +5,8 @@
 
   vars:
       INDIGO_ORCHESTRATOR_URL: http://orchestrator01.indigo.recas.ba.infn.it:8080
-      VNODE: vnode
-      TORQUE_PATH: /var/spool/torque
+      # the default IM value
+      VNODE: vnode-
       PBS_SERVER_CONF: |
         create queue batch
         set queue batch queue_type = Execution
@@ -28,6 +28,11 @@
         set tcp_timeout = 600
         
   tasks:
+    - set_fact: TORQUE_PATH="/var/spool/torque"
+      when: ansible_os_family == "Debian"
+    - set_fact: TORQUE_PATH="/var/lib/torque"
+      when: ansible_os_family == "RedHat"
+
     # /etc/hosts configuration
     - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{IM_NODE_NET_1_IP}} torqueserver'
       when: IM_NODE_NET_1_IP is defined
@@ -94,7 +99,9 @@
     - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_MAX_INSTANCES value={{ec3_max_instances}}
       notify: restart cluesd
     - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_URL value={{INDIGO_ORCHESTRATOR_URL}}
-      notify: restart cluesd      
+      notify: restart cluesd
+    - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_WN_NAME value="{{VNODE}}#N#"
+      notify: restart cluesd
 
     - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
       notify: restart cluesd
@@ -142,5 +149,5 @@
     - command: mv /usr/local/bin/clues-slurm-wrapper /usr/local/bin/sbatch creates=/usr/local/bin/sbatch
       when: clues_queue_system == 'slurm'
       
-      
+      # TODO: Add Mesos and HTCondor recipes
       
