@@ -204,9 +204,18 @@ tosca.capabilities.indigo.LRMS:
       required: true
       constraints:
       - valid_values: [ torque, slurm, sge, condor, mesos ]
-
+      
+tosca.capabilities.indigo.LRMS.Torque:
+  derived_from: tosca.capabilities.indigo.LRMS
+  properties:
+    type: 
+      type: string
+      required: true
+      default: torque
+      constraints:
+        - equal: torque
  
-tosca.nodes.indigo.ElasticCluster.FrontEnd:
+tosca.nodes.indigo.ElasticCluster:
   derived_from: tosca.nodes.Root
   properties:
     secret_token:
@@ -229,26 +238,23 @@ tosca.nodes.indigo.ElasticCluster.FrontEnd:
           ec3_max_instances: { get_property: [ SELF, wn, max_instances] }
           ec3_deployment_id: { get_property: [ SELF, deployment_id] }
       start: ec3/ec3_start.yml
-  capabilities:
-      lrms:
-        type: tosca.capabilities.indigo.LRMS
   requirements:
     - wn:
         capability: tosca.capabilities.Scalable
         node: tosca.nodes.indigo.LRMS.WorkerNode
         relationship: tosca.relationships.indigo.Manages
-    - host:
-        capability: tosca.capabilities.Container
-        node: tosca.nodes.Compute
+    - lrms:
+        capability: tosca.capabilities.indigo.LRMS
+        node: tosca.nodes.indigo.LRMS.FrontEnd
         relationship: tosca.relationships.HostedOn
 
 
 tosca.nodes.indigo.LRMS.WorkerNode:
-  derived_from: tosca.nodes.Root
+  derived_from: tosca.nodes.SoftwareComponent
   capabilities:
       wn:
         type: tosca.capabilities.Scalable
-        valid_source_types: [tosca.nodes.indigo.ElasticCluster.FrontEnd]
+        valid_source_types: [tosca.nodes.indigo.ElasticCluster]
   requirements:
     - host:
         capability: tosca.capabilities.Container
@@ -262,6 +268,28 @@ tosca.nodes.indigo.LRMS.WorkerNode.Torque:
       create: lrms/torque/torque_wn_install.yml
       configure: lrms/torque/torque_wn_configure.yml
       start: lrms/torque/torque_wn_start.yml
+
+tosca.nodes.indigo.LRMS.FrontEnd:
+  derived_from: tosca.nodes.SoftwareComponent
+  capabilities:
+      lrms:
+        type: tosca.capabilities.indigo.LRMS
+  requirements:
+    - host:
+        capability: tosca.capabilities.Container
+        node: tosca.nodes.Compute
+        relationship: tosca.relationships.HostedOn
+
+tosca.nodes.indigo.LRMS.FrontEnd.Torque:
+  derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+  capabilities:
+      lrms:
+        type: tosca.capabilities.indigo.LRMS.Torque
+  interfaces:
+    Standard:
+      create: lrms/torque/torque_fe_install.yml
+      configure: lrms/torque/torque_fe_configure.yml
+      start: lrms/torque/torque_fe_start.yml
  
 tosca.relationships.indigo.Manages:
   derived_from: tosca.relationships.Root
