@@ -10,16 +10,17 @@ topology_template:
   node_templates:
 
     elastic_cluster_front_end:
-      type: tosca.nodes.indigo.ElasticCluster.FrontEnd
+      type: tosca.nodes.indigo.ElasticCluster
       properties:
         deployment_id: orchestrator_deployment_id
-      capabilities:
-        lrms:
-          properties:
-            type: torque
+      requirements:
+        - lrms: torque_front_end
+        - wn: wn_node
+
+    torque_front_end:
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Torque
       requirements:
         - host: torque_server
-        - wn: wn_node
 
     torque_server:
       type: tosca.nodes.indigo.Compute
@@ -50,7 +51,7 @@ topology_template:
     torque_wn:
       type: tosca.nodes.indigo.Compute
       properties:
-        public_ip: yes
+        public_ip: no
       capabilities:
         scalable:
           properties:

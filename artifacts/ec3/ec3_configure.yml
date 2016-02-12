@@ -4,73 +4,16 @@
       service: name=cluesd state=restarted
 
   vars:
-      INDIGO_ORCHESTRATOR_URL: http://orchestrator01.indigo.recas.ba.infn.it:8080
-      # the default IM value
       VNODE: vnode-
-      PBS_SERVER_CONF: |
-        create queue batch
-        set queue batch queue_type = Execution
-        set queue batch resources_default.nodes = 1
-        set queue batch enabled = True
-        set queue batch started = True
-        set server default_queue = batch
-        set server scheduling = True
-        set server scheduler_iteration = 20
-        set server node_check_rate = 40
-        set server resources_default.neednodes = 1
-        set server resources_default.nodect = 1
-        set server resources_default.nodes = 1
-        set server query_other_jobs = True
-        set server node_pack = False
-        set server job_stat_rate = 30
-        set server mom_job_sync = True
-        set server poll_jobs = True
-        set tcp_timeout = 600
+      INDIGO_ORCHESTRATOR_URL: http://orchestrator01.indigo.recas.ba.infn.it:8080
         
   tasks:
-    - set_fact: TORQUE_PATH="/var/spool/torque"
-      when: ansible_os_family == "Debian"
-    - set_fact: TORQUE_PATH="/var/lib/torque"
-      when: ansible_os_family == "RedHat"
-
     # /etc/hosts configuration
-    - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{IM_NODE_NET_1_IP}} torqueserver'
-      when: IM_NODE_NET_1_IP is defined
-      
-    - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{ansible_default_ipv4.address}} torqueserver'
-      when: IM_NODE_NET_1_IP is undefined
-
-    # PBS configuration
-    - file: src=/var/lib/torque dest=/var/spool/torque state=link
-      when: ansible_os_family == "RedHat" and clues_queue_system == 'torque'
-    
-    - command: hostname torqueserver
-      when: clues_queue_system == 'torque'
-    
     - shell: |
         for i in `seq 1 {{ec3_max_instances}}`; do
           item="{{VNODE}}${i}";
           grep -q "\<${item}\>" /etc/hosts || echo "127.0.0.1 ${item}.localdomain ${item}" >> /etc/hosts;
         done
-      when: clues_queue_system == 'torque'
-        
-    - copy: dest=/etc/torque/server_name content=torqueserver
-      when: clues_queue_system == 'torque'
-    - copy:
-        content: |
-           {% for number in range(1, ec3_max_instances|int + 1) %}
-           {{VNODE}}{{number}}
-           {% endfor %}
-        dest: "{{TORQUE_PATH}}/server_priv/nodes"
-      when: clues_queue_system == 'torque'
-      
-    - service: name=torque-server state=started pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "Debian" and clues_queue_system == 'torque'
-    - service: name=pbs_server state=started pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "RedHat" and clues_queue_system == 'torque'
-      
-    - shell: echo "{{PBS_SERVER_CONF}}" | qmgr creates={{TORQUE_PATH}}/server_priv/queues/batch
-      when: clues_queue_system == 'torque'
   
     # CLUES2 Config file
     - file: path=/etc/clues2 state=directory mode=755
@@ -100,13 +43,15 @@
       notify: restart cluesd
     - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_URL value={{INDIGO_ORCHESTRATOR_URL}}
       notify: restart cluesd
-    - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_WN_NAME value="{{VNODE}}#N#"
-      notify: restart cluesd
 
     - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
       notify: restart cluesd
       
       # CLUES PBS configuration
+    - set_fact: TORQUE_PATH="/var/spool/torque"
+      when: ansible_os_family == "Debian"
+    - set_fact: TORQUE_PATH="/var/lib/torque"
+      when: ansible_os_family == "RedHat"
     - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
       notify: restart cluesd
       when: clues_queue_system == 'torque'
@@ -118,6 +63,32 @@
       when: clues_queue_system == 'torque'
     - lineinfile: dest={{TORQUE_PATH}}/torque.cfg regexp=^SUBMITFILTER line='SUBMITFILTER /usr/local/bin/clues-pbs-wrapper' create=yes mode=644
       when: clues_queue_system == 'torque'
+    - copy:
+        content: |
+           {% for number in range(1, ec3_max_instances|int + 1) %}
+           {{VNODE}}{{number}}
+           {% endfor %}
+        dest: "{{TORQUE_PATH}}/server_priv/nodes"
+      when: clues_queue_system == 'torque'
+      
+    - service: name=torque-server state=stopped pattern=/usr/sbin/pbs_server
+      when: ansible_os_family == "Debian" and clues_queue_system == 'torque'
+    - service: name=torque-server state=started pattern=/usr/sbin/pbs_server
+      when: ansible_os_family == "Debian" and clues_queue_system == 'torque'
+      
+    - service: name=pbs_server state=stopped pattern=/usr/sbin/pbs_server
+      when: ansible_os_family == "RedHat" and clues_queue_system == 'torque'
+    - service: name=pbs_server state=started pattern=/usr/sbin/pbs_server
+      when: ansible_os_family == "RedHat" and clues_queue_system == 'torque'
+      
+    # Many times pbs_server does not start properly. Wait and test it again
+    - command: sleep 5
+      when: clues_queue_system == 'torque'
+
+    - service: name=pbs_server state=started pattern=/usr/sbin/pbs_sched
+      when: ansible_os_family == "RedHat"
+    - service: name=torque-server state=started pattern=/usr/sbin/pbs_server
+      when: ansible_os_family == "Debian"
 
       # CLUES SGE configuration
     - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.sge
