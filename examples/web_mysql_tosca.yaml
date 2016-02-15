@@ -1,5 +1,15 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
- 
+
+repositories:
+  indigo_repository:
+    description: INDIGO Custom types repository
+    url: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/
+
+imports:
+  - indigo_custom_types:
+      file: custom_types.yaml
+      repository: indigo_repository
+
 description: >
   TOSCA test for launching a typical example of a two tier application with an
   Apache web server and a MySQL DB
