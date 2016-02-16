@@ -1,10 +1,8 @@
-- vars:
-    INDIGO_ZABBIX_SERVER: 127.0.0.1
-  tasks: 
+- tasks: 
     - lineinfile: dest=/etc/zabbix/zabbix_agentd.conf regexp="{{ item.var }}=" line="{{ item.var }}={{ item.value }}"
       with_items:
-        - { var: "Server", value: "{{INDIGO_ZABBIX_SERVER}}"}
-        - { var: "ServerActive", value: "{{INDIGO_ZABBIX_SERVER}}"}
+        - { var: "Server", value: "{{zabbix_server}}"}
+        - { var: "ServerActive", value: "{{zabbix_server}}"}
         - { var: "Hostname", value: "{{ansible_hostname}}"}
         - { var: "HostMetadataItem", value: "system.uname"}
       notify: restart zabbix-agent
