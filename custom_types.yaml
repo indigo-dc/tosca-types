@@ -142,7 +142,7 @@ node_types:
             db_access_host: { get_property: [ SELF, access_host ] }
 
   tosca.nodes.indigo.Compute:
-    derived_from: tosca.nodes.Compute
+    derived_from: tosca.nodes.indigo.MonitoredCompute
     properties:
       public_ip:
         type: boolean
@@ -151,6 +151,24 @@ node_types:
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
+
+  tosca.nodes.indigo.MonitoredCompute:
+    derived_from: tosca.nodes.Compute
+    properties:
+      zabbix_server:
+        type: string
+        required: no
+        default: 127.0.0.1
+    interfaces:
+      Standard:
+        create: 
+          implementation: zabbix/zabbix_agent_install.yml
+        configure: 
+          implementation: zabbix/zabbix_agent_configure.yml
+          inputs:
+            zabbix_server: { get_property: [ SELF, zabbix_server ] }
+        start:
+          implementation: zabbix/zabbix_agent_start.yml
 
   tosca.nodes.indigo.GalaxyPortal:
     derived_from: tosca.nodes.WebServer
