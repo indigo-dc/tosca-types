@@ -1,0 +1,3 @@
+- tasks:      
+  - name: Configure Mesos Master
+    debug: msg="Configure Mesos Master {{master_ips}}"

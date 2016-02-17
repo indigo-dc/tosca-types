@@ -143,6 +143,15 @@ node_types:
 
   tosca.nodes.indigo.Compute:
     derived_from: tosca.nodes.indigo.MonitoredCompute
+    attributes:
+      private_address:
+        type: list
+        entry_schema:
+          type: string
+      public_address:
+        type: list
+        entry_schema:
+          type: string
     properties:
       public_ip:
         type: boolean
@@ -352,3 +361,45 @@ node_types:
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
+
+  tosca.nodes.indigo.MesosMaster:
+    derived_from: tosca.nodes.SoftwareComponent
+    interfaces:
+      Standard:
+        create: 
+          implementation: mesos/mesos_master_install.yml
+        configure: 
+          implementation: mesos/mesos_master_configure.yml
+          inputs:
+            master_ips: { get_attribute: [ HOST, public_address ] }
+        start:
+          implementation: mesos/mesos_master_start.yml
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.Compute
+          relationship: tosca.relationships.HostedOn
+
+  tosca.nodes.indigo.MesosSlave:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+    interfaces:
+      Standard:
+        create: 
+          implementation: mesos/mesos_slave_install.yml
+        configure: 
+          implementation: mesos/mesos_slave_configure.yml
+          inputs:
+            mesos_master_ips: { get_property: [ SELF, master_ips ] }
+        start:
+          implementation: mesos/mesos_slave_start.yml
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.Compute
+          relationship: tosca.relationships.HostedOn
