@@ -3,8 +3,7 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 repositories:
   indigo_repository:
     description: INDIGO Custom types repository
-    #url: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/
-    url: file:///home/micafer/codigo/tosca-types/
+    url: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/
 
 imports:
   - indigo_custom_types:
