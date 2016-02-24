@@ -1,21 +1,21 @@
 - tasks:
-  - name: Download Zabbix release deb file
+  - name: Download Zabbix Debian 8 release deb file
     get_url: 
       url="http://repo.zabbix.com/zabbix/3.0/debian/pool/main/z/zabbix-release/zabbix-release_3.0-1+jessie_all.deb"
       dest="/tmp/zabbix-release_3.0-1.deb"
     when: ansible_os_family == "Debian" and ansible_distribution == "Debian" and ansible_distribution_major_version == 8
     
-  - name: Download Zabbix release deb file
+  - name: Download Zabbix Debian 7 release deb file
     get_url: 
       url="http://repo.zabbix.com/zabbix/3.0/debian/pool/main/z/zabbix-release/zabbix-release_3.0-1+wheezy_all.deb"
       dest="/tmp/zabbix-release_3.0-1.deb"
     when: ansible_os_family == "Debian" and ansible_distribution == "Debian" and ansible_distribution_major_version == 7
     
-  - name: Download Zabbix release deb file
+  - name: Download Zabbix Ubuntu 14 release deb file
     get_url: 
       url="http://repo.zabbix.com/zabbix/3.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_3.0-1+trusty_all.deb"
       dest="/tmp/zabbix-release_3.0-1.deb"
-    when: ansible_os_family == "Debian" and ansible_distribution == "Ubuntu" and ansible_distribution_major_version == 14
+    when: ansible_os_family == "Debian" and ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
 
   - name: Apt install Zabbix release in Ubuntu/Debian
     apt: deb="/tmp/zabbix-release_3.0-1.deb"
