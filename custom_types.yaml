@@ -60,7 +60,7 @@ relationship_types:
 node_types:
 
   # Standard types defined in TOSCA with interfaces to install
-  
+
   tosca.nodes.Database.MySQL:
     derived_from: tosca.nodes.Database
     requirements:
@@ -108,7 +108,7 @@ node_types:
     derived_from: tosca.nodes.WebServer
     interfaces:
       Standard:
-        create: 
+        create:
           implementation: apache/apache_install.yml
         start:
           implementation: apache/apache_start.yml
@@ -176,9 +176,9 @@ node_types:
         default: 32314
     interfaces:
       Standard:
-        create: 
+        create:
           implementation: zabbix/zabbix_agent_install.yml
-        configure: 
+        configure:
           implementation: zabbix/zabbix_agent_configure.yml
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
@@ -373,9 +373,9 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     interfaces:
       Standard:
-        create: 
+        create:
           implementation: mesos/mesos_master_install.yml
-        configure: 
+        configure:
           implementation: mesos/mesos_master_configure.yml
           inputs:
             master_ips: { get_attribute: [ HOST, public_address ] }
@@ -397,9 +397,9 @@ node_types:
           type: string
     interfaces:
       Standard:
-        create: 
+        create:
           implementation: mesos/mesos_slave_install.yml
-        configure: 
+        configure:
           implementation: mesos/mesos_slave_configure.yml
           inputs:
             mesos_master_ips: { get_property: [ SELF, master_ips ] }
@@ -421,12 +421,13 @@ node_types:
           type: string
     interfaces:
       Standard:
-        create: 
+        create:
           implementation: mesos/mesos_lb_install.yml
-        configure: 
+        configure:
           implementation: mesos/mesos_lb_configure.yml
           inputs:
             mesos_master_ips: { get_property: [ SELF, master_ips ] }
+            load_balancer_ips: { get_attribute: [ HOST, public_address ] }
         start:
           implementation: mesos/mesos_lb_start.yml
     requirements:

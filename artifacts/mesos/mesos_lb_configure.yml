@@ -4,12 +4,14 @@
 - handlers:
   - name: restart dnsmasq
     service: name=dnsmasq state=restarted
+  - name: restart networking
+    shell: ifup eth0:0
+    when: virtual_interface.changed
 
 ##################################
 ##           VARIABLES          ##
 ##################################
   vars:
-
     ##############################
     #      CONSUL VARIABLES      #
     ##############################
@@ -17,28 +19,25 @@
     consul_join_ip: "{{ mesos_master_ips[0] }}"
     consul_version: 'latest'
     consul_image: "progrium/consul:{{consul_version}}"
-
     ##############################
     #      DNSMASK VARIABLES     #
     ##############################
     consul_domain: consul
-
-    ##############################
-    #    ZOOKEEPER VARIABLES     #
-    ##############################
-    zookeeper_client_port: "2181"
-    zookeeper_peers_nodes: "{% for host in mesos_master_ips %}{{host}}:{{zookeeper_client_port}}{% if not loop.last %},{% endif %}{% endfor %}"
-
     ##############################
     #        MESOS VARIABLES     #
     ##############################
-    mesos_executor_registration_timeout: 10mins
-    mesos_containerizers: "docker,mesos"
-    mesos_log_dir: "/var/log"
-    mesos_version: 'latest'
-    mesos_slave_image: "indigodatacloud/mesos-slave:{{ mesos_version }}"
-    mesos_ip: "{{ ansible_eth0.ipv4.address }}"
-    mesos_slave_work_dir: "/tmp/mesos"
+    haproxy_consul_mode: "marathon"
+    haproxy_consul_version: 'latest'
+    haproxy_consul_image: "ciscocloud/haproxy-consul:{{haproxy_consul_version}}"
+    ##############################
+    #    KEEPALIVED VARIABLES    #
+    ##############################
+    keepalived_virtual_ip: "172.30.6.144"
+    first_load_balancer_ip: "{{load_balancer_ips[0]}}"
+    keepalived_role: "{% if ansible_default_ipv4.address == first_load_balancer_ip %}master{% else %}slave{% endif %}"
+    keepalived_version: 'latest'
+    keepalived_image: "indigodatacloud/keepalived:{{keepalived_version}}"
+    keepalived_priority: "{%- if keepalived_role == 'master' -%}150{%- else -%}100{%- endif -%}"
 
 ##################################
 ##            TASKS             ##
@@ -46,11 +45,9 @@
   tasks:
   - name: Configure Mesos Slave
     debug: msg="Configure Mesos Slave {{mesos_master_ips}}"
-
     ##############################
     #         START CONSUL       #
     ##############################
-
     # INFO
   - name: Consul variables
     debug: msg="Consul image --> {{consul_image}}"
@@ -62,7 +59,6 @@
     debug: msg="Consul advertise --> {{consul_advertise}}"
   - name: Consul variables
     debug: msg="Consul join ip --> {{consul_join_ip}}"
-
     # RUN CONTAINER
   - name: run consul client container with join ip
     docker:
@@ -95,7 +91,6 @@
     debug: msg="Consul domain --> {{consul_domain}}"
   - name: DNSMask variables
     debug: msg="Docker bridge IP --> {{docker_bridge_ip}}"
-
     # CONFIG
   - name: configure consul resolution dnsmasq
     copy:
@@ -128,48 +123,39 @@
   - meta: flush_handlers
 
   ##############################
-  #     START MESOS SLAVE      #
+  #    START HAPROXY-CONSUL    #
   ##############################
-
     # INFO
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Slave Image --> {{mesos_slave_image}}"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Masters --> zk://{{ zookeeper_peers_nodes }}/mesos"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Executor Timeout --> {{mesos_executor_registration_timeout}}"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Containerizers --> {{mesos_containerizers}}"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Slave LogDir --> {{mesos_log_dir}}"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Slave IP --> {{mesos_ip}}"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Slave WorkDir --> {{mesos_slave_work_dir}}"
-  - name: Mesos Slave Variables
-    debug: msg="Mesos Slave Hostname --> {{mesos_ip}}"
-
+  - name: Haproxy-Consul Variables
+    debug: msg="Haproxy-Consul Image --> {{haproxy_consul_image}}"
+  - name: Haproxy-Consul Variables
+    debug: msg="Haproxy-Consul mode --> haproxy_consul_mode"
     # RUN CONTAINER
-  - name: run mesos-slave container
+  - name: run haproxy-consul container
     docker:
-      name: mesos-slave
-      image: "{{ mesos_slave_image }}"
+      name: haproxy
+      image: "{{ haproxy_consul_image }}"
       state: started
-      privileged: true
-      pid: host
+      detach: true
       restart_policy: always
-      volumes:
-      - "/sys/fs/cgroup:/sys/fs/cgroup"
-      - "/var/run/docker.sock:/var/run/docker.sock"
       net: "host"
       env:
-        MESOS_MASTER: "zk://{{ zookeeper_peers_nodes }}/mesos"
-        MESOS_EXECUTOR_REGISTRATION_TIMEOUT: "{{ mesos_executor_registration_timeout }}"
-        MESOS_CONTAINERIZERS: "{{ mesos_containerizers }}"
-        MESOS_LOG_DIR: "{{ mesos_log_dir }}"
-        MESOS_docker_mesos_image: "{{ mesos_slave_image }}"
-        MESOS_IP: "{{ mesos_ip }}"
-        MESOS_WORK_DIR: "{{ mesos_slave_work_dir }}"
-        MESOS_HOSTNAME: "{{ mesos_ip }}"
-    tags:
-    - mesos-slave
+        HAPROXY_MODE: "{{haproxy_consul_mode}}"
+    tags: haproxy-consul
+
+  ##############################
+  #      START KEEPALIVED      #
+  ##############################
+  - name: run keepalived container
+    docker:
+      name: keepalived
+      image: "{{ keepalived_image }}"
+      state: started
+      detach: true
+      restart_policy: always
+      net: "host"
+      privileged: true
+      env:
+        KEEPALIVED_PRIORITY: "{{ keepalived_priority }}"
+        KEEPALIVED_VIRTUAL_IP: "{{ keepalived_virtual_ip }}"
+    tags: keepalived
