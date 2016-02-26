@@ -20,7 +20,14 @@ topology_template:
       type: tosca.nodes.indigo.MesosMaster
       requirements:
         - host: mesos_master_server
-        
+
+    mesos_lb:
+      type: tosca.nodes.indigo.MesosLoadBalancer
+      properties:
+        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+      requirements:
+        - host: mesos_lb_server
+
     mesos_slave:
       type: tosca.nodes.indigo.MesosSlave
       properties:
@@ -29,6 +36,24 @@ topology_template:
         - host: mesos_slave_server
 
     mesos_master_server:
+      type: tosca.nodes.indigo.Compute
+      properties:
+        public_ip: yes
+      capabilities:
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            type: linux 
+            #distribution: ubuntu 
+            #version: 14.04
+
+    mesos_lb_server:
       type: tosca.nodes.indigo.Compute
       properties:
         public_ip: yes
