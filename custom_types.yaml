@@ -169,11 +169,15 @@ node_types:
       zabbix_server:
         type: string
         required: no
-        default: 90.147.170.165
+        default: 104.155.32.157
       zabbix_server_port:
         type: PortDef
         required: no
-        default: 32314
+        default: 10051
+      zabbix_server_metadata:
+        type: string
+        required: no
+        default: Linux      668c875e-9a39-4dc0-a710-17c41376c1e0
     interfaces:
       Standard:
         create: 
@@ -183,6 +187,7 @@ node_types:
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
+            zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
         start:
           implementation: zabbix/zabbix_agent_start.yml
 
