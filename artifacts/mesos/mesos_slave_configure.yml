@@ -1,3 +1,175 @@
-- tasks:      
+##################################
+##           HANDLERS           ##
+##################################
+- handlers:
+  - name: restart dnsmasq
+    service: name=dnsmasq state=restarted
+
+##################################
+##           VARIABLES          ##
+##################################
+  vars:
+
+    ##############################
+    #      CONSUL VARIABLES      #
+    ##############################
+    consul_advertise: "{{ansible_default_ipv4.address}}"
+    consul_join_ip: "{{ mesos_master_ips[0] }}"
+    consul_version: 'latest'
+    consul_image: "progrium/consul:{{consul_version}}"
+
+    ##############################
+    #      DNSMASK VARIABLES     #
+    ##############################
+    consul_domain: consul
+
+    ##############################
+    #    ZOOKEEPER VARIABLES     #
+    ##############################
+    zookeeper_client_port: "2181"
+    zookeeper_peers_nodes: "{% for host in mesos_master_ips %}{{host}}:{{zookeeper_client_port}}{% if not loop.last %},{% endif %}{% endfor %}"
+
+    ##############################
+    #        MESOS VARIABLES     #
+    ##############################
+    mesos_executor_registration_timeout: 10mins
+    mesos_containerizers: "docker,mesos"
+    mesos_log_dir: "/var/log"
+    mesos_version: 'latest'
+    mesos_slave_image: "indigodatacloud/mesos-slave:{{ mesos_version }}"
+    mesos_ip: "{{ ansible_eth0.ipv4.address }}"
+    mesos_slave_work_dir: "/tmp/mesos"
+
+##################################
+##            TASKS             ##
+##################################
+  tasks:
   - name: Configure Mesos Slave
     debug: msg="Configure Mesos Slave {{mesos_master_ips}}"
+
+    ##############################
+    #         START CONSUL       #
+    ##############################
+
+    # INFO
+  - name: Consul variables
+    debug: msg="Consul image --> {{consul_image}}"
+  - name: Consul variables
+    debug: msg="Docker bridge IP --> {{docker_bridge_ip}}"
+  - name: Consul variables
+    debug: msg="Hostname --> {{ansible_hostname}}"
+  - name: Consul variables
+    debug: msg="Consul advertise --> {{consul_advertise}}"
+  - name: Consul variables
+    debug: msg="Consul join ip --> {{consul_join_ip}}"
+
+    # RUN CONTAINER
+  - name: run consul client container with join ip
+    docker:
+      name: consul
+      image: "{{ consul_image }}"
+      state: started
+      detach: true
+      restart_policy: always
+      net: "bridge"
+      ports:
+       - 8300:8300
+       - 8301:8301
+       - 8301:8301/udp
+       - 8302:8302
+       - 8302:8302/udp
+       - 8400:8400
+       - 8500:8500
+       - "{{ docker_bridge_ip }}:8600:53"
+       - "{{ docker_bridge_ip }}:8600:53/udp"
+      volumes:
+      - /mnt:/data
+      hostname: "{{ ansible_hostname }}"
+      command: -advertise "{{consul_advertise}}" -join "{{consul_join_ip}}" -ui-dir /ui
+
+  ##############################
+  #      CONFIGURE DNSMASK     #
+  ##############################
+    # INFO
+  - name: DNSMask variables
+    debug: msg="Consul domain --> {{consul_domain}}"
+  - name: DNSMask variables
+    debug: msg="Docker bridge IP --> {{docker_bridge_ip}}"
+
+    # CONFIG
+  - name: configure consul resolution dnsmasq
+    copy:
+      content: "server=/{{ consul_domain }}/{{ docker_bridge_ip }}#8600"
+      dest: /etc/dnsmasq.d/10-consul
+      owner: root
+      group: root
+      mode: 0644
+    notify:
+      - restart dnsmasq
+    tags: dnsmasq
+
+  - name: make sure dnsmasq is running
+    service:
+      name: dnsmasq
+      state: started
+      enabled: yes
+    tags: dnsmasq
+
+  - name: configure docker
+    lineinfile:
+      dest: /etc/default/docker
+      state: present
+      insertafter: ^DOCKER_OPTS=.*
+      line: "DOCKER_OPTS=\"$DOCKER_OPTS --dns {{ docker_bridge_ip }} --dns 8.8.8.8 --dns-search service.{{ consul_domain }} \""
+    notify:
+      - restart docker
+    tags: dnsmasq
+
+  - meta: flush_handlers
+
+  ##############################
+  #     START MESOS SLAVE      #
+  ##############################
+
+    # INFO
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Slave Image --> {{mesos_slave_image}}"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Masters --> zk://{{ zookeeper_peers_nodes }}/mesos"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Executor Timeout --> {{mesos_executor_registration_timeout}}"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Containerizers --> {{mesos_containerizers}}"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Slave LogDir --> {{mesos_log_dir}}"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Slave IP --> {{mesos_ip}}"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Slave WorkDir --> {{mesos_slave_work_dir}}"
+  - name: Mesos Slave Variables
+    debug: msg="Mesos Slave Hostname --> {{mesos_ip}}"
+
+    # RUN CONTAINER
+  - name: run mesos-slave container
+    docker:
+      name: mesos-slave
+      image: "{{ mesos_slave_image }}"
+      state: started
+      privileged: true
+      pid: host
+      restart_policy: always
+      volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      net: "host"
+      env:
+        MESOS_MASTER: "zk://{{ zookeeper_peers_nodes }}/mesos"
+        MESOS_EXECUTOR_REGISTRATION_TIMEOUT: "{{ mesos_executor_registration_timeout }}"
+        MESOS_CONTAINERIZERS: "{{ mesos_containerizers }}"
+        MESOS_LOG_DIR: "{{ mesos_log_dir }}"
+        MESOS_docker_mesos_image: "{{ mesos_slave_image }}"
+        MESOS_IP: "{{ mesos_ip }}"
+        MESOS_WORK_DIR: "{{ mesos_slave_work_dir }}"
+        MESOS_HOSTNAME: "{{ mesos_ip }}"
+    tags:
+    - mesos-slave  

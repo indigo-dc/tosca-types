@@ -1,3 +1,325 @@
-- tasks:      
+##################################
+##           HANDLERS           ##
+##################################
+- handlers:
+  - name: restart dnsmasq
+    service: name=dnsmasq state=restarted
+
+##################################
+##           VARIABLES          ##
+##################################
+  vars:
+    ##############################
+    #      DOCKER VARIABLES      #
+    ##############################
+    docker_bridge_ip: "172.0.17.1"
+
+    ##############################
+    #      CONSUL VARIABLES      #
+    ##############################
+    consul_advertise: "{{ansible_default_ipv4.address}}"
+    consul_servers_list: "{{ master_ips }}"
+    consul_join_ip: "{{ master_ips[0] }}"
+    consul_bootstrap_expect: "{{ consul_servers_list | length }}"
+    consul_bootstrap: "{% if ansible_default_ipv4.address == consul_join_ip %}1{% else %}0{% endif %}"
+    consul_version: 'latest'
+    consul_image: "progrium/consul:{{consul_version}}"
+
+    ##############################
+    #      DNSMASK VARIABLES     #
+    ##############################
+    consul_domain: consul
+
+    ##############################
+    #    ZOOKEEPER VARIABLES     #
+    ##############################
+    zookeeper_version: 'latest'
+    zookeeper_image: "indigodatacloud/zookeeper:{{zookeeper_version}}"
+    zookeeper_client_port: "2181"
+    zookeeper_servers_list: "{{ master_ips|join(',') }}"
+    zookeeper_id: "{%- for host in master_ips -%}{%- if host == 'default' or host == inventory_hostname or host == ansible_fqdn or host in ansible_all_ipv4_addresses -%}{{ loop.index }}{%- endif -%}{%- endfor -%}"
+    zookeeper_peers_nodes: "{% for host in master_ips %}{{host}}:{{zookeeper_client_port}}{% if not loop.last %},{% endif %}{% endfor %}"
+
+    ##############################
+    #        MESOS VARIABLES     #
+    ##############################
+    mesos_cluster_name: "Cluster01"
+    mesos_ip: "{{ ansible_eth0.ipv4.address }}"
+    mesos_hostname: "{{ ansible_eth0.ipv4.address }}"
+    mesos_version: 'latest'
+    mesos_log_dir: "/var/log"
+    mesos_master_image: "indigodatacloud/mesos-master:{{ mesos_version }}"
+    mesos_quorum: "{{ ( master_ips|count / 2) | round(0, 'ceil') | int }}"
+
+    ##############################
+    #     MARATHON VARIABLES     #
+    ##############################
+    marathon_version: 'latest'
+    marathon_hostname: "{{ ansible_eth0.ipv4.address }}"
+    marathon_framework_name: "marathon"
+    marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
+    marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
+    marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
+
+    ##############################
+    #      CHRONOS VARIABLES     #
+    ##############################
+    chronos_version: 'latest'
+    chronos_image: "indigodatacloud/chronos:{{ chronos_version }}"
+    chronos_hostname: "{{ ansible_default_ipv4.address }}"
+    chronos_port: "4400"
+    chronos_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
+    chronos_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
+    chronos_framework_name: "chronos"
+
+##################################
+##            TASKS             ##
+##################################
+  tasks:
   - name: Configure Mesos Master
     debug: msg="Configure Mesos Master {{master_ips}}"
+
+    ##############################
+    #         START CONSUL       #
+    ##############################
+
+    # INFO
+  - name: Consul variables
+    debug: msg="Consul image --> {{consul_image}}"
+  - name: Consul variables
+    debug: msg="Docker bridge IP --> {{docker_bridge_ip}}"
+  - name: Consul variables
+    debug: msg="Hostname --> {{ansible_hostname}}"
+  - name: Consul variables
+    debug: msg="Consul advertise --> {{consul_advertise}}"
+  - name: Consul variables
+    debug: msg="Consul bootstrap expect --> {{consul_bootstrap_expect}}"
+  - name: Consul variables
+    debug: msg="Consul bootstrap --> {{consul_bootstrap}}"
+  - name: Consul variables
+    debug: msg="Consul join ip --> {{consul_join_ip}}"
+
+    # RUN CONTAINER
+  - name: run consul container with bootstrap
+    when: consul_bootstrap == "1"
+    docker:
+      name: consul
+      image: "{{ consul_image }}"
+      state: started
+      detach: true
+      restart_policy: always
+      net: "bridge"
+      ports:
+       - 8300:8300
+       - 8301:8301
+       - 8301:8301/udp
+       - 8302:8302
+       - 8302:8302/udp
+       - 8400:8400
+       - 8500:8500
+       - "{{ docker_bridge_ip }}:8600:53"
+       - "{{ docker_bridge_ip }}:8600:53/udp"
+      hostname: "{{ ansible_hostname }}"
+      volumes:
+      - /mnt:/data
+      command: -server -advertise "{{consul_advertise}}" -bootstrap-expect "{{consul_bootstrap_expect}}" -ui-dir /ui
+
+  - name: run consul container with join ip
+    when: consul_bootstrap == "0"
+    docker:
+      name: consul
+      image: "{{ consul_image }}"
+      state: started
+      detach: true
+      restart_policy: always
+      net: "bridge"
+      ports:
+       - 8300:8300
+       - 8301:8301
+       - 8301:8301/udp
+       - 8302:8302
+       - 8302:8302/udp
+       - 8400:8400
+       - 8500:8500
+       - "{{ docker_bridge_ip }}:8600:53"
+       - "{{ docker_bridge_ip }}:8600:53/udp"
+      volumes:
+      - /mnt:/data
+      hostname: "{{ ansible_hostname }}"
+      command: -server -advertise "{{consul_advertise}}" -join "{{consul_join_ip}}" -ui-dir /ui
+
+  ##############################
+  #      CONFIGURE DNSMASK     #
+  ##############################
+    # INFO
+  - name: DNSMask variables
+    debug: msg="Consul domain --> {{consul_domain}}"
+  - name: DNSMask variables
+    debug: msg="Docker bridge IP --> {{docker_bridge_ip}}"
+
+    # CONFIG
+  - name: configure consul resolution dnsmasq
+    copy:
+      content: "server=/{{ consul_domain }}/{{ docker_bridge_ip }}#8600"
+      dest: /etc/dnsmasq.d/10-consul
+      owner: root
+      group: root
+      mode: 0644
+    notify:
+      - restart dnsmasq
+    tags: dnsmasq
+
+  - name: make sure dnsmasq is running
+    service:
+      name: dnsmasq
+      state: started
+      enabled: yes
+    tags: dnsmasq
+
+  - name: configure docker
+    lineinfile:
+      dest: /etc/default/docker
+      state: present
+      insertafter: ^DOCKER_OPTS=.*
+      line: "DOCKER_OPTS=\"$DOCKER_OPTS --dns {{ docker_bridge_ip }} --dns 8.8.8.8 --dns-search service.{{ consul_domain }} \""
+    notify:
+      - restart docker
+    tags: dnsmasq
+
+  - meta: flush_handlers
+
+  ##############################
+  #       START ZOOKEEPER      #
+  ##############################
+
+    # INFO
+  - name: Zookeeper variables
+    debug: msg="Zookeeper image --> {{zookeeper_image}}"
+  - name: Zookeeper variables
+    debug: msg="Zookeeper id --> {{zookeeper_id}}"
+  - name: Zookeeper variables
+    debug: msg="Zookeeper servers --> {{zookeeper_servers_list}}"
+
+    # RUN CONTAINER
+  - name: run zookeeper container
+    docker:
+      name: zookeeper
+      image: "{{ zookeeper_image }}"
+      state: started
+      detach: true
+      net: "host"
+      env:
+        MYID: "{{ zookeeper_id }}"
+        SERVERS: "{{ zookeeper_servers_list }}"
+      restart_policy: always
+    tags:
+    - zookeeper
+
+  ##############################
+  #     START MESOS MASTER     #
+  ##############################
+
+    # INFO
+  - name: Mesos master variables
+    debug: msg="Mesos image --> {{mesos_master_image}}"
+  - name: Mesos master variables
+    debug: msg="Mesos hostname --> {{mesos_hostname}}"
+  - name: Mesos master variables
+    debug: msg="Mesos ip --> {{mesos_ip}}"
+  - name: Mesos master variables
+    debug: msg="Mesos cluster --> {{mesos_cluster_name}}"
+  - name: Mesos master variables
+    debug: msg="Mesos zk --> zk://{{zookeeper_peers_nodes}}/mesos"
+  - name: Mesos master variables
+    debug: msg="Mesos log dir --> {{mesos_log_dir}}"
+  - name: Mesos master variables
+    debug: msg="Mesos quorum --> {{mesos_quorum}}"
+
+    # RUN CONTAINER
+  - name: run mesos-master container
+    docker:
+      name: mesos-master
+      image: "{{ mesos_master_image }}"
+      detach: true
+      state: started
+      net: "host"
+      restart_policy: always
+      env:
+        MESOS_HOSTNAME: "{{ mesos_hostname }}"
+        MESOS_IP: "{{ mesos_ip }}"
+        MESOS_CLUSTER: "{{ mesos_cluster_name }}"
+        MESOS_ZK: "zk://{{ zookeeper_peers_nodes }}/mesos"
+        MESOS_LOG_DIR: "{{ mesos_log_dir }}"
+        MESOS_QUORUM: "{{ mesos_quorum }}"
+    tags:
+    - mesos-master
+
+  ##############################
+  #       START MARATHON       #
+  ##############################
+
+    # INFO
+  - name: Marathon variables
+    debug: msg="Marathon hostname --> {{ marathon_hostname }}"
+  - name: Marathon variables
+    debug: msg="Marathon http address --> {{ marathon_hostname }}"
+  - name: Marathon variables
+    debug: msg="Marathon master --> {{marathon_master_peers}}"
+  - name: Marathon variables
+    debug: msg="Marathon zk --> {{ marathon_zk_peers }}/{{ marathon_framework_name }}"
+  - name: Marathon variables
+    debug: msg="Marathon zk --> {{ marathon_framework_name }}"
+
+    # RUN CONTAINER
+  - name: run marathon container
+    docker:
+      name: marathon
+      image: "{{ marathon_image }}"
+      state: started
+      detach: true
+      restart_policy: always
+      net: "host"
+      env:
+        MARATHON_HOSTNAME: "{{ marathon_hostname }}"
+        MARATHON_HTTP_ADDRESS: "{{ marathon_hostname }}"
+        MARATHON_MASTER: "{{ marathon_master_peers }}"
+        MARATHON_ZK: "{{ marathon_zk_peers }}/{{ marathon_framework_name }}"
+        MARATHON_FRAMEWORK_NAME: "{{ marathon_framework_name }}"
+    tags: marathon
+
+  ##############################
+  #        START CHRONOS       #
+  ##############################
+
+    # INFO
+  - name: Chronos variables
+    debug: msg="Chronos image --> {{ chronos_image }}"
+  - name: Chronos variables
+    debug: msg="Chronos hostname --> {{ chronos_hostname }}"
+  - name: Chronos variables
+    debug: msg="Chronos port --> {{chronos_port}}"
+  - name: Chronos variables
+    debug: msg="Chronos master peers --> {{ chronos_master_peers }}"
+  - name: Chronos variables
+    debug: msg="Chronos zk peers --> {{ chronos_zk_peers }}"
+  - name: Chronos variables
+    debug: msg="Chronos zk path --> /{{ chronos_framework_name }}/state"
+  - name: Chronos variables
+    debug: msg="Chronos chronos framework name --> {{ chronos_framework_name }}"
+
+    # RUN CONTAINER
+  - name: run chronos container
+    docker:
+      name: chronos
+      image: "{{ chronos_image }}"
+      state: started
+      detach: true
+      restart_policy: always
+      net: "host"
+      env:
+        CHRONOS_HOSTNAME: "{{ chronos_hostname }}"
+        CHRONOS_HTTP_PORT: "{{ chronos_port }}"
+        CHRONOS_MASTER: "{{ chronos_master_peers }}"
+        CHRONOS_ZK_HOSTS: "{{ chronos_zk_peers }}"
+        CHRONOS_ZK_PATH: "/{{ chronos_framework_name }}/state"
+        CHRONOS_MESOS_FRAMEWORK_NAME: "{{ chronos_framework_name }}"
