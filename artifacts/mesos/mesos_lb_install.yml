@@ -70,7 +70,7 @@
   #       INSTALL DNSMASK      #
   ##############################
   - name: install dnsmasq
-    apt: name="dnsmasq" state=present
+    apt: name=dnsmasq state=present
     tags: dnsmasq
 
   ##############################

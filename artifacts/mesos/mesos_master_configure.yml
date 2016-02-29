@@ -33,7 +33,7 @@
     ##############################
     #    ZOOKEEPER VARIABLES     #
     ##############################
-    zookeeper_version: 'latest'
+    zookeeper_version: "latest"
     zookeeper_image: "indigodatacloud/zookeeper:{{zookeeper_version}}"
     zookeeper_client_port: "2181"
     zookeeper_servers_list: "{{ master_ips|join(',') }}"
@@ -46,7 +46,7 @@
     mesos_cluster_name: "Cluster01"
     mesos_ip: "{{ ansible_eth0.ipv4.address }}"
     mesos_hostname: "{{ ansible_eth0.ipv4.address }}"
-    mesos_version: 'latest'
+    mesos_version: "latest"
     mesos_log_dir: "/var/log"
     mesos_master_image: "indigodatacloud/mesos-master:{{ mesos_version }}"
     mesos_quorum: "{{ ( master_ips|count / 2) | round(0, 'ceil') | int }}"
@@ -54,7 +54,7 @@
     ##############################
     #     MARATHON VARIABLES     #
     ##############################
-    marathon_version: 'latest'
+    marathon_version: "latest"
     marathon_hostname: "{{ ansible_eth0.ipv4.address }}"
     marathon_framework_name: "marathon"
     marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
@@ -64,7 +64,7 @@
     ##############################
     #      CHRONOS VARIABLES     #
     ##############################
-    chronos_version: 'latest'
+    chronos_version: "latest"
     chronos_image: "indigodatacloud/chronos:{{ chronos_version }}"
     chronos_hostname: "{{ ansible_default_ipv4.address }}"
     chronos_port: "4400"
@@ -77,7 +77,7 @@
 ##################################
   tasks:
   - name: Configure Mesos Master
-    debug: msg="Configure Mesos Master {{master_ips}}"
+    debug: msg="Mesos Master IPs {{master_ips}}"
 
     ##############################
     #         START CONSUL       #

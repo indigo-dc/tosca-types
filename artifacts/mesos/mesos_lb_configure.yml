@@ -24,7 +24,7 @@
     ##############################
     consul_domain: consul
     ##############################
-    #        MESOS VARIABLES     #
+    #      HAPROXY VARIABLES     #
     ##############################
     haproxy_consul_mode: "marathon"
     haproxy_consul_version: 'latest'
@@ -129,7 +129,7 @@
   - name: Haproxy-Consul Variables
     debug: msg="Haproxy-Consul Image --> {{haproxy_consul_image}}"
   - name: Haproxy-Consul Variables
-    debug: msg="Haproxy-Consul mode --> haproxy_consul_mode"
+    debug: msg="Haproxy-Consul mode --> {{haproxy_consul_mode}}"
     # RUN CONTAINER
   - name: run haproxy-consul container
     docker:
@@ -146,6 +146,14 @@
   ##############################
   #      START KEEPALIVED      #
   ##############################
+    # INFO
+  - name: KeepAlived Variables
+    debug: msg="KeepAlived Image --> {{keepalived_image}}"
+  - name: KeepAlived Variables
+    debug: msg="KeepAlived Priority --> {{keepalived_priority}}"
+  - name: KeepAlived Variables
+    debug: msg="KeepAlived Virtual IP --> {{keepalived_virtual_ip}}"
+    # RUN CONTAINER
   - name: run keepalived container
     docker:
       name: keepalived
