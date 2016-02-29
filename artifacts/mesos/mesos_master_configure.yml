@@ -60,6 +60,18 @@
     marathon_image: "indigodatacloud/marathon:{{ marathon_version }}"
     marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
     marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
+    # Note: marathon-consul checks the certificate CN against the host marathon.service.consul
+    openssl_self_signed:
+     - { name : "marathon.service.consul" }
+    generate_random_pass: "true"
+    marathon_key_password: "password"
+    marathon_pkcs_password: "password"
+    marathon_jks_password: "password"
+    marathon_username: "admin"
+    marathon_password: "secr3t"
+    marathon_https_port: "8443"
+    marathon_keystore_path: '/etc/marathon/ssl_keystore.jks'
+    marathon_ssl_ks_password: "{%- if generate_random_pass|string() == 'true' -%}{{ marathon_jks_randpassword.stdout }}{%- else -%}{{ marathon_jks_password }}{%- endif -%}"
 
     ##############################
     #      CHRONOS VARIABLES     #
@@ -68,9 +80,21 @@
     chronos_image: "indigodatacloud/chronos:{{ chronos_version }}"
     chronos_hostname: "{{ ansible_default_ipv4.address }}"
     chronos_port: "4400"
+    chronos_https_port: "4443"
     chronos_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
     chronos_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
     chronos_framework_name: "chronos"
+    openssl_self_signed:
+     - { name : "{{ ansible_default_ipv4.address }}" }
+    generate_random_pass: "true"
+    chronos_key_password: "password"
+    chronos_pkcs_password: "password"
+    chronos_jks_password: "password"
+    chronos_username: "admin"
+    chronos_password: "secr3t"
+    chronos_keystore_path: '/etc/chronos/ssl_keystore.jks'
+    chronos_server_zk_group: {{master_ips}}
+    chronos_ssl_ks_password: "{%- if generate_random_pass|string() == 'true' -%}{{ chronos_jks_randpassword.stdout  }}{%- else -%}{{ chronos_jks_password }}{%- endif -%}"
 
 ##################################
 ##            TASKS             ##
@@ -80,9 +104,8 @@
     debug: msg="Mesos Master IPs {{master_ips}}"
 
     ##############################
-    #         START CONSUL       #
+    #            CONSUL          #
     ##############################
-
     # INFO
   - name: Consul variables
     debug: msg="Consul image --> {{consul_image}}"
@@ -98,7 +121,6 @@
     debug: msg="Consul bootstrap --> {{consul_bootstrap}}"
   - name: Consul variables
     debug: msg="Consul join ip --> {{consul_join_ip}}"
-
     # RUN CONTAINER
   - name: run consul container with bootstrap
     when: consul_bootstrap == "1"
@@ -123,7 +145,7 @@
       volumes:
       - /mnt:/data
       command: -server -advertise "{{consul_advertise}}" -bootstrap-expect "{{consul_bootstrap_expect}}" -ui-dir /ui
-
+    # RUN CONTAINER
   - name: run consul container with join ip
     when: consul_bootstrap == "0"
     docker:
@@ -149,7 +171,7 @@
       command: -server -advertise "{{consul_advertise}}" -join "{{consul_join_ip}}" -ui-dir /ui
 
   ##############################
-  #      CONFIGURE DNSMASK     #
+  #           DNSMASK          #
   ##############################
     # INFO
   - name: DNSMask variables
@@ -189,9 +211,8 @@
   - meta: flush_handlers
 
   ##############################
-  #       START ZOOKEEPER      #
+  #          ZOOKEEPER         #
   ##############################
-
     # INFO
   - name: Zookeeper variables
     debug: msg="Zookeeper image --> {{zookeeper_image}}"
@@ -199,7 +220,6 @@
     debug: msg="Zookeeper id --> {{zookeeper_id}}"
   - name: Zookeeper variables
     debug: msg="Zookeeper servers --> {{zookeeper_servers_list}}"
-
     # RUN CONTAINER
   - name: run zookeeper container
     docker:
@@ -212,8 +232,13 @@
         MYID: "{{ zookeeper_id }}"
         SERVERS: "{{ zookeeper_servers_list }}"
       restart_policy: always
-    tags:
-    - zookeeper
+    tags: zookeeper
+    # REGISTER SERVICE IN CONSUL
+  - name: register zookeeper service
+    consul:
+      service_name: zookeeper
+      service_port: 2181
+      tags: zookeeper
 
   ##############################
   #     START MESOS MASTER     #
@@ -255,7 +280,7 @@
     - mesos-master
 
   ##############################
-  #       START MARATHON       #
+  #           MARATHON         #
   ##############################
 
     # INFO
@@ -269,6 +294,42 @@
     debug: msg="Marathon zk --> {{ marathon_zk_peers }}/{{ marathon_framework_name }}"
   - name: Marathon variables
     debug: msg="Marathon zk --> {{ marathon_framework_name }}"
+  - name: Marathon variables
+    debug: msg="Marathon HTTPS Port --> {{ marathon_https_port }}"
+  - name: Marathon variables
+    debug: msg="Marathon SSL Ks Password --> {{ marathon_ssl_ks_password }}"
+  - name: Marathon variables
+    debug: msg="Marathon Keystore Path --> {{marathon_keystore_path}}"
+  - name: Marathon variables
+    debug: msg="Marathon Http Credentials --> {{marathon_username}}:{{marathon_password}}"
+
+    # GENERATE PASSWORDS
+  - name: generate marathon key password
+    shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c10
+    register: marathon_key_randpassword
+    when: generate_random_pass == "true"
+
+  - name: generate marathon jks password
+    shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c10
+    register: marathon_jks_randpassword
+    when: generate_random_pass == "true"
+
+    # ENABLE SSL
+  - name: generate keystore with random password
+    vars:
+      key_password: "{{marathon_key_randpassword.stdout}}"
+      pkcs_password: "{{marathon_jks_randpassword.stdout}}"
+      jks_password: "{{marathon_jks_randpassword.stdout}}"
+    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_marathon_ssl.yml
+    when: generate_random_pass == "true"
+
+  - name: generate keystore
+    vars:
+      key_password: "{{marathon_key_password}}"
+      pkcs_password: "{{marathon_jks_password}}"
+      jks_password: "{{marathon_jks_password}}"
+    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_marathon_ssl.yml
+    when: generate_random_pass != "true"
 
     # RUN CONTAINER
   - name: run marathon container
@@ -279,16 +340,34 @@
       detach: true
       restart_policy: always
       net: "host"
+      volumes:
+      - "{{ marathon_keystore_path }}:{{ marathon_keystore_path }}"
       env:
         MARATHON_HOSTNAME: "{{ marathon_hostname }}"
         MARATHON_HTTP_ADDRESS: "{{ marathon_hostname }}"
+        MARATHON_HTTPS_ADDRESS: "{{ marathon_hostname }}"
         MARATHON_MASTER: "{{ marathon_master_peers }}"
         MARATHON_ZK: "{{ marathon_zk_peers }}/{{ marathon_framework_name }}"
         MARATHON_FRAMEWORK_NAME: "{{ marathon_framework_name }}"
+        MARATHON_HTTPS_PORT: "{{ marathon_https_port }}"
+        MARATHON_SSL_KEYSTORE_PASSWORD: "{{ marathon_ssl_ks_password }}"
+        MARATHON_SSL_KEYSTORE_PATH: "{{ marathon_keystore_path }}"
+        MARATHON_HTTP_CREDENTIALS: "{{marathon_username}}:{{marathon_password}}"
     tags: marathon
 
+  - name: register marathon service with curl check
+    consul:
+      service_name: marathon
+      service_port: "{{marathon_https_port}}"
+      script: "curl -k -u {{marathon_username}}:{{marathon_password}} https://{{marathon_hostname}}:{{marathon_https_port}}"
+      interval: 10s
+      tags: marathon
+
+    # RUN CONTAINER
+  - wait_for: port="{{marathon_https_port}}" host=marathon.service.consul delay=6 timeout=60
+
   ##############################
-  #        START CHRONOS       #
+  #           CHRONOS          #
   ##############################
 
     # INFO
@@ -306,6 +385,42 @@
     debug: msg="Chronos zk path --> /{{ chronos_framework_name }}/state"
   - name: Chronos variables
     debug: msg="Chronos chronos framework name --> {{ chronos_framework_name }}"
+  - name: Chronos variables
+    debug: msg="Chronos HTTPS Port --> {{ chronos_https_port }}"
+  - name: Chronos variables
+    debug: msg="Chronos SSL Ks Password --> {{ chronos_ssl_ks_password }}"
+  - name: Chronos variables
+    debug: msg="Chronos Keystore Path --> {{chronos_keystore_path}}"
+  - name: Chronos variables
+    debug: msg="Chronos Http Credentials --> {{chronos_username}}:{{chronos_password}}"
+
+  # GENERATE PASSWORDS
+  - name: generate chronos key password
+    shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c10
+    register: chronos_key_randpassword
+    when: generate_random_pass == "true"
+
+  - name: generate chronos jks password
+    shell: head /dev/urandom | tr -dc A-Za-z0-9 | head -c10
+    register: chronos_jks_randpassword
+    when: generate_random_pass == "true"
+
+    # ENABLE SSL
+  - name: generate keystore with random password
+    vars:
+      key_password: "{{chronos_key_randpassword.stdout}}"
+      pkcs_password: "{{chronos_jks_randpassword.stdout}}"
+      jks_password: "{{chronos_jks_randpassword.stdout}}"
+    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_chronos_ssl.yml
+    when: generate_random_pass == "true"
+
+  - name: generate keystore
+    vars:
+      key_password: "{{chronos_key_password}}"
+      pkcs_password: "{{chronos_jks_password}}"
+      jks_password: "{{chronos_jks_password}}"
+    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_chronos_ssl.yml
+    when: generate_random_pass != "true"
 
     # RUN CONTAINER
   - name: run chronos container
@@ -316,6 +431,8 @@
       detach: true
       restart_policy: always
       net: "host"
+      volumes:
+      - "{{ chronos_keystore_path }}:{{ chronos_keystore_path }}"
       env:
         CHRONOS_HOSTNAME: "{{ chronos_hostname }}"
         CHRONOS_HTTP_PORT: "{{ chronos_port }}"
@@ -323,3 +440,7 @@
         CHRONOS_ZK_HOSTS: "{{ chronos_zk_peers }}"
         CHRONOS_ZK_PATH: "/{{ chronos_framework_name }}/state"
         CHRONOS_MESOS_FRAMEWORK_NAME: "{{ chronos_framework_name }}"
+        CHRONOS_HTTPS_PORT: "{{ chronos_https_port }}"
+        CHRONOS_SSL_KEYSTORE_PASSWORD: "{{ chronos_ssl_ks_password }}"
+        CHRONOS_SSL_KEYSTORE_PATH: "{{ chronos_keystore_path }}"
+        CHRONOS_HTTP_CREDENTIALS: "{{chronos_username}}:{{chronos_password}}"

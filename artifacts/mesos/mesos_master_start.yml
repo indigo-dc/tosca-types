@@ -1,3 +1,98 @@
-- tasks:      
+##################################
+##           VARIABLES          ##
+##################################
+- vars:
+    ##############################
+    #     MARATHON VARIABLES     #
+    ##############################
+    marathon_username: "admin"
+    marathon_password: "secr3t"
+    marathon_https_port: "8443"
+    marathon_consul_version: 'latest'
+    marathon_consul_image: "ciscocloud/marathon-consul:{{marathon_consul_version}}"
+    marathon_consul_app_json: '{
+      "id": "marathon-consul",
+      "args": ["--registry=http://consul.service.consul:8500 --marathon-protocol=https --marathon-username={{marathon_username}} --marathon-password={{marathon_password}} --marathon-location=marathon.service.consul:{{marathon_https_port}}"],
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+          "image": "{{marathon_consul_image}}",
+          "network": "BRIDGE",
+          "portMappings": [{"containerPort": 4000, "hostPort": 0, "protocol": "tcp"}]
+        },
+        "volumes": [
+          {
+            "containerPath": "/usr/local/share/ca-certificates",
+            "hostPath": "/usr/local/share/ca-certificates/",
+            "mode": "RO"
+          },
+         ]
+      },
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 128
+    }'
+    mesos_consul_app_json: '{
+      "args": [
+        "--zk=zk://zookeeper.service.consul:2181/mesos",
+        "--mesos-ip-order=mesos,host"
+      ],
+      "container": {
+        "type": "DOCKER",
+        "docker": {
+          "network": "BRIDGE",
+          "image": "ciscocloud/mesos-consul"
+        }
+      },
+      "id": "mesos-consul",
+      "instances": 1,
+      "cpus": 0.1,
+      "mem": 256
+    }'
+
+##################################
+##            TASKS             ##
+##################################
+  tasks:
   - name: Start Mesos Master
     debug: msg="Start Mesos Master"
+
+  ##############################
+  #           MARATHON         #
+  ##############################
+  # Mesos-Consul APP
+  - name: start mesos-consul app
+    run_once: true
+    uri:
+       url: "https://marathon.service.consul:{{marathon_https_port}}/v2/apps/mesos-consul"
+       user: "{{marathon_username}}"
+       password: "{{marathon_password}}"
+       validate_certs: "no"
+       method: PUT
+       HEADER_Content-Type: "application/json"
+       body: "{{mesos_consul_app_json}}"
+       body_format: json
+    register: result
+    until: result.status == 200
+    retries: 3
+    delay: 10
+    changed_when: false
+    tags: marathon
+  # Marathon-Consul APP
+  - name: start marathon-consul app
+    run_once: true
+    uri:
+       url: "https://marathon.service.consul:{{marathon_https_port}}/v2/apps/marathon-consul"
+       user: "{{marathon_username}}"
+       password: "{{marathon_password}}"
+       validate_certs: "no"
+       method: PUT
+       HEADER_Content-Type: "application/json"
+       body: "{{marathon_consul_app_json}}"
+       body_format: json
+    register: result
+    until: result.status == 200
+    retries: 3
+    delay: 10
+    changed_when: false
+    tags: marathon

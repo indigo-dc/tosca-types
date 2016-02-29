@@ -50,7 +50,6 @@
     ##############################
     #         START CONSUL       #
     ##############################
-
     # INFO
   - name: Consul variables
     debug: msg="Consul image --> {{consul_image}}"
@@ -62,7 +61,6 @@
     debug: msg="Consul advertise --> {{consul_advertise}}"
   - name: Consul variables
     debug: msg="Consul join ip --> {{consul_join_ip}}"
-
     # RUN CONTAINER
   - name: run consul client container with join ip
     docker:
@@ -95,7 +93,6 @@
     debug: msg="Consul domain --> {{consul_domain}}"
   - name: DNSMask variables
     debug: msg="Docker bridge IP --> {{docker_bridge_ip}}"
-
     # CONFIG
   - name: configure consul resolution dnsmasq
     copy:
@@ -130,7 +127,6 @@
   ##############################
   #     START MESOS SLAVE      #
   ##############################
-
     # INFO
   - name: Mesos Slave Variables
     debug: msg="Mesos Slave Image --> {{mesos_slave_image}}"
@@ -148,7 +144,13 @@
     debug: msg="Mesos Slave WorkDir --> {{mesos_slave_work_dir}}"
   - name: Mesos Slave Variables
     debug: msg="Mesos Slave Hostname --> {{mesos_ip}}"
-
+  # INSTALL CERTIFICATES
+  - name: Ensure local certs directory exists
+    file: state=directory path=/usr/local/share/ca-certificates
+  - name: Install rootCA certificate
+    copy: src=https://raw.githubusercontent.com/indigo-dc/mesos-deploy/master/ansible/roles/mesos/files/rootCA.crt dest=/usr/local/share/ca-certificates/rootCA.crt
+  - name: Update cert index
+    shell: /usr/sbin/update-ca-certificates
     # RUN CONTAINER
   - name: run mesos-slave container
     docker:

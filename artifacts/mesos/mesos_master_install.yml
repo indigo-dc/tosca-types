@@ -69,7 +69,11 @@
   ##############################
   #       INSTALL DNSMASK      #
   ##############################
-
   - name: install dnsmasq
     apt: name=dnsmasq state=present
     tags: dnsmasq
+  ##############################
+  #       INSTALL OPENJDK7     #
+  ##############################
+  - name: Install openjdk
+    apt: name="openjdk-7-jre-headless" state=present
