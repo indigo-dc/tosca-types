@@ -23,3 +23,43 @@
     - file: path={{galaxy_install_path}} state=directory recurse=yes owner={{galaxy_user}}
 
     - copy: dest="{{galaxy_install_path}}/config/local_env.sh" content="PYTHON_EGG_CACHE={{galaxy_install_path}}/egg\nGALAXY_RUN_ALL=1\nexport PYTHON_EGG_CACHE GALAXY_RUN_ALL"
+    
+    # Configure Galaxy to use a Torque LRMS Back-end
+
+    # Install pbs_python egg
+    - file: path={{galaxy_install_path}}/eggs state=directory
+      when: galaxy_lrms == "torque"
+    - shell:  python scripts/scramble.py -e pbs_python chdir={{galaxy_install_path}}
+      environment:
+         LIBTORQUE_DIR: /usr/lib
+      when: galaxy_lrms == "torque"
+
+    # Configure job_conf.xml
+    - copy:
+        content: |
+            <?xml version="1.0"?>
+            <job_conf>
+              <plugins>
+                <plugin id="local" type="runner" load="galaxy.jobs.runners.local:LocalJobRunner" workers="1"/>
+                <plugin id="pbs" type="runner" load="galaxy.jobs.runners.pbs:PBSJobRunner"/>
+              </plugins>
+              <handlers>
+                <handler id="main" />
+              </handlers>
+              <destinations default="pbs">
+                <destination id="local" runner="local"/>
+                <destination id="pbs" runner="pbs" tags="mycluster" />
+                <destination id="pbs_longjobs" runner="pbs" tags="mycluster,longjobs">
+                  <param id="Resource_List">walltime=72:00:00</param>
+                </destination>
+              </destinations>
+              <tools>
+                <tool id="upload1" destination="local"/>
+              </tools>
+            </job_conf>
+        dest: "{{galaxy_install_path}}/config/job_conf.xml"
+      when: galaxy_lrms == "torque"
+
+    # Set the databse galaxy path to NFS shared dir
+    - file: path={{galaxy_install_path}}/database/pbs state=directory recurse=yes
+      when: galaxy_lrms == "torque"

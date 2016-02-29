@@ -26,9 +26,9 @@
     when: ansible_os_family == "RedHat"
 
   - name: Apt install Zabbix agent
-    apt: name=zabbix-agent
+    apt: name=zabbix-agent update_cache=yes
     when: ansible_os_family == "Debian"
 
   - name: Yum install Zabbix agent
-    yum: name=zabbix-agent update_cache=yes
+    yum: name=zabbix-agent
     when: ansible_os_family == "RedHat"

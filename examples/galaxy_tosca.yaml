@@ -30,6 +30,12 @@ topology_template:
     galaxy:
       type: tosca.nodes.indigo.GalaxyPortal
       requirements:
+        - lrms: local_lrms
+
+    # type to describe a Galaxy not using any LRMS but using the local system
+    local_lrms:
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Local
+      requirements:
         - host: galaxy_server
  
     galaxy_server:
