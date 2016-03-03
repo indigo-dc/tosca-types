@@ -94,8 +94,8 @@ topology_template:
             inputs:
               db_name: { get_property: [ SELF, name ] }
               db_data: { get_artifact: [ SELF, db_content ] }
-              db_name: { get_property: [ SELF, name ] }
               db_user: { get_property: [ SELF, user ] }
+              db_password: { get_property: [ SELF, password ] }
  
     mysql:
       type: tosca.nodes.DBMS.MySQL
@@ -122,4 +122,4 @@ topology_template:
 
   outputs:
     server_url:
-      value: { concat: [ 'http://', get_attribute: [ web_server, public_address ], '/cellar-webapp-sql' ] }
+      value: { concat: [ 'http://', get_attribute: [ web_server, public_address, 0 ], '/cellar-webapp-sql' ] }
