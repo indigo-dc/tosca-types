@@ -1,0 +1,3 @@
+- tasks:
+  - name: Start Load Balancer
+    debug: msg="Start Load Balancer"

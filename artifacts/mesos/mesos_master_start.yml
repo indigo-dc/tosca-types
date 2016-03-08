@@ -8,15 +8,20 @@
     marathon_username: "admin"
     marathon_password: "secr3t"
     marathon_https_port: "8443"
-    marathon_consul_version: 'latest'
-    marathon_consul_image: "ciscocloud/marathon-consul:{{marathon_consul_version}}"
     marathon_consul_app_json: '{
       "id": "marathon-consul",
-      "args": ["--registry=http://consul.service.consul:8500 --marathon-protocol=https --marathon-username={{marathon_username}} --marathon-password={{marathon_password}} --marathon-location=marathon.service.consul:{{marathon_https_port}}"],
+      "args": [
+        "--registry=http://consul.service.consul:8500",
+        "--registry-noverify=True",
+        "--marathon-protocol=https",
+        "--marathon-username={{marathon_username}}",
+        "--marathon-password={{marathon_password}}",
+        "--marathon-location=marathon.service.consul:{{marathon_https_port}}"
+      ],
       "container": {
         "type": "DOCKER",
         "docker": {
-          "image": "{{marathon_consul_image}}",
+          "image": "ciscocloud/marathon-consul:latest",
           "network": "BRIDGE",
           "portMappings": [{"containerPort": 4000, "hostPort": 0, "protocol": "tcp"}]
         },
@@ -25,7 +30,7 @@
             "containerPath": "/usr/local/share/ca-certificates",
             "hostPath": "/usr/local/share/ca-certificates/",
             "mode": "RO"
-          },
+          }
          ]
       },
       "instances": 1,
@@ -78,6 +83,7 @@
     delay: 10
     changed_when: false
     tags: marathon
+
   # Marathon-Consul APP
   - name: start marathon-consul app
     run_once: true

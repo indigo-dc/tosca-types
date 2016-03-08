@@ -22,7 +22,7 @@
     consul_join_ip: "{{ master_ips[0] }}"
     consul_bootstrap_expect: "{{ consul_servers_list | length }}"
     consul_bootstrap: "{% if ansible_default_ipv4.address == consul_join_ip %}1{% else %}0{% endif %}"
-    consul_version: 'latest'
+    consul_version: "latest"
     consul_image: "progrium/consul:{{consul_version}}"
 
     ##############################
@@ -62,7 +62,7 @@
     marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
     # Note: marathon-consul checks the certificate CN against the host marathon.service.consul
     openssl_self_signed:
-     - { name : "marathon.service.consul" }
+      - { name : "marathon.service.consul" }
     generate_random_pass: "true"
     marathon_key_password: "password"
     marathon_pkcs_password: "password"
@@ -85,15 +85,14 @@
     chronos_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
     chronos_framework_name: "chronos"
     openssl_self_signed:
-     - { name : "{{ ansible_default_ipv4.address }}" }
+      - { name : "{{ ansible_default_ipv4.address }}" }
     generate_random_pass: "true"
     chronos_key_password: "password"
     chronos_pkcs_password: "password"
     chronos_jks_password: "password"
     chronos_username: "admin"
     chronos_password: "secr3t"
-    chronos_keystore_path: '/etc/chronos/ssl_keystore.jks'
-    chronos_server_zk_group: {{master_ips}}
+    chronos_keystore_path: "/etc/chronos/ssl_keystore.jks"
     chronos_ssl_ks_password: "{%- if generate_random_pass|string() == 'true' -%}{{ chronos_jks_randpassword.stdout  }}{%- else -%}{{ chronos_jks_password }}{%- endif -%}"
 
 ##################################
@@ -276,8 +275,7 @@
         MESOS_ZK: "zk://{{ zookeeper_peers_nodes }}/mesos"
         MESOS_LOG_DIR: "{{ mesos_log_dir }}"
         MESOS_QUORUM: "{{ mesos_quorum }}"
-    tags:
-    - mesos-master
+    tags: mesos-master
 
   ##############################
   #           MARATHON         #
@@ -296,12 +294,6 @@
     debug: msg="Marathon zk --> {{ marathon_framework_name }}"
   - name: Marathon variables
     debug: msg="Marathon HTTPS Port --> {{ marathon_https_port }}"
-  - name: Marathon variables
-    debug: msg="Marathon SSL Ks Password --> {{ marathon_ssl_ks_password }}"
-  - name: Marathon variables
-    debug: msg="Marathon Keystore Path --> {{marathon_keystore_path}}"
-  - name: Marathon variables
-    debug: msg="Marathon Http Credentials --> {{marathon_username}}:{{marathon_password}}"
 
     # GENERATE PASSWORDS
   - name: generate marathon key password
@@ -315,21 +307,75 @@
     when: generate_random_pass == "true"
 
     # ENABLE SSL
-  - name: generate keystore with random password
-    vars:
-      key_password: "{{marathon_key_randpassword.stdout}}"
-      pkcs_password: "{{marathon_jks_randpassword.stdout}}"
-      jks_password: "{{marathon_jks_randpassword.stdout}}"
-    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_marathon_ssl.yml
-    when: generate_random_pass == "true"
+  - name: Check that the certificates exists
+    stat: path=marathon.key
+    register: marathon_key
+  - block:
+      - name: Marathon variables
+        debug: msg="Marathon key_password --> {{ marathon_key_randpassword.stdout }}"
+      - name: Marathon variables
+        debug: msg="Marathon pkcs_password --> {{ marathon_jks_randpassword.stdout }}"
+      - name: Marathon variables
+        debug: msg="Marathon jks_password --> {{ marathon_jks_randpassword.stdout }}"
 
-  - name: generate keystore
-    vars:
-      key_password: "{{marathon_key_password}}"
-      pkcs_password: "{{marathon_jks_password}}"
-      jks_password: "{{marathon_jks_password}}"
-    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_marathon_ssl.yml
-    when: generate_random_pass != "true"
+      - name: Ensure local certs directory exists
+        file: state=directory path=/usr/local/share/ca-certificates
+
+      - name: Install rootCA certificate
+        get_url: url=https://raw.githubusercontent.com/indigo-dc/mesos-deploy/master/ansible/roles/marathon/files/rootCA.crt dest=/usr/local/share/ca-certificates/rootCA.crt
+
+      - name: Update cert index
+        shell: /usr/sbin/update-ca-certificates
+
+      - name: Copy root CA crt
+        get_url: url=https://raw.githubusercontent.com/indigo-dc/mesos-deploy/master/ansible/roles/marathon/files/rootCA.crt dest=/tmp/rootCA.crt
+
+      - name: Copy root CA key
+        get_url: url=https://raw.githubusercontent.com/indigo-dc/mesos-deploy/master/ansible/roles/marathon/files/rootCA.key dest=/tmp/rootCA.key
+
+      - name: create ssl signed key
+        command: openssl genrsa -des3 -out marathon.key -passout "env:MARATHON_KEY_PASSWORD"
+        environment:
+          MARATHON_KEY_PASSWORD: "{{ marathon_key_randpassword.stdout }}"
+
+      - name: SSL variables
+        debug: msg="OPENSSL SELF SIGNED --> {{ openssl_self_signed }}"
+
+      - name: generate a CSR
+        command: openssl req -new -key marathon.key -passin "env:MARATHON_KEY_PASSWORD" -subj "/C={{ item.country|default('') }}/ST={{ item.state|default('') }}/L={{ item.city|default('') }}/O={{ item.organization|default('') }}/OU={{ item.unit|default('') }}/CN={{ item.name }}/emailAddress={{ item.email|default('') }}/" -out marathon.csr
+        environment:
+          MARATHON_KEY_PASSWORD: "{{ marathon_key_randpassword.stdout }}"
+        with_items: openssl_self_signed
+
+      - name: generate and sign cert
+        command: openssl x509 -req -in marathon.csr -passin "env:MARATHON_KEY_PASSWORD" -CA /tmp/rootCA.crt -CAkey /tmp/rootCA.key -CAcreateserial -out marathon.pem -days 3650
+        environment:
+          MARATHON_KEY_PASSWORD: "{{ marathon_key_randpassword.stdout }}"
+
+      - name: extract pcks12
+        command: openssl pkcs12 -inkey marathon.key -passin "env:MARATHON_KEY_PASSWORD" -name marathon -in marathon.pem -password "env:MARATHON_PKCS_PASSWORD" -export -out marathon.pkcs12
+        environment:
+          MARATHON_KEY_PASSWORD: "{{ marathon_key_randpassword.stdout }}"
+          MARATHON_PKCS_PASSWORD: "{{ marathon_jks_randpassword.stdout }}"
+
+      - name: create keystore dir
+        file: path="{{ marathon_keystore_path | dirname }}" state=directory
+
+      - name: generate keystore
+        command: keytool -importkeystore -srckeystore marathon.pkcs12 -srcalias marathon -srcstorepass $MARATHON_PKCS_PASSWORD -srcstoretype PKCS12 -destkeystore "{{ marathon_keystore_path}}" -deststorepass $MARATHON_JKS_PASSWORD
+        environment:
+          MARATHON_PKCS_PASSWORD: "{{ marathon_jks_randpassword.stdout }}"
+          MARATHON_JKS_PASSWORD: "{{ marathon_jks_randpassword.stdout }}"
+
+    when: marathon_key.stat.exists == False and generate_random_pass == "true"
+
+    # MORE INFO
+  - name: Marathon variables
+    debug: msg="Marathon SSL Ks Password --> {{ marathon_ssl_ks_password }}"
+  - name: Marathon variables
+    debug: msg="Marathon Keystore Path --> {{marathon_keystore_path}}"
+  - name: Marathon variables
+    debug: msg="Marathon Http Credentials --> {{marathon_username}}:{{marathon_password}}"
 
     # RUN CONTAINER
   - name: run marathon container
@@ -387,12 +433,6 @@
     debug: msg="Chronos chronos framework name --> {{ chronos_framework_name }}"
   - name: Chronos variables
     debug: msg="Chronos HTTPS Port --> {{ chronos_https_port }}"
-  - name: Chronos variables
-    debug: msg="Chronos SSL Ks Password --> {{ chronos_ssl_ks_password }}"
-  - name: Chronos variables
-    debug: msg="Chronos Keystore Path --> {{chronos_keystore_path}}"
-  - name: Chronos variables
-    debug: msg="Chronos Http Credentials --> {{chronos_username}}:{{chronos_password}}"
 
   # GENERATE PASSWORDS
   - name: generate chronos key password
@@ -405,22 +445,52 @@
     register: chronos_jks_randpassword
     when: generate_random_pass == "true"
 
-    # ENABLE SSL
-  - name: generate keystore with random password
-    vars:
-      key_password: "{{chronos_key_randpassword.stdout}}"
-      pkcs_password: "{{chronos_jks_randpassword.stdout}}"
-      jks_password: "{{chronos_jks_randpassword.stdout}}"
-    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_chronos_ssl.yml
-    when: generate_random_pass == "true"
+  - name: Chronos variables
+    debug: msg="Chronos SSL Ks Password --> {{ chronos_ssl_ks_password }}"
+  - name: Chronos variables
+    debug: msg="Chronos Keystore Path --> {{chronos_keystore_path}}"
+  - name: Chronos variables
+    debug: msg="Chronos Http Credentials --> {{chronos_username}}:{{chronos_password}}"
 
-  - name: generate keystore
-    vars:
-      key_password: "{{chronos_key_password}}"
-      pkcs_password: "{{chronos_jks_password}}"
-      jks_password: "{{chronos_jks_password}}"
-    include: https://raw.githubusercontent.com/alpegon/tosca-types/mesos-recipes/artifacts/mesos/enable_chronos_ssl.yml
-    when: generate_random_pass != "true"
+    # ENABLE SSL
+  - name: Check that the chronos key exists
+    stat: path=chronos.key
+    register: chronos_key
+  - block:
+      - name: Chronos variables
+        debug: msg="Chronos key_password --> {{ chronos_key_randpassword.stdout }}"
+      - name: Chronos variables
+        debug: msg="Chronos pkcs_password --> {{chronos_jks_randpassword.stdout}}"
+      - name: Chronos variables
+        debug: msg="Chronos jks_password --> {{chronos_jks_randpassword.stdout}}"
+
+      - name: create ssl signed key
+        command: openssl genrsa -des3 -out chronos.key -passout "env:CHRONOS_KEY_PASSWORD"
+        environment:
+          CHRONOS_KEY_PASSWORD: "{{ chronos_key_randpassword.stdout }}"
+
+      - name: sign cert
+        command: openssl req -new -x509 -key chronos.key -passin "env:CHRONOS_KEY_PASSWORD" -subj "/C={{ item.country|default('') }}/ST={{ item.state|default('') }}/L={{ item.city|default('') }}/O={{ item.organization|default('') }}/OU={{ item.unit|default('') }}/CN={{ item.name }}/emailAddress={{ item.email|default('') }}/" -out self-signed-chronos.pem
+        environment:
+          CHRONOS_KEY_PASSWORD: "{{ chronos_key_randpassword.stdout }}"
+        with_items: openssl_self_signed
+
+      - name: extract pcks12
+        command: openssl pkcs12 -inkey chronos.key -passin "env:CHRONOS_KEY_PASSWORD" -name chronos -in self-signed-chronos.pem -password "env:CHRONOS_PKCS_PASSWORD" -export -out chronos.pkcs12
+        environment:
+          CHRONOS_KEY_PASSWORD: "{{ chronos_key_randpassword.stdout }}"
+          CHRONOS_PKCS_PASSWORD: "{{ chronos_jks_randpassword.stdout }}"
+
+      - name: create keystore dir
+        file: path="{{ chronos_keystore_path | dirname }}" state=directory
+
+      - name: generate keystore
+        command: keytool -importkeystore -srckeystore chronos.pkcs12 -srcalias chronos -srcstorepass $CHRONOS_PKCS_PASSWORD -srcstoretype PKCS12 -destkeystore "{{ chronos_keystore_path}}" -deststorepass $CHRONOS_JKS_PASSWORD
+        environment:
+          CHRONOS_PKCS_PASSWORD: "{{ chronos_jks_randpassword.stdout }}"
+          CHRONOS_JKS_PASSWORD: "{{ chronos_jks_randpassword.stdout }}"
+    when: chronos_key.stat.exists == False and generate_random_pass == "true"
+
 
     # RUN CONTAINER
   - name: run chronos container
