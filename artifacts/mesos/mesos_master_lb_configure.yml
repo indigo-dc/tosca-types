@@ -17,7 +17,7 @@
     ##############################
     consul_advertise: "{{ansible_default_ipv4.address}}"
     consul_join_ip: "{{ mesos_master_ips[0] }}"
-    consul_version: 'latest'
+    consul_version: "latest"
     consul_image: "progrium/consul:{{consul_version}}"
     ##############################
     #      DNSMASK VARIABLES     #
@@ -27,24 +27,24 @@
     #      HAPROXY VARIABLES     #
     ##############################
     haproxy_consul_mode: "marathon"
-    haproxy_consul_version: 'latest'
+    haproxy_consul_version: "latest"
     haproxy_consul_image: "ciscocloud/haproxy-consul:{{haproxy_consul_version}}"
     ##############################
     #    KEEPALIVED VARIABLES    #
     ##############################
-    keepalived_virtual_ip: "10.0.0.127"
-    first_load_balancer_ip: "{{load_balancer_ips[0]}}"
-    keepalived_role: "{% if ansible_default_ipv4.address == first_load_balancer_ip %}master{% else %}slave{% endif %}"
-    keepalived_version: 'latest'
+    keepalived_virtual_ip: "{{lb_master_ip[0]}}"
+    first_load_balancer_ip: "{{lb_master_ip[0]}}"
+    keepalived_role: "master"
+    keepalived_version: "latest"
     keepalived_image: "indigodatacloud/keepalived:{{keepalived_version}}"
-    keepalived_priority: "{%- if keepalived_role == 'master' -%}150{%- else -%}100{%- endif -%}"
+    keepalived_priority: "150"
 
 ##################################
 ##            TASKS             ##
 ##################################
   tasks:
-  - name: Configure Mesos Slave
-    debug: msg="Configure Mesos Slave {{mesos_master_ips}}"
+  - name: Configure Master Load Balancer
+    debug: msg="Configure Master Load Balancer"
     ##############################
     #         START CONSUL       #
     ##############################
@@ -67,7 +67,7 @@
       state: started
       detach: true
       restart_policy: always
-      net: "bridge"
+      net: bridge
       ports:
        - 8300:8300
        - 8301:8301
@@ -138,7 +138,7 @@
       state: started
       detach: true
       restart_policy: always
-      net: "host"
+      net: host
       env:
         HAPROXY_MODE: "{{haproxy_consul_mode}}"
     tags: haproxy-consul
@@ -161,7 +161,7 @@
       state: started
       detach: true
       restart_policy: always
-      net: "host"
+      net: host
       privileged: true
       env:
         KEEPALIVED_PRIORITY: "{{ keepalived_priority }}"

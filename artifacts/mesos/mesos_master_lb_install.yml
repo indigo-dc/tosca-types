@@ -20,8 +20,8 @@
 ##            TASKS             ##
 ##################################
   tasks:
-  - name: Install Mesos Master
-    debug: msg="Install Mesos Master"
+  - name: Install Master Load Balancer
+    debug: msg="Install Master Load Balancer"
 
   - name: Fail if OS distro is not Ubuntu 14.04
     fail: msg="The role is designed only for Ubuntu 14.04"

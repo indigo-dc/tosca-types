@@ -32,19 +32,19 @@
     ##############################
     #    KEEPALIVED VARIABLES    #
     ##############################
-    keepalived_virtual_ip: "172.30.6.144"
+    keepalived_virtual_ip: "{{keepalived_vip[0]}}"
     first_load_balancer_ip: "{{load_balancer_ips[0]}}"
-    keepalived_role: "{% if ansible_default_ipv4.address == first_load_balancer_ip %}master{% else %}slave{% endif %}"
+    keepalived_role: "slave"
     keepalived_version: 'latest'
     keepalived_image: "indigodatacloud/keepalived:{{keepalived_version}}"
-    keepalived_priority: "{%- if keepalived_role == 'master' -%}150{%- else -%}100{%- endif -%}"
+    keepalived_priority: "100"
 
 ##################################
 ##            TASKS             ##
 ##################################
   tasks:
-  - name: Configure Mesos Slave
-    debug: msg="Configure Mesos Slave {{mesos_master_ips}}"
+  - name: Configure Slave Load Balancer
+    debug: msg="Configure Slave Load Balancer"
     ##############################
     #         START CONSUL       #
     ##############################

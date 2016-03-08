@@ -457,7 +457,7 @@ node_types:
           implementation: mesos/mesos_slave_lb_configure.yml
           inputs:
             mesos_master_ips: { get_property: [ SELF, master_ips ] }
-            keepalived_virtual_ip: { get_property: [ SELF, lb_master_ip ] }
+            keepalived_vip: { get_property: [ SELF, lb_master_ip ] }
         start:
           implementation: mesos/mesos_slave_lb_start.yml
     requirements:
