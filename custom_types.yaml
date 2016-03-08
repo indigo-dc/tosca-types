@@ -411,7 +411,7 @@ node_types:
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
 
-  tosca.nodes.indigo.MesosLoadBalancer:
+  tosca.nodes.indigo.MesosLoadBalancerMaster:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       master_ips:
@@ -422,14 +422,44 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: mesos/mesos_lb_install.yml
+          implementation: mesos/mesos_master_lb_install.yml
         configure:
-          implementation: mesos/mesos_lb_configure.yml
+          implementation: mesos/mesos_master_lb_configure.yml
           inputs:
             mesos_master_ips: { get_property: [ SELF, master_ips ] }
-            load_balancer_ips: { get_attribute: [ HOST, public_address ] }
+            lb_master_ip: { get_attribute: [ HOST, public_address ] }
         start:
-          implementation: mesos/mesos_lb_start.yml
+          implementation: mesos/mesos_master_lb_start.yml
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.Compute
+          relationship: tosca.relationships.HostedOn
+
+  tosca.nodes.indigo.MesosLoadBalancerSlave:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+      lb_master_ip:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+    interfaces:
+      Standard:
+        create:
+          implementation: mesos/mesos_slave_lb_install.yml
+        configure:
+          implementation: mesos/mesos_slave_lb_configure.yml
+          inputs:
+            mesos_master_ips: { get_property: [ SELF, master_ips ] }
+            keepalived_virtual_ip: { get_property: [ SELF, lb_master_ip ] }
+        start:
+          implementation: mesos/mesos_slave_lb_start.yml
     requirements:
       - host:
           capability: tosca.capabilities.Container
