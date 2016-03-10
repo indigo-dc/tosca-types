@@ -20,8 +20,8 @@
 ##            TASKS             ##
 ##################################
   tasks:
-  - name: Install Mesos Slave
-    debug: msg="Install Mesos Slave"
+  - name: Install Slave Load Balancer
+    debug: msg="Install Slave Load Balancer"
 
   - name: Fail if OS distro is not Ubuntu 14.04
     fail: msg="The role is designed only for Ubuntu 14.04"
@@ -41,7 +41,7 @@
     pip: name=docker-py state=present version=1.2.3
 
   - name: Add docker apt repo
-    apt_repository: repo="deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main" state=present
+    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main' state=present
 
   - name: Import the Docker repository key
     apt_key: url=https://apt.dockerproject.org/gpg state=present id=2C52609D
@@ -55,7 +55,8 @@
       state: present
       insertafter: ^DOCKER_OPTS=.*
       line: "DOCKER_OPTS=\"$DOCKER_OPTS --bip={{docker_bridge_ip}}/24 \""
-    notify: restart docker
+    notify:
+    - restart docker
 
   - meta: flush_handlers
 
@@ -71,3 +72,12 @@
   - name: install dnsmasq
     apt: name=dnsmasq state=present
     tags: dnsmasq
+
+  ##############################
+  #     INSTALL KEEPALIVED     #
+  ##############################
+  - name: load ip_vs module
+    modprobe: name=ip_vs state=present
+
+  - name: make modprobe persistent
+    lineinfile: dest=/etc/modules line="ip_vs" state=present
