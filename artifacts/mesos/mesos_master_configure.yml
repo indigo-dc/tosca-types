@@ -61,7 +61,7 @@
     marathon_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
     marathon_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
     # Note: marathon-consul checks the certificate CN against the host marathon.service.consul
-    openssl_self_signed:
+    marathon_openssl_self_signed:
       - { name : "marathon.service.consul" }
     generate_random_pass: "true"
     marathon_key_password: "password"
@@ -84,8 +84,8 @@
     chronos_master_peers: "zk://{{ zookeeper_peers_nodes }}/mesos"
     chronos_zk_peers: "zk://{{ zookeeper_peers_nodes }}"
     chronos_framework_name: "chronos"
-    openssl_self_signed:
-      - { name : "{{ ansible_default_ipv4.address }}" }
+    chronos_openssl_self_signed:
+      - { name : "chronos.service.consul" }
     generate_random_pass: "true"
     chronos_key_password: "password"
     chronos_pkcs_password: "password"
@@ -339,13 +339,13 @@
           MARATHON_KEY_PASSWORD: "{{ marathon_key_randpassword.stdout }}"
 
       - name: SSL variables
-        debug: msg="OPENSSL SELF SIGNED --> {{ openssl_self_signed }}"
+        debug: msg="OPENSSL SELF SIGNED --> {{ marathon_openssl_self_signed }}"
 
       - name: generate a CSR
         command: openssl req -new -key marathon.key -passin "env:MARATHON_KEY_PASSWORD" -subj "/C={{ item.country|default('') }}/ST={{ item.state|default('') }}/L={{ item.city|default('') }}/O={{ item.organization|default('') }}/OU={{ item.unit|default('') }}/CN={{ item.name }}/emailAddress={{ item.email|default('') }}/" -out marathon.csr
         environment:
           MARATHON_KEY_PASSWORD: "{{ marathon_key_randpassword.stdout }}"
-        with_items: openssl_self_signed
+        with_items: marathon_openssl_self_signed
 
       - name: generate and sign cert
         command: openssl x509 -req -in marathon.csr -passin "env:MARATHON_KEY_PASSWORD" -CA /tmp/rootCA.crt -CAkey /tmp/rootCA.key -CAcreateserial -out marathon.pem -days 3650
@@ -473,7 +473,7 @@
         command: openssl req -new -x509 -key chronos.key -passin "env:CHRONOS_KEY_PASSWORD" -subj "/C={{ item.country|default('') }}/ST={{ item.state|default('') }}/L={{ item.city|default('') }}/O={{ item.organization|default('') }}/OU={{ item.unit|default('') }}/CN={{ item.name }}/emailAddress={{ item.email|default('') }}/" -out self-signed-chronos.pem
         environment:
           CHRONOS_KEY_PASSWORD: "{{ chronos_key_randpassword.stdout }}"
-        with_items: openssl_self_signed
+        with_items: chronos_openssl_self_signed
 
       - name: extract pcks12
         command: openssl pkcs12 -inkey chronos.key -passin "env:CHRONOS_KEY_PASSWORD" -name chronos -in self-signed-chronos.pem -password "env:CHRONOS_PKCS_PASSWORD" -export -out chronos.pkcs12

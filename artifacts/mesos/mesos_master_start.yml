@@ -12,7 +12,6 @@
       "id": "marathon-consul",
       "args": [
         "--registry=http://consul.service.consul:8500",
-        "--registry-noverify=True",
         "--marathon-protocol=https",
         "--marathon-username={{marathon_username}}",
         "--marathon-password={{marathon_password}}",
@@ -46,7 +45,7 @@
         "type": "DOCKER",
         "docker": {
           "network": "BRIDGE",
-          "image": "ciscocloud/mesos-consul"
+          "image": "ciscocloud/mesos-consul:latest"
         }
       },
       "id": "mesos-consul",
