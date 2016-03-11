@@ -1,0 +1,30 @@
+- vars:
+    URL_BASE: http://packages.onedata.org
+  tasks:
+  - name: Download REL 7 Repo file
+    get_url: url={{URL_BASE}}/yum/centos/7x/onedata.repo dest=/etc/yum.repos.d/onedata.repo
+    when: (ansible_distribution == "CentOS" or ansible_distribution == "ScientificLinux") and ansible_distribution_major_version == "7"
+    
+  - name: Download REL 6 Repo file
+    get_url: url={{URL_BASE}}/yum/scientific/6x/onedata.repo dest=/etc/yum.repos.d/onedata.repo
+    when: (ansible_distribution == "CentOS" or ansible_distribution == "ScientificLinux") and ansible_distribution_major_version == "6"
+    
+  - name: Download Fedora Repo file
+    get_url: url={{URL_BASE}}/yum/fedora/{{ansible_distribution_version}}/onedata.repo dest=/etc/yum.repos.d/onedata.repo
+    when: ansible_distribution == "Fedora" and (ansible_distribution_version == "21" or ansible_distribution_version == "23") 
+    
+  - name: Ubuntu add repo key
+    apt_key: url={{URL_BASE}}/onedata.gpg.key state=present
+    when: ansible_distribution == "Ubuntu"
+    
+  - name: Ubuntu add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb {{URL_BASE}}/apt/ubuntu/ vivid main"
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Install Ubuntu oneclient package
+    apt: pkg=oneclient update_cache=yes
+    when: ansible_distribution == "Ubuntu"
+    
+  - name: Install REL oneclient package
+    apt: yum=oneclient enablerepo=onedata
+    when: ansible_os_family == "RedHat"

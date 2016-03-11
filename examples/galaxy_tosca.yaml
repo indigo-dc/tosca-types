@@ -56,3 +56,6 @@ topology_template:
             #distribution: scientific 
             #version: 6.6
 
+  outputs:
+    galaxy_url:
+      value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ], ':8080' ] }
