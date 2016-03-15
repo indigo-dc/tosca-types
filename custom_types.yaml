@@ -2,6 +2,16 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 capability_types:
 
+  tosca.capabilities.indigo.OperatingSystem:
+    derived_from: tosca.capabilities.OperatingSystem
+    properties:
+      image:
+        type: string
+        required: no
+      credential:
+        type: tosca.datatypes.Credential
+        required: no
+
   tosca.capabilities.indigo.Scalable:
     derived_from: tosca.capabilities.Scalable
     properties:
@@ -162,6 +172,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      credential:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.Credential
     properties:
       public_ip:
         type: boolean
@@ -170,6 +184,8 @@ node_types:
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
+      os:
+         type: tosca.capabilities.indigo.OperatingSystem
 
   tosca.nodes.indigo.MonitoredCompute:
     derived_from: tosca.nodes.Compute
@@ -487,3 +503,10 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
+
+  tosca.nodes.indigo.OneDataStorage:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      credential:
+        type: tosca.datatypes.Credential
+        required: yes

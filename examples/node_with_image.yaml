@@ -1,0 +1,49 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+repositories:
+  indigo_repository:
+    description: INDIGO Custom types repository
+    url: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/
+
+imports:
+  - indigo_custom_types:
+      file: custom_types.yaml
+      repository: indigo_repository
+
+description: >
+  TOSCA test for launching compute node with a specified image and getting
+  as an output the IP and SSH credentials to access
+
+topology_template:
+ 
+  node_templates:
+   
+    simple_node:
+      type: tosca.nodes.indigo.Compute
+      properties:
+        public_ip: yes
+      capabilities:
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            type: linux  
+            # The format of the image must be defined
+            # Currently this example uses the IM URI convention
+            # used in disk.0.image.url
+            # see: http://imdocs.readthedocs.org/en/latest/radl.html?highlight=uri#system-features
+            image: https://onedock.i3m.upv.es:11443/uuid_ubuntu_ssh_indigo_4 
+            credential: 
+              user: root
+              token: indig0!
+
+  outputs:
+    node_ip:
+      value: { get_attribute: [ simple_node, public_address, 0 ] }
+    node_creds:
+      value: { get_attribute: [ simple_node, credential, 0 ] }
