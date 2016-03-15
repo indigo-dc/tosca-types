@@ -172,6 +172,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      credential:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.Credential
     properties:
       public_ip:
         type: boolean
