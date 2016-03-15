@@ -11,3 +11,4 @@ These directory has some examples to specify features needed in the INDIGO proje
 * galaxy_elastic_cluster.yaml: TOSCA test for launching a Galaxy Server over an Virtual Elastic Cluster.
 * indigo_jobs.yaml: TOSCA examples for specifying Chronos and Marathon jobs to enable the   specification of applications and services in INDIGO.
 * mesos_cluster.yaml: TOSCA example for specifying a Mesos Cluster.
+* node_with_image.yaml: TOSCA example for launching compute node with a specified image and getting as an output the IP and SSH credentials to access.
