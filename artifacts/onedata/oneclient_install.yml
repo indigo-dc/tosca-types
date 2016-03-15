@@ -20,11 +20,29 @@
   - name: Ubuntu add source repo
     copy: dest=/etc/apt/sources.list.d/onedata.list content="deb {{URL_BASE}}/apt/ubuntu/ vivid main"
     when: ansible_distribution == "Ubuntu"
+    notify: apt-get update
+
+  - name: Apt-get update Ubuntu
+    apt: update_cache=yes
+    when: ansible_distribution == "Ubuntu"
+    ignore_errors: yes
 
   - name: Install Ubuntu oneclient package
-    apt: pkg=oneclient update_cache=yes
+    apt: pkg=oneclient
     when: ansible_distribution == "Ubuntu"
     
   - name: Install REL oneclient package
     apt: yum=oneclient enablerepo=onedata
     when: ansible_os_family == "RedHat"
+
+  - name: Create {{ onedata_location }} directory
+    user: name={{ansible_user}} append=yes groups=fuse
+
+  - name: Create {{ onedata_location }} directory
+    file: path={{ onedata_location }} state=directory owner={{ansible_user}} group={{ansible_user}} mode=755
+
+  - name: Mount onedata path at {{ onedata_location }}
+    shell: echo {{ onedata_token }} | oneclient --authentication token --no-check-certificate {{ onedata_location }} creates={{ onedata_location }}/spaces
+    become: no
+    environment:
+       PROVIDER_HOSTNAME: 158.42.105.149

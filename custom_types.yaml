@@ -487,3 +487,10 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
+
+  tosca.nodes.indigo.OneDataStorage:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      credential:
+        type: tosca.datatypes.Credential
+        required: yes

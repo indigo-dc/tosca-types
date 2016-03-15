@@ -1,0 +1,56 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+repositories:
+  indigo_repository:
+    description: INDIGO Custom types repository
+    url: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/
+
+imports:
+  - indigo_custom_types:
+      file: custom_types.yaml
+      repository: indigo_repository
+
+description: >
+  TOSCA test for launching compute node mounting a onedata space
+
+topology_template:
+ 
+  node_templates:
+   
+    onedata_client_node:
+      type: tosca.nodes.indigo.Compute
+      properties:
+        public_ip: yes
+      capabilities:
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            type: linux 
+            distribution: ubuntu 
+            #version: 14.04
+      requirements:
+        - local_storage:
+            node: my_onedata_storage
+            relationship:
+              type: AttachesTo
+              properties:
+                location: /mnt/disk
+              interfaces:
+                Configure:
+                  pre_configure_source:
+                    implementation: onedata/oneclient_install.yml
+                    inputs:
+                      onedata_token: { get_property: [ TARGET, credential, token ] }
+                      onedata_location: { get_property: [ SELF, location ] }
+
+    my_onedata_storage:
+      type: tosca.nodes.indigo.OneDataStorage
+      properties:
+        credential:
+          token: some_token
