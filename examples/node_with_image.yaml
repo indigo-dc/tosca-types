@@ -37,7 +37,7 @@ topology_template:
             # Currently this example uses the IM URI convention
             # used in disk.0.image.url
             # see: http://imdocs.readthedocs.org/en/latest/radl.html?highlight=uri#system-features
-            image: one://onedock.i3m.upv.es/5 
+            image: https://onedock.i3m.upv.es:11443/uuid_ubuntu_ssh_indigo_4 
             credential: 
               user: root
               token: indig0!
