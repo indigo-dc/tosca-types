@@ -2,6 +2,16 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 capability_types:
 
+  tosca.capabilities.indigo.OperatingSystem:
+    derived_from: tosca.capabilities.OperatingSystem
+    properties:
+      image:
+        type: string
+        required: no
+      credential:
+        type: tosca.datatypes.Credential
+        required: no
+
   tosca.capabilities.indigo.Scalable:
     derived_from: tosca.capabilities.Scalable
     properties:
@@ -170,6 +180,8 @@ node_types:
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
+      os:
+         type: tosca.capabilities.indigo.OperatingSystem
 
   tosca.nodes.indigo.MonitoredCompute:
     derived_from: tosca.nodes.Compute
