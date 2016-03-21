@@ -114,3 +114,11 @@ topology_template:
             type: linux
             #distribution: ubuntu
             #version: 14.04
+
+
+  outputs:
+    mesos_lb_ips:
+      value: { get_attribute: [ mesos_lb_master_server, public_address ] }
+    mesos_master_ips:
+      value: { get_attribute: [ mesos_master_server, public_address ] }
+      
