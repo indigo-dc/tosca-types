@@ -43,10 +43,7 @@ topology_template:
             mem_size: 1 GB
         os:
           properties:
-            # host Operating System image properties
             type: linux 
-            #distribution: scientific 
-            #version: 6.6
 
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Torque
@@ -72,7 +69,12 @@ topology_template:
             mem_size: 1 GB
         os:
           properties:
-            # host Operating System image properties
             type: linux 
-            #distribution: scientific 
-            #version: 6.6
+            #distribution: ubuntu 
+            #version: 14.04
+
+  outputs:
+    cluster_ip:
+      value: { get_attribute: [ torque_server, public_address, 0 ] }
+    cluster_creds:
+      value: { get_attribute: [ torque_server, credential, 0 ] }
