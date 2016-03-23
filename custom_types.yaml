@@ -208,18 +208,18 @@ node_types:
         type: string
         required: no
         default: Linux      668c875e-9a39-4dc0-a710-17c41376c1e0
+    artifacts:
+      zabbix_agent_role:
+        file: indigo-dc.zabbix-agent
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        create:
-          implementation: zabbix/zabbix_agent_install.yml
         configure:
-          implementation: zabbix/zabbix_agent_configure.yml
+          implementation: zabbix/zabbix_agent_install.yml
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
             zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
-        start:
-          implementation: zabbix/zabbix_agent_start.yml
 
   tosca.nodes.indigo.GalaxyPortal:
     derived_from: tosca.nodes.WebServer
@@ -249,10 +249,6 @@ node_types:
           capability: tosca.capabilities.indigo.LRMS
           node: tosca.nodes.indigo.LRMS.FrontEnd
           relationship: tosca.relationships.HostedOn
-#    artifacts:
-#      galaxy_role:
-#        file: galaxyprojectdotorg.galaxy
-#        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
