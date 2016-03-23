@@ -27,7 +27,7 @@ capability_types:
         type: integer
         description: the number of resources
         required: no
-        defailt: 1
+        default: 1
       removal_list:
         type: list
         description: list of IDs of the resources to be removed
