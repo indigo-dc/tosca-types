@@ -71,6 +71,10 @@ artifact_types:
     description: YAML Ansible recipe artifact
     mime_type: text/yaml
     file_ext: [ yaml, yml ]
+    
+  tosca.artifacts.AnsibleGalaxy.role:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy role to be deployed in the target node
 
 relationship_types:
 
@@ -245,6 +249,10 @@ node_types:
           capability: tosca.capabilities.indigo.LRMS
           node: tosca.nodes.indigo.LRMS.FrontEnd
           relationship: tosca.relationships.HostedOn
+#    artifacts:
+#      galaxy_role:
+#        file: galaxyprojectdotorg.galaxy
+#        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
