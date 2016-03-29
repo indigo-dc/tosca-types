@@ -1,7 +1,10 @@
- - roles:
-    - role: indigo-dc.zabbix-agent
-      zabbix_agent_server: "{{ zabbix_server }}"
-      zabbix_agent_server_port: "{{ zabbix_server_port }}"
-      zabbix_agent_metadata: "{{ zabbix_server_metadata }}"
-      # Use the IM_INFRASTRUCTURE_ID var until we have the orchestrator deployment id.
-      zabbix_agent_hostname_prefix: "{{ IM_INFRASTRUCTURE_ID }}."
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - role: indigo-dc.zabbix-agent
+    zabbix_agent_server: "{{ zabbix_server }}"
+    zabbix_agent_server_port: "{{ zabbix_server_port }}"
+    zabbix_agent_metadata: "{{ zabbix_server_metadata }}"
+    # Use the IM_INFRASTRUCTURE_ID var until we have the orchestrator deployment id.
+    zabbix_agent_hostname_prefix: "{{ IM_INFRASTRUCTURE_ID }}."

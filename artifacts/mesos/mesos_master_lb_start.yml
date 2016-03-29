@@ -1,3 +1,6 @@
-- tasks:
+---
+- hosts: localhost
+  connection: local
+  tasks:
   - name: Start Master Load Balancer
     debug: msg="Start Master Load Balancer"

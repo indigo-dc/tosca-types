@@ -1,5 +1,7 @@
 ---
-- tasks:
+- hosts: localhost
+  connection: local
+  tasks:
     # Launch the server
     - shell: bash run.sh --daemon chdir={{galaxy_install_path}}/ creates={{galaxy_install_path}}/main.pid
       sudo: true

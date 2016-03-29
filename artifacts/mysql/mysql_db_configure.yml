@@ -1,5 +1,7 @@
 ---
-- tasks:
+- hosts: localhost
+  connection: local
+  tasks:
   - name: Create DB {{db_name}}
     mysql_db: name={{db_name}} state=present login_user=root login_password={{db_root_password}}
   

@@ -1,5 +1,8 @@
-- tasks:
-  # Disable IPv6  
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  # Disable IPv6
   - lineinfile: dest=/etc/sysctl.conf regexp="{{ item }}" line="{{ item }} = 1"
     with_items:
      - 'net.ipv6.conf.all.disable_ipv6'
@@ -9,11 +12,11 @@
 
   - command: sysctl -p
     ignore_errors: yes
-      
+
   - name: MySQL | Make sure the MySQL packages are installed
     apt: pkg=mysql-server,python-mysqldb update_cache=yes
     when: ansible_os_family == "Debian"
     
   - name: MySQL | Make sure the MySQL packages are installed
-    apt: yum=mysql-server,MySQL-python
+    yum: name=mariadb-server,MySQL-python
     when: ansible_os_family == "RedHat"
