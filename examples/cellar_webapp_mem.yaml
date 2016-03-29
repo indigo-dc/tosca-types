@@ -23,7 +23,7 @@ topology_template:
       interfaces:
         Standard:
           configure: 
-            implementation: webapps/cellar-mem.yml
+            implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/webapps/cellar-mem.yml
             inputs:
               download_url: { get_input: download_url }
 
