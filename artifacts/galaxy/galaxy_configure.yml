@@ -1,5 +1,7 @@
 ---
-- vars:
+- hosts: localhost
+  connection: local
+  vars:
       GALAXY_USER_ID: 4001
       GALAXY_USER_PASSWORD: $6$Ehg4GHQT5y$6ZCTLffp.epiNEhS1M3ZB.P6Kii1wELySe/DCwUInGt8r7zgdAHfHw66DuPwpS6pfOiZ9PS/KaTiBKjoCn23t0
 

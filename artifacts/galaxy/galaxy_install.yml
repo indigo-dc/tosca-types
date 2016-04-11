@@ -1,5 +1,7 @@
 ---
-- vars:
+- hosts: localhost
+  connection: local
+  vars:
     VERSION: release_15.07
   tasks:
     # Install requisites

@@ -1,26 +1,28 @@
 ---
- - tasks:
-    - set_fact: TORQUE_PATH="/var/spool/torque"
-      when: ansible_os_family == "Debian"
-    - set_fact: TORQUE_PATH="/var/lib/torque"
-      when: ansible_os_family == "RedHat"
+- hosts: localhost
+  connection: local
+  tasks:
+  - set_fact: TORQUE_PATH="/var/spool/torque"
+    when: ansible_os_family == "Debian"
+  - set_fact: TORQUE_PATH="/var/lib/torque"
+    when: ansible_os_family == "RedHat"
 
-    # /etc/hosts configuration
-    - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{ hostvars[groups['torque_server'][0]]['IM_NODE_NET_1_IP'] }} torqueserver'
-      when: "'IM_NODE_NET_1_IP' in hostvars[groups['torque_server'][0]]"
+  # /etc/hosts configuration
+  - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{ hostvars[groups['torque_server'][0]]['IM_NODE_NET_1_IP'] }} torqueserver'
+    when: "'IM_NODE_NET_1_IP' in hostvars[groups['torque_server'][0]]"
 
-    - lineinfile: dest=/etc/hosts regexp='torqueserver' line='"{{ hostvars[groups['torque_server'][0]]['ansible_default_ipv4.address'] }}" torqueserver'
-      when: "'IM_NODE_NET_1_IP' not in hostvars[groups['torque_server'][0]]"
-      
-    - name: Set the Torque server name
-      copy: content=torqueserver dest=/etc/torque/server_name
-    - name: Create the mom_priv/config file
-      copy:
-        dest: "{{TORQUE_PATH}}/mom_priv/config"
-        content: |
-            $clienthost torqueserver
-            $max_conn_timeout_micro_sec 10000
-            $mom_host {{IM_NODE_HOSTNAME}}
-        mode: 0644
-        owner: root
-        group: root
+  - lineinfile: dest=/etc/hosts regexp='torqueserver' line='"{{ hostvars[groups['torque_server'][0]]['ansible_default_ipv4.address'] }}" torqueserver'
+    when: "'IM_NODE_NET_1_IP' not in hostvars[groups['torque_server'][0]]"
+
+  - name: Set the Torque server name
+    copy: content=torqueserver dest=/etc/torque/server_name
+  - name: Create the mom_priv/config file
+    copy:
+      dest: "{{TORQUE_PATH}}/mom_priv/config"
+      content: |
+          $clienthost torqueserver
+          $max_conn_timeout_micro_sec 10000
+          $mom_host {{IM_NODE_HOSTNAME}}
+      mode: 0644
+      owner: root
+      group: root

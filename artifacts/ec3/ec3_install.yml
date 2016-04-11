@@ -1,5 +1,7 @@
 ---
-- tasks:
+- hosts: localhost
+  connection: local
+  tasks:
     # General task
     - name: create epel.repo
       template: src=utils/templates/epel.repo dest=/etc/yum.repos.d/epel.repo

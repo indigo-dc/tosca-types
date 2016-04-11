@@ -1,4 +1,7 @@
-- tasks:      
+---
+- hosts: localhost
+  connection: local
+  tasks:
   - name: Apache | Make sure the Apache packages are installed
     apt: name=apache2 update_cache=yes
     when: ansible_os_family == "Debian"

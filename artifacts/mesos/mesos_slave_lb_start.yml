@@ -1,3 +1,6 @@
-- tasks:
+---
+- hosts: localhost
+  connection: local
+  tasks:
   - name: Start Slave Load Balancer
     debug: msg="Start Slave Load Balancer"
