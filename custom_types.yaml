@@ -251,23 +251,15 @@ node_types:
           relationship: tosca.relationships.HostedOn
     interfaces:
       Standard:
-        create:
+        configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/galaxy/galaxy_install.yml
           inputs:
             galaxy_install_path: { get_property: [ SELF, install_path ] }
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/galaxy/galaxy_configure.yml
-          inputs:
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_admin: { get_property: [ SELF, admin ] }
             galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
             galaxy_lrms: { get_property: [ SELF, lrms, type ] }
-        start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/galaxy/galaxy_start.yml
-          inputs:
-            galaxy_user: { get_property: [ SELF, user ] }
-            galaxy_install_path: { get_property: [ SELF, install_path ] }
 
   tosca.nodes.indigo.GalaxyShedTool:
     derived_from: tosca.nodes.WebApplication

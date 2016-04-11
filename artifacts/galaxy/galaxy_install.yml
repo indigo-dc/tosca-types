@@ -1,13 +1,10 @@
 ---
 - hosts: localhost
   connection: local
-  vars:
-    VERSION: release_15.07
-  tasks:
-    # Install requisites
-    - apt: name=git update_cache=yes cache_valid_time=3600
-      when: ansible_os_family == "Debian"
-    - yum: name=git
-      when: ansible_os_family == "RedHat"
-    # Download Galaxy
-    - git: repo=https://github.com/galaxyproject/galaxy/ dest={{galaxy_install_path}} version={{VERSION}}
+  roles:
+    - role: indigo-dc.galaxy
+      galaxy_install_path: "{{ galaxy_install_path }}"
+      galaxy_lrms: "{{ galaxy_lrms }}"
+      galaxy_admin: "{{ galaxy_admin }}"
+      galaxy_admin_api_key: "{{ galaxy_admin_api_key }}"
+      galaxy_user: "{{ galaxy_user }}"
