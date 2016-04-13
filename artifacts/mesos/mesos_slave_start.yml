@@ -1,3 +1,6 @@
-- tasks:
+---
+- hosts: localhost
+  connection: local
+  tasks:
   - name: Start Mesos Slave
     debug: msg="Start Mesos Slave"

@@ -1,8 +1,7 @@
-- tasks:
-  - name: update mysql root password for all root accounts
-    mysql_user: name=root password={{root_password}}
-    ignore_errors: yes
-
+---
+- hosts: localhost
+  connection: local
+  tasks:
   - name: Enable remote access
     lineinfile: dest=/etc/mysql/my.cnf regexp='bind-address' line='bind-address=0.0.0.0'
     when: ansible_os_family == "Debian"
@@ -12,9 +11,13 @@
     when: ansible_os_family == "RedHat"
     
   - name: Start MySQL service
-    service: name=mysqld state=restarted
+    service: name=mariadb state=restarted enabled=yes
     when: ansible_os_family == "RedHat"
     
   - name: Start MySQL service
-    service: name=mysql state=restarted
+    service: name=mysql state=restarted enabled=yes
     when: ansible_os_family == "Debian"
+
+  - name: update mysql root password for all root accounts
+    mysql_user: name=root password={{root_password}}
+    ignore_errors: yes

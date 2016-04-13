@@ -1,4 +1,7 @@
-- vars:
+---
+- hosts: localhost
+  connection: local
+  vars:
     URL_BASE: http://packages.onedata.org
   tasks:
   - name: Download REL 7 Repo file
@@ -32,7 +35,7 @@
     when: ansible_distribution == "Ubuntu"
     
   - name: Install REL oneclient package
-    apt: yum=oneclient enablerepo=onedata
+    yum: name=oneclient enablerepo=onedata
     when: ansible_os_family == "RedHat"
 
   - name: Create {{ onedata_location }} directory

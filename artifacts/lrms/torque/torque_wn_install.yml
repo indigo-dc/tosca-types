@@ -1,13 +1,15 @@
 ---
- - tasks:
-    - name: create epel.repo
-      template: src=utils/templates/epel-es.repo dest=/etc/yum.repos.d/epel.repo
-      when: ansible_os_family == "RedHat"
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: create epel.repo
+    template: src=utils/templates/epel-es.repo dest=/etc/yum.repos.d/epel.repo
+    when: ansible_os_family == "RedHat"
 
-    - name: Apt install torque mom
-      apt: name=torque-mom,torque-client update_cache=yes cache_valid_time=3600
-      when: ansible_os_family == "Debian"
-      
-    - name: Yum install Torque in REL system
-      yum: name=torque-mom,torque-client,openssh-clients
-      when: ansible_os_family == "RedHat"
+  - name: Apt install torque mom
+    apt: name=torque-mom,torque-client update_cache=yes cache_valid_time=3600
+    when: ansible_os_family == "Debian"
+
+  - name: Yum install Torque in REL system
+    yum: name=torque-mom,torque-client,openssh-clients
+    when: ansible_os_family == "RedHat"

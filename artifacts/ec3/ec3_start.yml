@@ -1,4 +1,6 @@
 ---
-- tasks:
+- hosts: localhost
+  connection: local
+  tasks:
     # Launch CLUES
     - service: name=cluesd state=started

@@ -1,16 +1,18 @@
 ---
- - tasks:
-    - service: name=torque-mom state=started pattern=/usr/sbin/pbs_mom
-      when: ansible_os_family == "Debian"
-      
-    - service: name=pbs_mom state=started pattern=/usr/sbin/pbs_mom
-      when: ansible_os_family == "RedHat"
-      
-    # Many times MOM_SERVICE does not start properly. Wait and test it again
-    - command: sleep 5
-    
-    - service: name=torque-mom state=started pattern=/usr/sbin/pbs_mom
-      when: ansible_os_family == "Debian"
-      
-    - service: name=pbs_mom state=started pattern=/usr/sbin/pbs_mom
-      when: ansible_os_family == "RedHat"
+- hosts: localhost
+  connection: local
+  tasks:
+  - service: name=torque-mom state=started pattern=/usr/sbin/pbs_mom
+    when: ansible_os_family == "Debian"
+
+  - service: name=pbs_mom state=started pattern=/usr/sbin/pbs_mom
+    when: ansible_os_family == "RedHat"
+
+  # Many times MOM_SERVICE does not start properly. Wait and test it again
+  - command: sleep 5
+
+  - service: name=torque-mom state=started pattern=/usr/sbin/pbs_mom
+    when: ansible_os_family == "Debian"
+
+  - service: name=pbs_mom state=started pattern=/usr/sbin/pbs_mom
+    when: ansible_os_family == "RedHat"

@@ -1,5 +1,7 @@
 ---
-- vars:
+- hosts: localhost
+  connection: local
+  vars:
       tool_content: |
         tools:
         - name: '{{galaxy_tool_name}}'
