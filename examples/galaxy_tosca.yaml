@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/custom_types.yaml
+  - https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
 
 description: >
   TOSCA test for launching a Galaxy Server also configuring the bowtie2
@@ -11,14 +11,14 @@ topology_template:
  
   node_templates:
 
-    bowtie2_galaxy_tool:
-      type: tosca.nodes.indigo.GalaxyShedTool
-      properties:
-         name: bowtie2
-         owner: devteam
-         tool_panel_section_id: ngs_mapping
-      requirements:
-        - host: galaxy
+#    bowtie2_galaxy_tool:
+#      type: tosca.nodes.indigo.GalaxyShedTool
+#      properties:
+#         name: bowtie2
+#         owner: devteam
+#         tool_panel_section_id: ngs_mapping
+#      requirements:
+#        - host: galaxy
 
     galaxy:
       type: tosca.nodes.indigo.GalaxyPortal
