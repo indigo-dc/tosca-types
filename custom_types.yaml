@@ -64,6 +64,15 @@ capability_types:
         constraints:
           - equal: local
 
+  tosca.capabilities.indigo.Container.Docker:
+    derived_from: tosca.capabilities.Container.Docker
+    properties:
+      num_cpus:
+        type: float
+        required: false
+        constraints:
+          - greater_or_equal: 0.0
+
 artifact_types:
 
   tosca.artifacts.Implementation.YAML:
@@ -377,7 +386,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     capabilities:
       host:
-        type: tosca.capabilities.Container.Docker
+        type: tosca.capabilities.indigo.Container.Docker
       scalable:
         type: tosca.capabilities.Scalable
 
