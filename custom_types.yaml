@@ -258,6 +258,10 @@ node_types:
           capability: tosca.capabilities.indigo.LRMS
           node: tosca.nodes.indigo.LRMS.FrontEnd
           relationship: tosca.relationships.HostedOn
+    artifacts:
+      zabbix_agent_role:
+        file: indigo-dc.galaxy
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
