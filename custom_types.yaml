@@ -259,7 +259,7 @@ node_types:
           node: tosca.nodes.indigo.LRMS.FrontEnd
           relationship: tosca.relationships.HostedOn
     artifacts:
-      zabbix_agent_role:
+      galaxy_role:
         file: indigo-dc.galaxy
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
