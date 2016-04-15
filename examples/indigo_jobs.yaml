@@ -4,21 +4,55 @@ imports:
   - https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
 
 description: >
-  TOSCA examples for specifying Chronos and Marathon jobs to enable the 
+  TOSCA examples for specifying Chronos and Marathon jobs to enable the
   specification of applications and services in INDIGO.
 
 topology_template:
- 
+
   node_templates:
 
     chronos_job:
       type: tosca.nodes.indigo.Container.Application.Docker.Chronos
       properties:
-        command: echo "hola"
-        uris: ['http://algo.para.bajar.com', 'http://otro.para.bajar.com']
+        schedule: 'R0/2015-12-25T17:22:00Z/PT5M'
+        name: 'amber-job-01'
+        description: 'Execute amber app'
+        command: /bin/bash run.sh
+        uris: ['http://…/input.tgz', 'http://…/run.sh']
+        retries: 3
+        environment_variables:
+          PROVIDER_HOSTNAME: <ONEDATA_PROVIDER_IP>
+          ONEDATA_TOKEN: <User Token>
+          ONEDATA_SPACE: <path>
+          OUTPUT_FILENAME: <output filename>
       artifacts:
         image:
-          file: mysql
+          file: indigodatacloud/ambertools_app
+          type: tosca.artifacts.Deployment.Image.Container.Docker
+      requirements:
+        - host: docker_runtime1
+
+    chronos_job_upload:
+      type: tosca.nodes.indigo.Container.Application.Docker.Chronos
+      properties:
+        schedule: 'R0/2015-12-25T17:22:00Z/PT5M'
+        name: 'upload-amber-job-01'
+        description: 'Upload output data'
+        command: /bin/bash run.sh
+        parents: ['amber-job-01']
+        retries: 3
+        environment_variables:
+          PROVIDER_HOSTNAME: <ONEDATA_PROVIDER_IP>
+          ONEDATA_TOKEN: <ROBOT Token>
+          ONEDATA_SPACE: <path>
+          INPUT_FILENAME: <input filename>
+          OUTPUT_FILENAME: <input filename --> coincindes with amber-job-01 OUTPUT_FILENAME>
+          OUTPUT_PROTOCOL: http(s)|ftp(s)|S3|Swift|WebDav
+          OUTPUT_URL: <output URL>
+          OUTPUT_CREDENTIALS: <e.g. username:password>
+      artifacts:
+        image:
+          file: indigodatacloud/jobuploader
           type: tosca.artifacts.Deployment.Image.Container.Docker
       requirements:
         - host: docker_runtime1
@@ -30,7 +64,7 @@ topology_template:
           properties:
             num_cpus: 0.5
             mem_size: 512 MB
-                 
+
     marathon_job:
       type: tosca.nodes.indigo.Container.Application.Docker.Marathon
       properties:

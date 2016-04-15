@@ -53,7 +53,7 @@ capability_types:
         default: torque
         constraints:
           - equal: torque
-          
+
   tosca.capabilities.indigo.LRMS.Local:
     derived_from: tosca.capabilities.indigo.LRMS
     properties:
@@ -80,7 +80,7 @@ artifact_types:
     description: YAML Ansible recipe artifact
     mime_type: text/yaml
     file_ext: [ yaml, yml ]
-    
+
   tosca.artifacts.AnsibleGalaxy.role:
     derived_from: tosca.artifacts.Root
     description: Ansible Galaxy role to be deployed in the target node
@@ -379,7 +379,7 @@ node_types:
         create: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_fe_install.yml
         configure: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_fe_configure.yml
         start: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_fe_start.yml
-        
+
   tosca.nodes.indigo.LRMS.FrontEnd.Local:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
     capabilities:
@@ -405,6 +405,11 @@ node_types:
         type: list
         entry_schema:
           type: string
+      environment_variables:
+        required: no
+        type: map
+        entry_schema:
+          type: string
 
   tosca.nodes.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
@@ -412,6 +417,20 @@ node_types:
       schedule:
         required: no
         type: string
+      name:
+        required: no
+        type: string
+      description:
+        required: no
+        type: string
+      retries:
+        required: no
+        type: integer
+      parents:
+        required: no
+        type: list
+        entry_schema:
+          type: string
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
