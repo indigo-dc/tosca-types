@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
 
 description: >
   TOSCA test for launching compute node with a specified image and getting
@@ -39,4 +39,4 @@ topology_template:
     node_ip:
       value: { get_attribute: [ simple_node, public_address, 0 ] }
     node_creds:
-      value: { get_attribute: [ simple_node, public_endpoint, credential, 0 ] }
+      value: { get_attribute: [ simple_node, credential, 0 ] }

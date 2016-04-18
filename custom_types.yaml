@@ -73,22 +73,6 @@ capability_types:
         constraints:
           - greater_or_equal: 0.0
 
-  tosca.capabilities.indigo.Endpoint:
-    derived_from: tosca.capabilities.Endpoint
-    attributes:
-      credential:
-        type: list
-        entry_schema:
-          type: tosca.datatypes.Credential
-        
-  tosca.capabilities.indigo.Endpoint.Public:
-    derived_from: tosca.capabilities.Endpoint.Public
-    attributes:
-      credential:
-        type: list
-        entry_schema:
-          type: tosca.datatypes.Credential
-
 artifact_types:
 
   tosca.artifacts.Implementation.YAML:
@@ -201,15 +185,20 @@ node_types:
         type: list
         entry_schema:
           type: string
+      credential:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.Credential
+    properties:
+      public_ip:
+        type: boolean
+        required: no
+        default: no
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
       os:
          type: tosca.capabilities.indigo.OperatingSystem
-      endpoint:
-        type: tosca.capabilities.indigo.Endpoint
-      public_endpoint:
-        type: tosca.capabilities.indigo.Endpoint.Public
 
   tosca.nodes.indigo.MonitoredCompute:
     derived_from: tosca.nodes.Compute
