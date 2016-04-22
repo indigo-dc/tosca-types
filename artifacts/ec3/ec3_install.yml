@@ -32,13 +32,13 @@
       - cpyutils
 
     # CLUES2 installation
-    - unarchive: src=/tmp/{{item}}.zip dest=/tmp copy=no
+    - unarchive: src=/tmp/{{item}}.zip dest=/tmp copy=no creates=/tmp/{{item}}-master
       with_items:
       - clues
       - cpyutils
 
     # CLUES2 INDIGO Orchestrator plugin      
-    - get_url: url=https://raw.githubusercontent.com/indigo-dc/orchestrator-clues-plugin/master/indigo_orchestrator.py dest=/tmp/clues-master/cluesplugins/indigo_orchestrator.py
+    - get_url: url=https://raw.githubusercontent.com/indigo-dc/clues-indigo/master/indigo_orchestrator.py dest=/tmp/clues-master/cluesplugins/indigo_orchestrator.py
       register: result
       until: result|success
       retries: 5
