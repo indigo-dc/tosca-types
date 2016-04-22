@@ -44,6 +44,9 @@
       retries: 5
       delay: 1
 
-    # TODO: improve this using pip to install
-    - command: python setup.py install chdir=/tmp/cpyutils-master
-    - command: python setup.py install chdir=/tmp/clues-master creates=/usr/local/bin/cluesserver
+    - command: pip install -e /tmp/cpyutils-master
+    - command: pip install -e /tmp/clues-master
+
+    # This only works with ansible 2.X
+    #- pip: name='/tmp/cpyutils-master' editable=true
+    #- pip: name='/tmp/clues-master' editable=true
