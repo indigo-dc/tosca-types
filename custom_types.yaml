@@ -73,6 +73,19 @@ capability_types:
         constraints:
           - greater_or_equal: 0.0
 
+  tosca.capabilities.indigo.Endpoint:
+    derived_from: tosca.capabilities.Endpoint
+    properties:
+      dns_name:
+        description: The optional name to register with DNS
+        type: string
+        required: false
+    attributes:
+      credential:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.Credential
+
 artifact_types:
 
   tosca.artifacts.Implementation.YAML:
@@ -185,10 +198,6 @@ node_types:
         type: list
         entry_schema:
           type: string
-      credential:
-        type: list
-        entry_schema:
-          type: tosca.datatypes.Credential
     properties:
       public_ip:
         type: boolean
@@ -199,6 +208,8 @@ node_types:
         type: tosca.capabilities.indigo.Scalable
       os:
          type: tosca.capabilities.indigo.OperatingSystem
+      endpoint:
+        type: tosca.capabilities.indigo.Endpoint
 
   tosca.nodes.indigo.MonitoredCompute:
     derived_from: tosca.nodes.Compute

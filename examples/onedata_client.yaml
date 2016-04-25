@@ -12,9 +12,10 @@ topology_template:
    
     onedata_client_node:
       type: tosca.nodes.indigo.Compute
-      properties:
-        public_ip: yes
       capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
         scalable:
           properties:
             count: 1
