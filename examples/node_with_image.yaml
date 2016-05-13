@@ -13,9 +13,17 @@ topology_template:
    
     simple_node:
       type: tosca.nodes.indigo.Compute
-      properties:
-        public_ip: yes
       capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              user_port:
+                protocol: tcp
+                source: 9000
+              other_port:
+                protocol: tcp
+                source: 9001
         scalable:
           properties:
             count: 1
@@ -39,4 +47,4 @@ topology_template:
     node_ip:
       value: { get_attribute: [ simple_node, public_address, 0 ] }
     node_creds:
-      value: { get_attribute: [ simple_node, credential, 0 ] }
+      value: { get_attribute: [ simple_node, endpoint, credential, 0 ] }

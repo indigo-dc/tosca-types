@@ -12,9 +12,10 @@ topology_template:
    
     onedata_client_node:
       type: tosca.nodes.indigo.Compute
-      properties:
-        public_ip: yes
       capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
         scalable:
           properties:
             count: 1
@@ -45,5 +46,7 @@ topology_template:
     my_onedata_storage:
       type: tosca.nodes.indigo.OneDataStorage
       properties:
+        oneprovider_host: ["oneprovider.com", "twoprovider.net"]
+        dataspace: ["space1","space2"]
         credential:
           token: some_token
