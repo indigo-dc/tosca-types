@@ -201,11 +201,6 @@ node_types:
         type: list
         entry_schema:
           type: string
-    properties:
-      public_ip:
-        type: boolean
-        required: no
-        default: no
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
