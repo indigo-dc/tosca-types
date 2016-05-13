@@ -544,6 +544,10 @@ node_types:
   tosca.nodes.indigo.OneDataStorage:
     derived_from: tosca.nodes.BlockStorage
     properties:
+      size:
+        # to overwrite BlockStorage size property to set it as not required
+        type: scalar-unit.size
+        required: false
       oneprovider_host:
         type: list
         entry_schema:
