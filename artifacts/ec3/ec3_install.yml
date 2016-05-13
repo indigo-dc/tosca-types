@@ -44,5 +44,5 @@
       retries: 5
       delay: 1
 
-    - pip: name='/tmp/cpyutils-master'
-    - pip: name='/tmp/clues-master'
+    - pip: name='/tmp/cpyutils-master' editable=true
+    - pip: name='/tmp/clues-master' editable=true
