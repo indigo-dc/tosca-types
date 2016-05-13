@@ -33,9 +33,14 @@ topology_template:
  
     galaxy_server:
       type: tosca.nodes.indigo.Compute
-      properties:
-         public_ip: yes
       capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              http_port:
+                protocol: tcp
+                source: 8080
         # Host container properties
         host:
          properties:

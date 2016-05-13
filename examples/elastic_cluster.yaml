@@ -27,9 +27,10 @@ topology_template:
 
     torque_server:
       type: tosca.nodes.indigo.Compute
-      properties:
-        public_ip: yes
       capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
         host:
           properties:
             num_cpus: 1
@@ -50,8 +51,6 @@ topology_template:
             
     torque_wn:
       type: tosca.nodes.indigo.Compute
-      properties:
-        public_ip: no
       capabilities:
         scalable:
           properties:
