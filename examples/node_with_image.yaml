@@ -24,7 +24,6 @@ topology_template:
               other_port:
                 protocol: tcp
                 source: 9001
-            dns_name: ambernode
         scalable:
           properties:
             count: 1
