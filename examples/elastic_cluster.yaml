@@ -69,4 +69,4 @@ topology_template:
     cluster_ip:
       value: { get_attribute: [ torque_server, public_address, 0 ] }
     cluster_creds:
-      value: { get_attribute: [ torque_server, credential, 0 ] }
+      value: { get_attribute: [ torque_server, endpoint, credential, 0 ] }
