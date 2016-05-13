@@ -426,20 +426,28 @@ node_types:
       schedule:
         required: no
         type: string
-      name:
-        required: no
-        type: string
       description:
         required: no
         type: string
       retries:
         required: no
         type: integer
-      parents:
-        required: no
-        type: list
-        entry_schema:
-          type: string
+   capabilities:
+     - job_successor:
+         type: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+         valid_source_types: [tosca.nodes.indigo.Container.Application.Docker.Chronos]
+                occurrences: [0, UNBOUNDED]
+  
+       requirements:
+          - job_predecessor:
+          capability: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+          node: tosca.nodes.indigo.Container.Application.Docker.Chronos
+          relationship: tosca.relationships.DependsOn
+               occurrences: [0, 1]
+  
+  tosca.capabilities.indigo.Container.Application.Docker.Chronos:
+    derived_from: tosca.capabilities.Root
+
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
