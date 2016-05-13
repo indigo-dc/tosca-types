@@ -5,6 +5,9 @@ capability_types:
   tosca.capabilities.indigo.OperatingSystem:
     derived_from: tosca.capabilities.OperatingSystem
     properties:
+      gpu:
+        type: boolean
+        required: no
       image:
         type: string
         required: no
