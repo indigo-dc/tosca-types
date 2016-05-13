@@ -78,13 +78,16 @@ topology_template:
       type: tosca.nodes.indigo.Container.Application.Docker.Chronos
       properties:
         schedule: 'R0/2015-12-25T17:22:00Z/PT1M'
-        name: 'JOB_ID_TO_BE_SET_BY_THE_ORCHESTRATOR'
         description: 'Execute Application'
         command: { get_input: command }
         uris: { get_input: input_urls}
         retries: 3
         environment_variables:
           OUTPUT_FILENAMES: { get_input: output_filenames }
+          ONEDATA_SERVICE_TOKEN: "TOKEN_TO_BE_SET_BY_THE_ORCHESTRATOR"
+          ONEDATA_SPACE: "DATA_SPACE_TO_BE_SET_BY_THE_ORCHESTRATOR"
+          ONEDATA_PATH: "PATH_TO_BE_SET_BY_THE_ORCHESTRATOR"
+          ONEDATA_PROVIDERS: "ONEDATA_PROVIDERS_TO_BE_SET_BY_THE_ORCHESTRATOR"
       artifacts:
         image:
           file: { get_input: docker_image }
