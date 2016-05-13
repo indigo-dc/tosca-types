@@ -9,11 +9,11 @@
       
     # CLUES2 requirements
     - name: Apt install CLUES2 requirements in Deb system
-      apt: pkg=python-pip,python-sqlite,unzip
+      apt: pkg=python-sqlite,unzip
       when: ansible_os_family == "Debian"
 
     - name: Yum install CLUES2 requirements in REL system
-      yum: pkg=python-pip,python-sqlite2,unzip
+      yum: pkg=python-sqlite2,unzip
       when: ansible_os_family == "RedHat"
 
     - name: Install CLUES pip requirements
@@ -44,5 +44,5 @@
       retries: 5
       delay: 1
 
-    - pip: name='/tmp/cpyutils-master' editable=true
-    - pip: name='/tmp/clues-master' editable=true
+    - command: python setup.py install chdir=/tmp/cpyutils-master
+    - command: python setup.py install chdir=/tmp/clues-master creates=/usr/local/bin/cluesserver
