@@ -46,5 +46,7 @@ topology_template:
     my_onedata_storage:
       type: tosca.nodes.indigo.OneDataStorage
       properties:
+        oneprovider_host: ["oneprovider.com", "twoprovider.net"]
+        dataspace: ["space1","space2"]
         credential:
           token: some_token
