@@ -78,6 +78,11 @@ capability_types:
 
   tosca.capabilities.indigo.Endpoint:
     derived_from: tosca.capabilities.Endpoint
+    properties:
+      dns_name:
+        description: The optional name to register with DNS
+        type: string
+        required: false
     attributes:
       credential:
         type: list

@@ -29,11 +29,11 @@
     when: ansible_os_family == "RedHat"
 
   # /etc/hosts configuration
-  - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{IM_NODE_NET_1_IP}} torqueserver'
-    when: IM_NODE_NET_1_IP is defined
+  - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{IM_NODE_PRIVATE_IP}} torqueserver'
+    when: IM_NODE_PRIVATE_IP is defined
 
   - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{ansible_default_ipv4.address}} torqueserver'
-    when: IM_NODE_NET_1_IP is undefined
+    when: IM_NODE_PRIVATE_IP is undefined
 
   - command: hostname torqueserver
   - copy: dest=/etc/torque/server_name content=torqueserver
