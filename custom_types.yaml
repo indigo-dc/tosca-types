@@ -552,10 +552,15 @@ node_types:
         type: list
         entry_schema:
           type: string
+        required: false
+      onezone_endpoint:
+        type: string
+        required: false
       dataspace:
         type: list
         entry_schema:
           type: string
+        required: false
       credential:
         type: tosca.datatypes.Credential
-        required: yes
+        required: true
