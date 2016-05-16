@@ -48,5 +48,6 @@ topology_template:
       properties:
         oneprovider_host: ["oneprovider.com", "twoprovider.net"]
         dataspace: ["space1","space2"]
+        onezone_endpoint: http://server.com
         credential:
           token: some_token
