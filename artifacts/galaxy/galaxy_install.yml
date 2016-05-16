@@ -3,8 +3,3 @@
   connection: local
   roles:
     - role: indigo-dc.galaxy
-      galaxy_install_path: "{{ galaxy_install_path }}"
-      galaxy_lrms: "{{ galaxy_lrms }}"
-      galaxy_admin: "{{ galaxy_admin }}"
-      galaxy_admin_api_key: "{{ galaxy_admin_api_key }}"
-      galaxy_user: "{{ galaxy_user }}"
