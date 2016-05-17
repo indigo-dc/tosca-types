@@ -107,7 +107,7 @@ topology_template:
         - host: docker_runtime1
 
 
-  chronos_job_upload:
+    chronos_job_upload:
       type: tosca.nodes.indigo.Container.Application.Docker.Chronos
       properties:
         description: 'Upload  application output data'
