@@ -432,18 +432,17 @@ node_types:
       retries:
         required: no
         type: integer
-   capabilities:
-     - job_successor:
-         type: tosca.capabilities.indigo.Container.Application.Docker.Chronos
-         valid_source_types: [tosca.nodes.indigo.Container.Application.Docker.Chronos]
-                occurrences: [0, UNBOUNDED]
-  
-       requirements:
-          - job_predecessor:
-          capability: tosca.capabilities.indigo.Container.Application.Docker.Chronos
-          node: tosca.nodes.indigo.Container.Application.Docker.Chronos
-          relationship: tosca.relationships.DependsOn
-               occurrences: [0, 1]
+    capabilities:
+      job_successor:
+        type: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+        valid_source_types: [tosca.nodes.indigo.Container.Application.Docker.Chronos]
+        occurrences: [0, UNBOUNDED]
+    requirements:
+      - job_predecessor:
+        capability: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+        node: tosca.nodes.indigo.Container.Application.Docker.Chronos
+        relationship: tosca.relationships.DependsOn
+        occurrences: [0, 1]
   
   tosca.capabilities.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.capabilities.Root
