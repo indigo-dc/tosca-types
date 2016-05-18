@@ -135,6 +135,6 @@ topology_template:
       capabilities:
         host:
           properties:
-            num_cpus: 1
+            num_cpus: 1.0
             mem_size: 1024 MB
 
