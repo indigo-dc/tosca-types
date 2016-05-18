@@ -89,6 +89,10 @@ capability_types:
         entry_schema:
           type: tosca.datatypes.Credential
 
+  tosca.capabilities.indigo.Container.Application.Docker.Chronos:
+    derived_from: tosca.capabilities.Root
+    
+    
 artifact_types:
 
   tosca.artifacts.Implementation.YAML:
@@ -442,10 +446,6 @@ node_types:
           node: tosca.nodes.indigo.Container.Application.Docker.Chronos
           relationship: tosca.relationships.DependsOn
           occurrences: [0, 1]
-  
-  tosca.capabilities.indigo.Container.Application.Docker.Chronos:
-    derived_from: tosca.capabilities.Root
-
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
