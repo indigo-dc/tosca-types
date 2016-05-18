@@ -439,10 +439,10 @@ node_types:
         occurrences: [0, UNBOUNDED]
     requirements:
       - job_predecessor:
-        capability: tosca.capabilities.indigo.Container.Application.Docker.Chronos
-        node: tosca.nodes.indigo.Container.Application.Docker.Chronos
-        relationship: tosca.relationships.DependsOn
-        occurrences: [0, 1]
+          capability: tosca.capabilities.indigo.Container.Application.Docker.Chronos
+          node: tosca.nodes.indigo.Container.Application.Docker.Chronos
+          relationship: tosca.relationships.DependsOn
+          occurrences: [0, 1]
   
   tosca.capabilities.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.capabilities.Root
