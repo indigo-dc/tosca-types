@@ -62,8 +62,8 @@ topology_template:
       required: yes
     
     mem:
-      type: float
-      description: Amount of Memory (MB) for this job
+      type: scalar-unit.size
+      description: Amount of Memory for this job
       required: yes
   
     docker_image:
