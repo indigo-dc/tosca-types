@@ -116,7 +116,7 @@ topology_template:
             type: tosca.artifacts.Deployment.Image.Container.Docker
         requirements:
           - host: docker_runtime2
-          - job: chronos_job
+          - parent_job: chronos_job
 
 
     docker_runtime1:
