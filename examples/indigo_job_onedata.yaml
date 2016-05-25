@@ -18,11 +18,6 @@ topology_template:
       description: User token required to mount the user's OUTPUT Onedata space. It can be the same as the input token
       required: yes
   
-   # data_locality:
-   #   type: boolean
-   #   description: Flag that controls the INPUT data locality: if yes the orchestrator will select the best provider, if no the user has to specify the provider to be used
-   #   required: yes
-  
     input_onedata_providers:
       type: list
       description: List of favorite Onedata providers to be used to mount the Input Onedata space. If not provided, data locality algo will be applied.
