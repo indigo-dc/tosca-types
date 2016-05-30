@@ -34,9 +34,9 @@
       yum: name=torque-server,torque-scheduler,torque-client,openssh-clients,gcc-c++,torque-devel,make
       when: ansible_os_family == "RedHat"
       
-    - set_fact: TORQUE_PATH="/var/spool/torque"
+    - set_fact: TORQUE_PATH="/var/spool/torque" SCHED_SERVICE="torque-scheduler" SERVER_SERVICE="torque-server"
       when: ansible_os_family == "Debian"
-    - set_fact: TORQUE_PATH="/var/lib/torque"
+    - set_fact: TORQUE_PATH="/var/lib/torque" SCHED_SERVICE="pbs_sched" SERVER_SERVICE="pbs_server"
       when: ansible_os_family == "RedHat"
   
     # /etc/hosts configuration
@@ -70,27 +70,14 @@
       when: ansible_os_family == "RedHat"
       
     # Launch PBS
-    - service: name=pbs_sched state=started pattern=/usr/sbin/pbs_sched
-      when: ansible_os_family == "RedHat"
-    - service: name=torque-scheduler state=started pattern=/usr/sbin/pbs_sched
-      when: ansible_os_family == "Debian"
+    - service: name={{SCHED_SERVICE}} state=started pattern=/usr/sbin/pbs_sched
   
-    - service: name=torque-server state=stopped pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "Debian"
-    - service: name=torque-server state=started pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "Debian"
-  
-    - service: name=pbs_server state=stopped pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "RedHat"
-    - service: name=pbs_server state=started pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "RedHat"
+    - service: name={{SERVER_SERVICE}} state=stopped pattern=/usr/sbin/pbs_server
+    - service: name={{SERVER_SERVICE}} state=started pattern=/usr/sbin/pbs_server
       
     # Many times TORQUE_SERVICE and SCHED_SERVICE do not start properly. Wait and test them again
     - command: sleep 2
 
-    - service: name=torque-server state=started pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "Debian"
-    - service: name=pbs_server state=started pattern=/usr/sbin/pbs_server
-      when: ansible_os_family == "RedHat"
+    - service: name={{SERVER_SERVICE}} state=started pattern=/usr/sbin/pbs_server
       
     - shell: echo "{{PBS_SERVER_CONF}}" | qmgr creates={{TORQUE_PATH}}/server_priv/queues/batch
