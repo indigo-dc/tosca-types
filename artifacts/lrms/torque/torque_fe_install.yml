@@ -1,5 +1,7 @@
 ---
- - vars:
+- hosts: localhost
+  connection: local
+  vars:
     PBS_SERVER_CONF: |
       create queue batch
       set queue batch queue_type = Execution
@@ -19,7 +21,7 @@
       set server mom_job_sync = True
       set server poll_jobs = True
       set server tcp_timeout = 600
-   tasks:
+  tasks:
     - name: create epel.repo
       template: src=utils/templates/epel.repo dest=/etc/yum.repos.d/epel.repo
       when: ansible_os_family == "RedHat"
