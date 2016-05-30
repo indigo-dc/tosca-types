@@ -20,7 +20,7 @@
       set server job_stat_rate = 30
       set server mom_job_sync = True
       set server poll_jobs = True
-      set tcp_timeout = 600
+      set server tcp_timeout = 600
 
   tasks:
   - set_fact: TORQUE_PATH="/var/spool/torque"
@@ -37,6 +37,26 @@
 
   - command: hostname torqueserver
   - copy: dest=/etc/torque/server_name content=torqueserver
+
+  - yum: name=munge
+    when: ansible_os_family == "RedHat"
+  - shell: create-munge-key < /dev/null
+    when: ansible_os_family == "RedHat"
+  - file: path=/var/log/munge state=directory mode=0700
+    when: ansible_os_family == "RedHat"
+  - file: path=/var/log state=directory mode=0755
+    when: ansible_os_family == "RedHat"
+  - service: name=munge state=restarted
+    when: ansible_os_family == "RedHat"
+
+  - service: name=trqauthd state=started
+    when: ansible_os_family == "RedHat"
+    ignore_errors: yes  
+
+  - shell: yes | pbs_server -t create
+    when: ansible_os_family == "RedHat"
+  - command: qterm
+    when: ansible_os_family == "RedHat"
 
   - service: name=torque-server state=started pattern=/usr/sbin/pbs_server
     when: ansible_os_family == "Debian"
