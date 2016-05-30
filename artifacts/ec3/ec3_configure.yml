@@ -7,7 +7,6 @@
 
   vars:
       VNODE: vnode-
-      INDIGO_ORCHESTRATOR_URL: http://orchestrator01.indigo.recas.ba.infn.it:8080
         
   tasks:
     # /etc/hosts configuration
@@ -43,7 +42,7 @@
       notify: restart cluesd
     - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_MAX_INSTANCES value={{ec3_max_instances}}
       notify: restart cluesd
-    - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_URL value={{INDIGO_ORCHESTRATOR_URL}}
+    - ini_file: dest=/etc/clues2/conf.d/plugin-ec3.cfg section="INDIGO ORCHESTRATOR" option=INDIGO_ORCHESTRATOR_URL value={{orchestrator_url}}
       notify: restart cluesd
 
     - ini_file: dest=/etc/clues2/clues2.cfg section=general option=LRMS_CLASS value=cluesplugins.pbs
