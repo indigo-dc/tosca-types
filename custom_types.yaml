@@ -329,6 +329,11 @@ node_types:
         type: string
         description: ID of the deployment of this elastic cluster in the orchestrator
         required: false
+      orchestrator_url:
+        type: string
+        description: URL of the orchestrator
+        required: false
+        default: http://orchestrator01.indigo.recas.ba.infn.it:8080
     interfaces:
       Standard:
         create: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_install.yml
@@ -339,6 +344,7 @@ node_types:
             clues_queue_system: { get_property: [ SELF, lrms, type ] }
             ec3_max_instances: { get_property: [ SELF, wn, max_instances] }
             ec3_deployment_id: { get_property: [ SELF, deployment_id] }
+            orchestrator_url: { get_property: [ SELF, orchestrator_url] }
         start: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_start.yml
     requirements:
       - wn:
