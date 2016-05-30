@@ -1,5 +1,27 @@
 ---
- - tasks:
+- hosts: localhost
+  connection: local
+  vars:
+    PBS_SERVER_CONF: |
+      create queue batch
+      set queue batch queue_type = Execution
+      set queue batch resources_default.nodes = 1
+      set queue batch enabled = True
+      set queue batch started = True
+      set server default_queue = batch
+      set server scheduling = True
+      set server scheduler_iteration = 20
+      set server node_check_rate = 40
+      set server resources_default.neednodes = 1
+      set server resources_default.nodect = 1
+      set server resources_default.nodes = 1
+      set server query_other_jobs = True
+      set server node_pack = False
+      set server job_stat_rate = 30
+      set server mom_job_sync = True
+      set server poll_jobs = True
+      set server tcp_timeout = 600
+  tasks:
     - name: create epel.repo
       template: src=utils/templates/epel.repo dest=/etc/yum.repos.d/epel.repo
       when: ansible_os_family == "RedHat"
@@ -11,3 +33,51 @@
     - name: Yum install Torque in REL system
       yum: name=torque-server,torque-scheduler,torque-client,openssh-clients,gcc-c++,torque-devel,make
       when: ansible_os_family == "RedHat"
+      
+    - set_fact: TORQUE_PATH="/var/spool/torque" SCHED_SERVICE="torque-scheduler" SERVER_SERVICE="torque-server"
+      when: ansible_os_family == "Debian"
+    - set_fact: TORQUE_PATH="/var/lib/torque" SCHED_SERVICE="pbs_sched" SERVER_SERVICE="pbs_server"
+      when: ansible_os_family == "RedHat"
+  
+    # /etc/hosts configuration
+    - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{IM_NODE_PRIVATE_IP}} torqueserver'
+      when: IM_NODE_PRIVATE_IP is defined
+  
+    - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{ansible_default_ipv4.address}} torqueserver'
+      when: IM_NODE_PRIVATE_IP is undefined
+  
+    - command: hostname torqueserver
+    - copy: dest=/etc/torque/server_name content=torqueserver
+  
+    - yum: name=munge
+      when: ansible_os_family == "RedHat"
+    - shell: create-munge-key < /dev/null
+      when: ansible_os_family == "RedHat"
+    - file: path=/var/log/munge state=directory mode=0700
+      when: ansible_os_family == "RedHat"
+    - file: path=/var/log state=directory mode=0755
+      when: ansible_os_family == "RedHat"
+    - service: name=munge state=restarted
+      when: ansible_os_family == "RedHat"
+  
+    - service: name=trqauthd state=started
+      when: ansible_os_family == "RedHat"
+      ignore_errors: yes  
+  
+    - shell: yes | pbs_server -t create
+      when: ansible_os_family == "RedHat"
+    - command: qterm
+      when: ansible_os_family == "RedHat"
+      
+    # Launch PBS
+    - service: name={{SCHED_SERVICE}} state=started pattern=/usr/sbin/pbs_sched
+  
+    - service: name={{SERVER_SERVICE}} state=stopped pattern=/usr/sbin/pbs_server
+    - service: name={{SERVER_SERVICE}} state=started pattern=/usr/sbin/pbs_server
+      
+    # Many times TORQUE_SERVICE and SCHED_SERVICE do not start properly. Wait and test them again
+    - command: sleep 2
+
+    - service: name={{SERVER_SERVICE}} state=started pattern=/usr/sbin/pbs_server
+      
+    - shell: echo "{{PBS_SERVER_CONF}}" | qmgr creates={{TORQUE_PATH}}/server_priv/queues/batch

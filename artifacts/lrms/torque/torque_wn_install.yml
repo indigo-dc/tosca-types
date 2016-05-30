@@ -13,3 +13,35 @@
   - name: Yum install Torque in REL system
     yum: name=torque-mom,torque-client,openssh-clients
     when: ansible_os_family == "RedHat"
+
+  - set_fact: TORQUE_PATH="/var/spool/torque" MOM_SERVICE="pbs_mom"
+    when: ansible_os_family == "Debian"
+  - set_fact: TORQUE_PATH="/var/lib/torque" MOM_SERVICE="torque-mom"
+    when: ansible_os_family == "RedHat"
+
+  # /etc/hosts configuration
+  - lineinfile: dest=/etc/hosts regexp='torqueserver' line='{{ hostvars[groups['torque_server'][0]]['IM_NODE_NET_1_IP'] }} torqueserver'
+    when: "'IM_NODE_NET_1_IP' in hostvars[groups['torque_server'][0]]"
+
+  - lineinfile: dest=/etc/hosts regexp='torqueserver' line='"{{ hostvars[groups['torque_server'][0]]['ansible_default_ipv4.address'] }}" torqueserver'
+    when: "'IM_NODE_NET_1_IP' not in hostvars[groups['torque_server'][0]]"
+
+  - name: Set the Torque server name
+    copy: content=torqueserver dest=/etc/torque/server_name
+  - name: Create the mom_priv/config file
+    copy:
+      dest: "{{TORQUE_PATH}}/mom_priv/config"
+      content: |
+          $clienthost torqueserver
+          $max_conn_timeout_micro_sec 10000
+          $mom_host {{ansible_hostname}}
+      mode: 0644
+      owner: root
+      group: root
+
+  - service: name={{MOM_SERVICE}} state=started pattern=/usr/sbin/pbs_mom
+
+  # Many times MOM_SERVICE does not start properly. Wait and test it again
+  - command: sleep 5
+
+  - service: name={{MOM_SERVICE}} state=started pattern=/usr/sbin/pbs_mom
