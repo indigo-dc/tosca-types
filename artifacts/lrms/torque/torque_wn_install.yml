@@ -14,9 +14,9 @@
     yum: name=torque-mom,torque-client,openssh-clients
     when: ansible_os_family == "RedHat"
 
-  - set_fact: TORQUE_PATH="/var/spool/torque" MOM_SERVICE="pbs_mom"
+  - set_fact: TORQUE_PATH="/var/spool/torque" MOM_SERVICE="torque-mom"
     when: ansible_os_family == "Debian"
-  - set_fact: TORQUE_PATH="/var/lib/torque" MOM_SERVICE="torque-mom"
+  - set_fact: TORQUE_PATH="/var/lib/torque" MOM_SERVICE="pbs_mom"
     when: ansible_os_family == "RedHat"
 
   # /etc/hosts configuration
