@@ -403,8 +403,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          #implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
-          implementation: lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
@@ -416,7 +415,8 @@ node_types:
         entry_schema:
           type: string
         description: List of IPs of the WNs
-        required: true
+        required: false
+        default: []
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS
@@ -450,8 +450,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          #implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
-          implementation: lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_ips: { get_property: [ SELF, wn_ips ] }
 
