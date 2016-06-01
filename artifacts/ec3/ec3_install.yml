@@ -2,4 +2,4 @@
 - hosts: localhost
   connection: local
   roles:
-  - role: alpegon.clues
+  - role: indigo-dc.clues
