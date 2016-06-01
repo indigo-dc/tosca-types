@@ -17,13 +17,13 @@ topology_template:
       properties:
         deployment_id: orchestrator_deployment_id
       requirements:
-        - lrms: torque_front_end
+        - lrms: lrms_front_end
         - wn: wn_node
 
     galaxy:
       type: tosca.nodes.indigo.GalaxyPortal
       requirements:
-        - lrms: torque_front_end
+        - lrms: lrms_front_end
 
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
