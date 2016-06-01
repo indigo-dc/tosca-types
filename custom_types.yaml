@@ -91,8 +91,8 @@ capability_types:
 
   tosca.capabilities.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.capabilities.Root
-    
-    
+
+
 artifact_types:
 
   tosca.artifacts.Implementation.YAML:
@@ -334,18 +334,20 @@ node_types:
         description: URL of the orchestrator
         required: false
         default: http://orchestrator01.indigo.recas.ba.infn.it:8080
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.clues
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        create: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_install.yml
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_configure.yml
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_install.yml
           inputs:
             clues_secret_token: { get_property: [ SELF, secret_token ] }
             clues_queue_system: { get_property: [ SELF, lrms, type ] }
             ec3_max_instances: { get_property: [ SELF, wn, max_instances] }
             ec3_deployment_id: { get_property: [ SELF, deployment_id] }
             orchestrator_url: { get_property: [ SELF, orchestrator_url] }
-        start: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_start.yml
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
