@@ -25,12 +25,14 @@ topology_template:
       requirements:
         - lrms: torque_front_end
 
-    torque_front_end:
-      type: tosca.nodes.indigo.LRMS.FrontEnd.Torque
+    lrms_front_end:
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
+      properties:
+        wn_ips: { get_attribute: [ lrms_wn, private_address ] }
       requirements:
-        - host: torque_server
+        - host: lrms_server
 
-    torque_server:
+    lrms_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
         endpoint:
@@ -52,16 +54,18 @@ topology_template:
             #version: 6.6
 
     wn_node:
-      type: tosca.nodes.indigo.LRMS.WorkerNode.Torque
+      type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
+      properties:
+        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
       capabilities:
         wn:
           properties:
             max_instances: 5
             min_instances: 0
       requirements:
-        - host: torque_wn
+        - host: lrms_wn
             
-    torque_wn:
+    lrms_wn:
       type: tosca.nodes.indigo.Compute
       capabilities:
         scalable:
@@ -80,4 +84,4 @@ topology_template:
 
   outputs:
     galaxy_url:
-      value: { concat: [ 'http://', get_attribute: [ torque_server, public_address, 0 ], ':8080' ] }
+      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':8080' ] }
