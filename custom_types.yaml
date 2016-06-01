@@ -336,12 +336,12 @@ node_types:
         default: http://orchestrator01.indigo.recas.ba.infn.it:8080
     artifacts:
       docker_agent_role:
-        file: alpegon.clues
+        file: indigo-dc.clues
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/alpegon/tosca-types/master/artifacts/ec3/ec3_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_install.yml
           inputs:
             clues_secret_token: { get_property: [ SELF, secret_token ] }
             clues_queue_system: { get_property: [ SELF, lrms, type ] }
