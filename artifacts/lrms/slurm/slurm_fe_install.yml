@@ -3,5 +3,5 @@
   connection: local
   roles:
   - role: indigo-dc.slurm
-    slurm_type_of_node: 'wn'
-    slurm_server_ip: '{{ slurm_front_end_ip }}'
+    slurm_type_of_node: 'front'
+    slurm_wn_ips: '{{ wn_ips }}'
