@@ -296,6 +296,18 @@ node_types:
             galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
             galaxy_lrms: { get_property: [ SELF, lrms, type ] }
 
+  tosca.nodes.indigo.GalaxyWN:
+    derived_from: tosca.nodes.SoftwareComponent
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.Compute
+          relationship: tosca.relationships.HostedOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure.yml
+
   tosca.nodes.indigo.GalaxyShedTool:
     derived_from: tosca.nodes.WebApplication
     properties:

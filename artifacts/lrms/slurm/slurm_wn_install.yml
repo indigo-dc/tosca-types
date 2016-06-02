@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - role: indigo-dc.slurm
+    slurm_type_of_node: 'front'
+    slurm_server_ip: '{{ansible_default_ipv4}}'
+    slurm_wn_ips: '{{ wn_ips }}'
