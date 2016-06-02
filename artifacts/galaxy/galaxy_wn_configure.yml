@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.galaxy
+      galaxy_node_type: 'wn'

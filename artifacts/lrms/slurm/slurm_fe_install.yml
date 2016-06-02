@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - role: indigo-dc.slurm
+    slurm_type_of_node: 'wn'
+    slurm_server_ip: '{{ slurm_front_end_ip }}'

@@ -20,7 +20,7 @@ topology_template:
         - lrms: lrms_front_end
         - wn: wn_node
 
-    galaxy:
+    galaxy_portal:
       type: tosca.nodes.indigo.GalaxyPortal
       requirements:
         - lrms: lrms_front_end
@@ -64,7 +64,12 @@ topology_template:
             min_instances: 0
       requirements:
         - host: lrms_wn
-            
+
+    galaxy_wn:
+      type: tosca.nodes.indigo.GalaxyWN
+      requirements:
+        - host: lrms_wn
+
     lrms_wn:
       type: tosca.nodes.indigo.Compute
       capabilities:
