@@ -37,6 +37,7 @@ topology_template:
       capabilities:
         endpoint:
           properties:
+            dns_name: slurmserver
             network_name: PUBLIC
             ports:
               http_port:
