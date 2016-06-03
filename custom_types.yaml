@@ -412,6 +412,9 @@ node_types:
       slurm_role:
         file: indigo-dc.slurm
         type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
@@ -455,6 +458,9 @@ node_types:
     artifacts:
       slurm_role:
         file: indigo-dc.slurm
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
