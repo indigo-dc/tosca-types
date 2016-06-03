@@ -2,6 +2,9 @@
 - hosts: localhost
   connection: local
   roles:
+  - role: indigo-dc.nfs
+    nfs_mode: 'client'
+    nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ slurm_front_end_ip }}" }]
   - role: indigo-dc.slurm
     slurm_type_of_node: 'wn'
     slurm_server_ip: '{{ slurm_front_end_ip }}'
