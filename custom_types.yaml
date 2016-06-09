@@ -532,16 +532,73 @@ node_types:
 
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      # Set the current data of the mesos server
+      # but it can also specified in the TOSCA document
+      consul_servers:
+        type: string
+        required: no
+        default: localhost
+      zookeeper_host_list:
+        type: string
+        required: no
+        default: localhost
+      zookeeper_peers:
+        type: string
+        required: no
+        default: localhost
+      mesos_masters_list:
+        type: string
+        required: no
+        default: localhost
+      marathon_username:
+        type: string
+        required: no
+        default: grycap01
+      marathon_password:
+        type: string
+        required: no
+        default: yoyoyo
+      chronos_username:
+        type: string
+        required: no
+        default: grycap01
+      chronos_password:
+        type: string
+        required: no
+        default: yoyoyo
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+      consul_agent_role:
+        file: indigo-dc.consul
+        type: tosca.artifacts.AnsibleGalaxy.role
+      zookeeper_agent_role:
+        file: indigo-dc.zookeeper
+        type: tosca.artifacts.AnsibleGalaxy.role
+      mesos_agent_role:
+        file: indigo-dc.mesos
+        type: tosca.artifacts.AnsibleGalaxy.role
+      marathon_agent_role:
+        file: indigo-dc.marathon
+        type: tosca.artifacts.AnsibleGalaxy.role
+      chronos_agent_role:
+        file: indigo-dc.chronos
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_configure.yml
+          implementation: mesos/mesos_master_install_with_roles.yml
           inputs:
-            master_ips: { get_attribute: [ HOST, public_address ] }
-        start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_start.yml
+            consul_server_ips: { get_attribute: [ HOST, public_address ] }
+            zookeeper_host_list_ips: { get_attribute: [ HOST, public_address ] }
+            zookeeper_peers_ips: { get_attribute: [ HOST, public_address ] }
+            mesos_masters_list_ips: { get_attribute: [ HOST, public_address ] }
+            marathon_user: { get_property: [ SELF, marathon_username ] }
+            marathon_pass: { get_property: [ SELF, marathon_password ] }
+            chronos_user: { get_property: [ SELF, chronos_username ] }
+            chronos_pass: { get_property: [ SELF, chronos_password ] }
     requirements:
       - host:
           capability: tosca.capabilities.Container
@@ -551,21 +608,78 @@ node_types:
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      # Set the current data of the mesos server
+      # but it can also specified in the TOSCA document
       master_ips:
         required: yes
         type: list
         entry_schema:
           type: string
+      consul_servers:
+        type: string
+        required: no
+        default: localhost
+      zookeeper_host_list:
+        type: string
+        required: no
+        default: localhost
+      zookeeper_peers:
+        type: string
+        required: no
+        default: localhost
+      mesos_masters_list:
+        type: string
+        required: no
+        default: localhost
+      marathon_username:
+        type: string
+        required: no
+        default: grycap01
+      marathon_password:
+        type: string
+        required: no
+        default: yoyoyo
+      chronos_username:
+        type: string
+        required: no
+        default: grycap01
+      chronos_password:
+        type: string
+        required: no
+        default: yoyoyo
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+      consul_agent_role:
+        file: indigo-dc.consul
+        type: tosca.artifacts.AnsibleGalaxy.role
+      zookeeper_agent_role:
+        file: indigo-dc.zookeeper
+        type: tosca.artifacts.AnsibleGalaxy.role
+      mesos_agent_role:
+        file: indigo-dc.mesos
+        type: tosca.artifacts.AnsibleGalaxy.role
+      marathon_agent_role:
+        file: indigo-dc.marathon
+        type: tosca.artifacts.AnsibleGalaxy.role
+      chronos_agent_role:
+        file: indigo-dc.chronos
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_configure.yml
+          implementation: mesos/mesos_slave_install_with_roles.yml
           inputs:
             mesos_master_ips: { get_property: [ SELF, master_ips ] }
-        start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_start.yml
+            consul_server_ips: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list_ips: { get_property: [ SELF, master_ips ] }
+            zookeeper_peers_ips: { get_property: [ SELF, master_ips ] }
+            mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
+            marathon_user: { get_property: [ SELF, marathon_username ] }
+            marathon_pass: { get_property: [ SELF, marathon_password ] }
+            chronos_user: { get_property: [ SELF, chronos_username ] }
+            chronos_pass: { get_property: [ SELF, chronos_password ] }
     requirements:
       - host:
           capability: tosca.capabilities.Container

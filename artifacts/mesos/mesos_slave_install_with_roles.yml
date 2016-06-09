@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.docker
+      docker_bridge_ip: "172.0.17.1"
+
+    - role: indigo-dc.consul
+      consul_mode: "agent"
+      docker_bridge_ip: "172.0.17.1"
+      consul_servers: "{{ mesos_master_ips }}"
+
+    - role: indigo-dc.zookeeper
+      zookeeper_host_list: "{{ zookeeper_host_list_ips }}"
+      zookeeper_peers: "{{ zookeeper_peers_ips }}"
+
+    - role: indigo-dc.mesos
+      mesos_install_mode: "slave"
+      zookeeper_peers: "{{ zookeeper_peers_ips }}"
+      mesos_masters_list: "{{ mesos_masters_list_ips }}"
