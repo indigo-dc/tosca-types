@@ -554,19 +554,17 @@ node_types:
       marathon_username:
         type: string
         required: no
-        default: grycap01
+        default: admin
       marathon_password:
         type: string
-        required: no
-        default: yoyoyo
+        required: yes
       chronos_username:
         type: string
         required: no
-        default: grycap01
+        default: admin
       chronos_password:
         type: string
-        required: no
-        default: yoyoyo
+        required: yes
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -631,22 +629,6 @@ node_types:
         type: string
         required: no
         default: localhost
-      marathon_username:
-        type: string
-        required: no
-        default: grycap01
-      marathon_password:
-        type: string
-        required: no
-        default: yoyoyo
-      chronos_username:
-        type: string
-        required: no
-        default: grycap01
-      chronos_password:
-        type: string
-        required: no
-        default: yoyoyo
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -660,12 +642,6 @@ node_types:
       mesos_agent_role:
         file: indigo-dc.mesos
         type: tosca.artifacts.AnsibleGalaxy.role
-      marathon_agent_role:
-        file: indigo-dc.marathon
-        type: tosca.artifacts.AnsibleGalaxy.role
-      chronos_agent_role:
-        file: indigo-dc.chronos
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
@@ -676,17 +652,13 @@ node_types:
             zookeeper_host_list_ips: { get_property: [ SELF, master_ips ] }
             zookeeper_peers_ips: { get_property: [ SELF, master_ips ] }
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
-            marathon_user: { get_property: [ SELF, marathon_username ] }
-            marathon_pass: { get_property: [ SELF, marathon_password ] }
-            chronos_user: { get_property: [ SELF, chronos_username ] }
-            chronos_pass: { get_property: [ SELF, chronos_password ] }
     requirements:
       - host:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
 
-  tosca.nodes.indigo.MesosLoadBalancerMaster:
+  tosca.nodes.indigo.MesosLoadBalancer:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       master_ips:
@@ -697,49 +669,16 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_lb_install.yml
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_lb_configure.yml
+          implementation: mesos/mesos_lb_install.yml
           inputs:
-            mesos_master_ips: { get_property: [ SELF, master_ips ] }
+            consul_server_ips: { get_property: [ SELF, master_ips ] }
             lb_master_ip: { get_attribute: [ HOST, public_address ] }
-        start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_lb_start.yml
     requirements:
       - host:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.Compute
-          relationship: tosca.relationships.HostedOn
-
-  tosca.nodes.indigo.MesosLoadBalancerSlave:
-    derived_from: tosca.nodes.SoftwareComponent
-    properties:
-      master_ips:
-        required: yes
-        type: list
-        entry_schema:
-          type: string
-      lb_master_ip:
-        required: yes
-        type: list
-        entry_schema:
-          type: string
-    interfaces:
-      Standard:
-        create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_lb_install.yml
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_lb_configure.yml
-          inputs:
-            mesos_master_ips: { get_property: [ SELF, master_ips ] }
-            keepalived_vip: { get_property: [ SELF, lb_master_ip ] }
-        start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_lb_start.yml
-    requirements:
-      - host:
-          capability: tosca.capabilities.Container
-          node: tosca.nodes.indigo.Compute
-          relationship: tosca.relationships.HostedOn
+          relationship: tosca.relationships.HostedOn          
+          
 
   tosca.nodes.indigo.OneDataStorage:
     derived_from: tosca.nodes.BlockStorage
