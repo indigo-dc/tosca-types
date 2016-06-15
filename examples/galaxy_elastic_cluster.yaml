@@ -9,6 +9,36 @@ description: >
   using the specified LRMS (torque, sge, slurm and condor) workload.
 
 topology_template:
+  inputs:
+    wn_num:
+      type: integer
+      description: Maximum number of WNs in the elastic cluster
+      default: 5
+      required: yes
+ 
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 1
+      required: yes
+    
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 1 GB
+      required: yes
+      
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 1
+      required: yes
+    
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 1 GB
+      required: yes
 
   node_templates:
 
@@ -45,14 +75,16 @@ topology_template:
                 source: 8080
         host:
           properties:
-            num_cpus: 1
-            mem_size: 1 GB
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
         os:
           properties:
             # host Operating System image properties
             type: linux 
             #distribution: scientific 
             #version: 6.6
+            # Until the orchestrator can resolve the images use the URL
+            image: one://onecloud.i3m.upv.es/256
 
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
@@ -61,7 +93,7 @@ topology_template:
       capabilities:
         wn:
           properties:
-            max_instances: 5
+            max_instances: { get_input: wn_num }
             min_instances: 0
       requirements:
         - host: lrms_wn
@@ -79,15 +111,21 @@ topology_template:
             count: 0
         host:
           properties:
-            num_cpus: 1
-            mem_size: 1 GB
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
         os:
           properties:
             # host Operating System image properties
             type: linux 
-            #distribution: scientific 
-            #version: 6.6
+            #distribution: ubuntu
+            #version: 14.04
+            # Until the orchestrator can resolve the images use the URL
+            image: one://onecloud.i3m.upv.es/256
 
   outputs:
     galaxy_url:
       value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':8080' ] }
+    cluster_ip:
+      value: { get_attribute: [ lrms_server, public_address, 0 ] }
+    cluster_creds:
+      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
