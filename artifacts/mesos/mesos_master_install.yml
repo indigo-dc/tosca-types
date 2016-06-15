@@ -1,84 +1,30 @@
 ---
 - hosts: localhost
   connection: local
-##################################
-##           HANDLERS           ##
-##################################
-  handlers:
-  - name: start docker
-    service: name=docker state=started
-  - name: reload docker
-    service: name=docker state=reloaded
-  - name: restart docker
-    service: name=docker state=restarted
+  roles:
+    - role: indigo-dc.docker
+      docker_bridge_ip: "172.0.17.1"
 
-##################################
-##           VARIABLES          ##
-##################################
-  vars:
-    docker_bridge_ip: "172.0.17.1"
+    - role: indigo-dc.consul
+      consul_mode: "server"
+      docker_bridge_ip: "172.0.17.1"
+      consul_servers: "{{ consul_server_ips }}"
 
-##################################
-##            TASKS             ##
-##################################
-  tasks:
-  - name: Install Mesos Master
-    debug: msg="Install Mesos Master"
+    - role: indigo-dc.zookeeper
+      zookeeper_host_list: "{{ zookeeper_host_list_ips }}"
+      zookeeper_peers: "{{ zookeeper_peers_ips }}"
 
-  - name: Fail if OS distro is not Ubuntu 14.04
-    fail: msg="The role is designed only for Ubuntu 14.04"
-    when: "{{ ansible_distribution_version | version_compare('14.04', '!=') }}"
+    - role: indigo-dc.mesos
+      mesos_install_mode: "master"
+      zookeeper_peers: "{{ zookeeper_peers_ips }}"
+      mesos_masters_list: "{{ mesos_masters_list_ips }}"
 
-  ##############################
-  # INSTALL DOCKER & DOCKER_PY #
-  ##############################
-  - name: Install dependencies
-    apt: name={{ item }} update_cache=yes state=present
-    with_items:
-        - python-dev
-        - python-setuptools
-        - python-pip
+    - role: indigo-dc.marathon
+      zookeeper_peers: "{{ zookeeper_peers_ips }}"
+      marathon_username: "{{ marathon_user }}"
+      marathon_password: "{{ marathon_pass }}"
 
-  - name: Install docker-py
-    pip: name=docker-py state=present version=1.2.3
-
-  - name: Add docker apt repo
-    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main' state=present
-
-  - name: Import the Docker repository key
-    apt_key: url=https://apt.dockerproject.org/gpg state=present id=2C52609D
-
-  - name: Install Docker package
-    apt: name=docker-engine update_cache=yes state=present
-
-  - name: Configure docker0 bridge
-    lineinfile:
-      dest: /etc/default/docker
-      state: present
-      insertafter: ^DOCKER_OPTS=.*
-      line: "DOCKER_OPTS=\"$DOCKER_OPTS --bip={{docker_bridge_ip}}/24 \""
-    notify:
-    - restart docker
-
-  - meta: flush_handlers
-
-  ##############################
-  #       INSTALL CONSUL       #
-  ##############################
-  - name: Install python-consul
-    pip:  name=python-consul  state=present
-
-  - name: Install mesos-consul dependency
-    pip:  name=httplib2  state=present
-
-  ##############################
-  #       INSTALL DNSMASK      #
-  ##############################
-  - name: install dnsmasq
-    apt: name=dnsmasq state=present
-    tags: dnsmasq
-  ##############################
-  #       INSTALL OPENJDK7     #
-  ##############################
-  - name: Install openjdk
-    apt: name="openjdk-7-jre-headless" state=present
+    - role: indigo-dc.chronos
+      zookeeper_peers: "{{ zookeeper_peers_ips }}"
+      chronos_username: "{{ chronos_user }}"
+      chronos_password: "{{ chronos_pass }}"
