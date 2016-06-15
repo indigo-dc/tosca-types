@@ -589,7 +589,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: mesos/mesos_master_install_with_roles.yml
+          implementation: mesos/mesos_master_install.yml
           inputs:
             consul_server_ips: { get_attribute: [ HOST, public_address ] }
             zookeeper_host_list_ips: { get_attribute: [ HOST, public_address ] }
@@ -669,7 +669,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: mesos/mesos_slave_install_with_roles.yml
+          implementation: mesos/mesos_slave_install.yml
           inputs:
             mesos_master_ips: { get_property: [ SELF, master_ips ] }
             consul_server_ips: { get_property: [ SELF, master_ips ] }
