@@ -9,6 +9,36 @@ description: >
   using the specified LRMS (torque, sge, slurm and condor) workload.
 
 topology_template:
+  inputs:
+    wn_num:
+      type: integer
+      description: Maximum number of WNs in the elastic cluster
+      default: 5
+      required: yes
+
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 1
+      required: yes
+
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 1 GB
+      required: yes
+
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 1
+      required: yes
+
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 1 GB
+      required: yes
 
   node_templates:
 
@@ -35,8 +65,8 @@ topology_template:
             network_name: PUBLIC
         host:
           properties:
-            num_cpus: 1
-            mem_size: 1 GB
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
         os:
           properties:
             type: linux 
@@ -48,7 +78,7 @@ topology_template:
       capabilities:
         wn:
           properties:
-            max_instances: 5
+            max_instances: { get_input: wn_num }
             min_instances: 0
       requirements:
         - host: torque_wn
@@ -61,8 +91,8 @@ topology_template:
             count: 0
         host:
           properties:
-            num_cpus: 1
-            mem_size: 1 GB
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
         os:
           properties:
             type: linux 
