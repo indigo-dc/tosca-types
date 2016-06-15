@@ -51,3 +51,4 @@ topology_template:
         onezone_endpoint: http://server.com
         credential:
           token: some_token
+          token_type: token

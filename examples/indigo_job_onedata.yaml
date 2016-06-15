@@ -89,8 +89,8 @@ topology_template:
         environment_variables:
           INPUT_ONEDATA_TOKEN: { get_input: input_onedata_token }
           OUTPUT_ONEDATA_TOKEN: { get_input: output_onedata_token }
-          INPUT_ONEDATA_PROVIDERS: { get_input: input_onedata_providers }
-          OUTPUT_ONEDATA_PROVIDERS: { get_input: output_onedata_providers }
+          INPUT_ONEDATA_PROVIDERS: 'INPUT_ONEDATA_PROVIDERS_TO_BE_SET_BY_THE_ORCHESTRATOR'
+          OUTPUT_ONEDATA_PROVIDERS: 'OUTPUT_ONEDATA_PROVIDERS_TO_BE_SET_BY_THE_ORCHESTRATOR'
           INPUT_ONEDATA_SPACE: { get_input: input_onedata_space }
           INPUT_PATH: { get_input: input_path }
           OUTPUT_ONEDATA_SPACE: { get_input: output_onedata_space }
