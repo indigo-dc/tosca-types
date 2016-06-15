@@ -42,7 +42,7 @@ topology_template:
             count: 2
         host:
           properties:
-            num_cpus: 1
+            num_cpus: 2
             mem_size: 1 GB
         os:
           properties:
