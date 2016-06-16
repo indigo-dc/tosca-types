@@ -11,6 +11,3 @@
       consul_servers: "{{ consul_server_ips }}"
 
     - role: indigo-dc.haproxy-consul
-
-    - role: indigo-dc.keepalived
-      load_balancers_list: "{{ lb_master_ip }}"

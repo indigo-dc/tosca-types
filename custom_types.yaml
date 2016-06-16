@@ -659,7 +659,6 @@ node_types:
           implementation: mesos/mesos_lb_install.yml
           inputs:
             consul_server_ips: { get_property: [ SELF, master_ips ] }
-            lb_master_ip: { get_attribute: [ HOST, public_address ] }
     requirements:
       - host:
           capability: tosca.capabilities.Container
