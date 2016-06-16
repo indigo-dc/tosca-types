@@ -12,5 +12,5 @@
 
     - role: indigo-dc.mesos
       mesos_install_mode: "slave"
-      zookeeper_peers: "{{ zookeeper_peers_ips }}"
+      zookeeper_peers: "{{ mesos_masters_list_ips }}"
       mesos_masters_list: "{{ mesos_masters_list_ips }}"
