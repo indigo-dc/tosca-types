@@ -39,11 +39,11 @@ topology_template:
             network_name: PUBLIC
         scalable:
           properties:
-            count: 2
+            count: 1
         host:
           properties:
             num_cpus: 2
-            mem_size: 1 GB
+            mem_size: 2 GB
         os:
           properties:
             type: linux
@@ -55,7 +55,7 @@ topology_template:
       capabilities:
         scalable:
           properties:
-            count: 1
+            count: 3
         host:
           properties:
             num_cpus: 1
@@ -69,6 +69,9 @@ topology_template:
     mesos_lb_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
         scalable:
           properties:
             count: 1

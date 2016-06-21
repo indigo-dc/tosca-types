@@ -653,6 +653,16 @@ node_types:
         type: list
         entry_schema:
           type: string
+    artifacts:
+      docker_agent_role:
+        file: indigo-dc.docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+      consul_agent_role:
+        file: indigo-dc.consul
+        type: tosca.artifacts.AnsibleGalaxy.role    
+      docker_agent_role:
+        file: indigo-dc.haproxy-consul
+        type: tosca.artifacts.AnsibleGalaxy.role          
     interfaces:
       Standard:
         create:
