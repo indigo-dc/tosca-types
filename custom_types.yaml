@@ -660,7 +660,7 @@ node_types:
       consul_agent_role:
         file: indigo-dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role    
-      docker_agent_role:
+      haproxy_agent_role:
         file: indigo-dc.haproxy-consul
         type: tosca.artifacts.AnsibleGalaxy.role          
     interfaces:
