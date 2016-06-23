@@ -21,17 +21,17 @@
     when: ansible_distribution == "Ubuntu"
     
   - name: Ubuntu 14 add source repo
-    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb {{URL_BASE}}/apt/ubuntu/ trusty main"
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/trusty trusty main"
     when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
     notify: apt-get update
 
   - name: Ubuntu 15 add source repo
-    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb {{URL_BASE}}/apt/ubuntu/ wily main"
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/wily wily main"
     when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "15"
     notify: apt-get update
 
   - name: Ubuntu 16 add source repo
-    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb {{URL_BASE}}/apt/ubuntu/ xenial main"
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/xenial xenial main"
     when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16"
     notify: apt-get update
 
