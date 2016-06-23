@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.docker
+      docker_bridge_ip: "172.0.17.1"
+
+    - role: indigo-dc.consul
+      consul_mode: "server"
+      docker_bridge_ip: "172.0.17.1"
+      consul_servers: "{{ consul_server_ips }}"
+
+    - role: indigo-dc.haproxy-consul
