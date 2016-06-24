@@ -12,7 +12,6 @@
 
     - role: indigo-dc.zookeeper
       zookeeper_host_list: "{{ zookeeper_host_list_ips }}"
-      zookeeper_peers: "{{ zookeeper_peers_ips }}"
 
     - role: indigo-dc.mesos
       mesos_install_mode: "master"
