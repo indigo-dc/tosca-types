@@ -47,6 +47,10 @@
   - name: Install REL oneclient package
     yum: name=oneclient enablerepo=onedata
     when: ansible_os_family == "RedHat"
+    
+  - name: Install Ubuntu oneclient package
+    apt: pkg=libtbb2 state=latest only_upgrade=yes
+    when: ansible_distribution == "Ubuntu"
 
   - name: Create {{ onedata_location }} directory
     user: name={{ansible_user}} append=yes groups=fuse
@@ -58,5 +62,7 @@
     lineinfile: dest=/etc/oneclient.conf regexp=provider_hostname= line=provider_hostname="{{ oneprovider_host[0] }}" create=yes
 
   - name: Mount onedata path at {{ onedata_location }} using as provider {{ oneprovider_host[0] }}
-    shell: echo {{ onedata_token }} | oneclient --authentication token --no-check-certificate {{ onedata_location }} creates={{ onedata_location }}/spaces
+    shell: oneclient --authentication token --no-check-certificate {{ onedata_location }} creates={{ onedata_location }}/spaces
     become: no
+    environment:
+      ONECLIENT_AUTHORIZATION_TOKEN: "{{ onedata_token }}"
