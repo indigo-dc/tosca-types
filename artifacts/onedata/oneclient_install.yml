@@ -20,9 +20,19 @@
     apt_key: url={{URL_BASE}}/onedata.gpg.key state=present
     when: ansible_distribution == "Ubuntu"
     
-  - name: Ubuntu add source repo
-    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb {{URL_BASE}}/apt/ubuntu/ vivid main"
-    when: ansible_distribution == "Ubuntu"
+  - name: Ubuntu 14 add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/trusty trusty main"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "14"
+    notify: apt-get update
+
+  - name: Ubuntu 15 add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/wily wily main"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "15"
+    notify: apt-get update
+
+  - name: Ubuntu 16 add source repo
+    copy: dest=/etc/apt/sources.list.d/onedata.list content="deb [arch=amd64] {{URL_BASE}}/apt/ubuntu/xenial xenial main"
+    when: ansible_distribution == "Ubuntu" and ansible_distribution_major_version == "16"
     notify: apt-get update
 
   - name: Apt-get update Ubuntu
@@ -44,8 +54,9 @@
   - name: Create {{ onedata_location }} directory
     file: path={{ onedata_location }} state=directory owner={{ansible_user}} group={{ansible_user}} mode=755
 
-  - name: Mount onedata path at {{ onedata_location }}
+  - name: Set provider_hostname at /etc/oneclient.conf
+    lineinfile: dest=/etc/oneclient.conf regexp=provider_hostname= line=provider_hostname="{{ oneprovider_host[0] }}" create=yes
+
+  - name: Mount onedata path at {{ onedata_location }} using as provider {{ oneprovider_host[0] }}
     shell: echo {{ onedata_token }} | oneclient --authentication token --no-check-certificate {{ onedata_location }} creates={{ onedata_location }}/spaces
     become: no
-    environment:
-       PROVIDER_HOSTNAME: 158.42.105.149
