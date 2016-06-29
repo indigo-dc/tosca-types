@@ -16,6 +16,13 @@ topology_template:
         endpoint:
           properties:
             network_name: PUBLIC
+            ports:
+              oneclient_5555:
+                protocol: tcp
+                source: 5555
+              oneclient_443:
+                protocol: tcp
+                source: 443
         scalable:
           properties:
             count: 1
