@@ -58,11 +58,9 @@
   - name: Create {{ onedata_location }} directory
     file: path={{ onedata_location }} state=directory owner={{ansible_user}} group={{ansible_user}} mode=755
 
-  - name: Set provider_hostname at /etc/oneclient.conf
-    lineinfile: dest=/etc/oneclient.conf regexp=provider_hostname= line=provider_hostname="{{ oneprovider_host[0] }}" create=yes
-
   - name: Mount onedata path at {{ onedata_location }} using as provider {{ oneprovider_host[0] }}
     shell: oneclient --authentication token --no-check-certificate {{ onedata_location }} creates={{ onedata_location }}/spaces
     become: no
     environment:
       ONECLIENT_AUTHORIZATION_TOKEN: "{{ onedata_token }}"
+      PROVIDER_HOSTNAME: "{{ oneprovider_host[0] }}"
