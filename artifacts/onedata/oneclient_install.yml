@@ -52,8 +52,9 @@
     apt: pkg=libtbb2 state=latest only_upgrade=yes
     when: ansible_distribution == "Ubuntu"
 
-  - name: Create {{ onedata_location }} directory
+  - name: Add {{ansible_user}} user to fuse group
     user: name={{ansible_user}} append=yes groups=fuse
+    when: ansible_distribution == "Ubuntu"
 
   - name: Create {{ onedata_location }} directory
     file: path={{ onedata_location }} state=directory owner={{ansible_user}} group={{ansible_user}} mode=755
