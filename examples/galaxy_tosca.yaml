@@ -8,17 +8,17 @@ description: >
   tool using Galaxy Tool Shed.
 
 topology_template:
+  inputs:
+    number_cpus:
+      type: integer
+      description: number of cpus required for the instance
+      default: 1
+    memory_size:
+      type: string
+      description: ram memory required for the instance
+      default: 1 GB
  
   node_templates:
-
-#    bowtie2_galaxy_tool:
-#      type: tosca.nodes.indigo.GalaxyShedTool
-#      properties:
-#         name: bowtie2
-#         owner: devteam
-#         tool_panel_section_id: ngs_mapping
-#      requirements:
-#        - host: galaxy
 
     galaxy:
       type: tosca.nodes.indigo.GalaxyPortal
@@ -40,20 +40,20 @@ topology_template:
             ports:
               http_port:
                 protocol: tcp
-                source: 8080
+                source: 80
         # Host container properties
         host:
          properties:
-           num_cpus: 1
-           mem_size: 1 GB
+           num_cpus: { get_input: number_cpus }
+           mem_size: { get_input: memory_size }
         # Guest Operating System properties
         os:
           properties:
-            # host Operating System image properties
             type: linux 
-            #distribution: scientific 
-            #version: 6.6
+            distribution: centos
+            version: 7
+            image: indigodatacloudapps/docker-galaxy
 
   outputs:
     galaxy_url:
-      value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ], ':8080' ] }
+      value: { concat: [ 'http://', get_attribute: [ galaxy_server, public_address, 0 ], '/galaxy' ] }
