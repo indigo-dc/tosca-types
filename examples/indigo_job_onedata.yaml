@@ -12,11 +12,13 @@ topology_template:
       type: string
       description: User token required to mount the user's INPUT Onedata space
       required: yes
+      default: ""
   
     output_onedata_token:
       type: string
       description: User token required to mount the user's OUTPUT Onedata space. It can be the same as the input token
       required: yes
+      default: ""
   
     input_onedata_providers:
       type: string
@@ -34,21 +36,25 @@ topology_template:
       type: string
       description: Onedata space where the application input data are stored
       required: yes
+      default: ""
   
     input_path:
       type: string
       description: Path to the input data inside the Input Onedata space
       required: yes
+      default: ""
   
     output_onedata_space:
       type: string
       description: Onedata space where the application output will be stored. It can be the same as the Input Onedata space
       required: yes
+      default: ""
   
     output_path:
       type: string
       description: Path to the output data inside the Output Onedata space
       required: yes
+      default: ""
   
     output_filenames:
       type: string
@@ -66,16 +72,19 @@ topology_template:
       type: float
       description: Amount of CPUs for this job
       required: yes
+      default: 1.0
     
     mem:
       type: scalar-unit.size
       description: Amount of Memory for this job
       required: yes 
+      default: 1 GB
   
     docker_image:
       type: string
       description: Docker image to be used to run the container application
       required: yes
+      default: ""
 
   node_templates:
     chronos_job:
