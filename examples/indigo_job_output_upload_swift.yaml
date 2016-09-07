@@ -20,26 +20,31 @@ topology_template:
       constraints:
          - valid_values: [ swift+keystone, swift ]
       required: yes
+      default: swift
   
     output_endpoint:
       type: string
       description: 'Auth URL of the Swift cluster (e.g. https://keystone-server.example.com:5000/v2.0 or http://swift-auth-server.example.com/auth/v1.0)'
       required: yes
+      default: ""
   
     output_path:
       type: string
       description: Swift Container were the output files will be uploaded
       required: yes
+      default: ""
   
     output_username:
       type: string 
       description: Username to access the swift account
       required: yes
+      default: ""
   
     output_password:
       type: string
       description: Password to access the swift account 
       required: yes
+      default: ""
   
     output_tenant:
       type: string
@@ -69,16 +74,19 @@ topology_template:
       type: float
       description: Amount of CPUs for this job
       required: yes
+      default: 1.0
     
     mem:
       type: scalar-unit.size
       description: Amount of Memory for this job
       required: yes
+      default: 1 GB
   
     docker_image:
       type: string
       description: Docker image to be used to run the container application
       required: yes
+      default: "indigodatacloud/ubuntu-sshd"
        
 
   node_templates:
