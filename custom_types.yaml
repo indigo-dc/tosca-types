@@ -231,11 +231,11 @@ node_types:
       zabbix_server:
         type: string
         required: no
-        default: 90.147.170.165
+        default: indigo-paas.cloud.ba.infn.it
       zabbix_server_port:
         type: PortDef
         required: no
-        default: 32314
+        default: 10051
       zabbix_server_metadata:
         type: string
         required: no
