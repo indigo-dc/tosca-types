@@ -46,6 +46,7 @@ topology_template:
       type: tosca.nodes.indigo.ElasticCluster
       properties:
         deployment_id: orchestrator_deployment_id
+        iam_access_token: iam_access_token
       requirements:
         - lrms: torque_front_end
         - wn: wn_node
@@ -69,7 +70,7 @@ topology_template:
             mem_size: { get_input: fe_mem }
         os:
           properties:
-            type: linux 
+            image: linux-ubuntu-14.04-vmi
 
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Torque
@@ -95,9 +96,7 @@ topology_template:
             mem_size: { get_input: wn_mem }
         os:
           properties:
-            type: linux 
-            #distribution: ubuntu 
-            #version: 14.04
+            image: linux-ubuntu-14.04-vmi
 
   outputs:
     cluster_ip:
