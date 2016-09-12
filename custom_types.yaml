@@ -374,6 +374,7 @@ node_types:
             ec3_max_instances: { get_property: [ SELF, wn, max_instances] }
             ec3_deployment_id: { get_property: [ SELF, deployment_id] }
             orchestrator_url: { get_property: [ SELF, orchestrator_url] }
+            ec3_iam_access_token: { get_property: [ SELF, iam_access_token] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
