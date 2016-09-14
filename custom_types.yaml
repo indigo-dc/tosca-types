@@ -360,6 +360,7 @@ node_types:
         type: string
         description: INDIGO IAM access token
         required: false
+        default: ""
     artifacts:
       docker_agent_role:
         file: indigo-dc.clues
