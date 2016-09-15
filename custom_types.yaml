@@ -776,6 +776,17 @@ node_types:
         constraints:
           - equal: powerfit
 
+  tosca.nodes.indigo.Eubiosteo:
+    derived_from: tosca.nodes.SoftwareComponent
+      artifacts:
+        galaxy_role:
+          file: indigo-dc.eubiosteo
+          type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/eubiosteo/eubiosteo_install.yml
+
   tosca.nodes.indigo.Ambertools:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
