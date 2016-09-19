@@ -48,4 +48,4 @@
       instance_ip:
         value: { get_attribute: [ eubiosteo_server, public_address, 0 ] }
       instance_creds:
-  value: { get_attribute: [ eubiosteo_server, endpoint, credential, 0 ] }
+        value: { get_attribute: [ eubiosteo_server, endpoint, credential, 0 ] }

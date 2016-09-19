@@ -797,3 +797,14 @@ node_types:
       Standard:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ambertools/ambertools_install.yml
+
+  tosca.nodes.indigo.Kepler:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.kepler
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/kepler/kepler_install.yml
