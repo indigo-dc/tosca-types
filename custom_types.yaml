@@ -778,10 +778,10 @@ node_types:
 
   tosca.nodes.indigo.Eubiosteo:
     derived_from: tosca.nodes.SoftwareComponent
-      artifacts:
-        galaxy_role:
-          file: indigo-dc.eubiosteo
-          type: tosca.artifacts.AnsibleGalaxy.role
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.eubiosteo
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
