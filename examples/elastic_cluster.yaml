@@ -63,6 +63,7 @@ topology_template:
       capabilities:
         endpoint:
           properties:
+            dns_name: torqueserver
             network_name: PUBLIC
         host:
           properties:
