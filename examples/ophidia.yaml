@@ -3,7 +3,7 @@
   imports:
     - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
   
-  description: TOSCA template for deploying an instance for EuBiOsteo
+  description: TOSCA template for deploying an instance for Ophidia
   
   topology_template:
     inputs:
