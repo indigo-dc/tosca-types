@@ -3,3 +3,4 @@
   connection: local
   roles:
     - role: indigo-dc.galaxycloud
+      GALAXY_VERSION: "{{ galaxy_version }}"
