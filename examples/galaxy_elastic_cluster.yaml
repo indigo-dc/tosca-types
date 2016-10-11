@@ -15,30 +15,47 @@ topology_template:
       description: Maximum number of WNs in the elastic cluster
       default: 5
       required: yes
- 
     fe_cpus:
       type: integer
       description: Numer of CPUs for the front-end node
       default: 1
       required: yes
-    
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
       default: 1 GB
       required: yes
-      
     wn_cpus:
       type: integer
       description: Numer of CPUs for the WNs
       default: 1
       required: yes
-    
     wn_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
       default: 1 GB
       required: yes
+      
+    admin_email:
+      type: string
+      description: email of the admin user
+      default: admin@admin.com
+    admin_api_key:
+      type: string
+      description: key to access the API with admin role
+      default: not_very_secret_api_key
+    version:
+      type: string
+      description: galaxy version to install
+      default: master
+    instance_description:
+      type: string
+      description: galaxy instance description
+      default: "INDIGO Galaxy test"
+    instance_key_pub:
+      type: string
+      description: galaxy instance ssh public key
+      default: your_ssh_public_key
 
   node_templates:
 
@@ -53,6 +70,12 @@ topology_template:
 
     galaxy_portal:
       type: tosca.nodes.indigo.GalaxyPortal
+      properties:
+        admin_email: { get_input: admin_email }
+        admin_api_key: { get_input: admin_api_key }
+        version: { get_input: version }
+        instance_description: { get_input: instance_description }
+        instance_key_pub: { get_input: instance_key_pub }
       requirements:
         - lrms: lrms_front_end
 
@@ -120,3 +143,4 @@ topology_template:
       value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
       value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
+
