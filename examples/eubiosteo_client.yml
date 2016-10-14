@@ -2,9 +2,9 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
   imports:
     - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
-  
+
   description: TOSCA template for deploying an instance for EuBiOsteo
-  
+
   topology_template:
     inputs:
       number_cpus:
@@ -27,14 +27,14 @@ tosca_definitions_version: tosca_simple_yaml_1_0
         type: string
         description: access token
         default: "MDAxNWxvY2F00aW9uIG9uZXpvbmUKMDAzYmlkZW500aWZpZXIgbTNXMHY4Wm5kejkyZWUyXzloYm1MOEtZbjJCSG1rTHBSYzAzUDA1dWZoWQowMDFhY2lkIHRpbWUgPCAxNTA3OTA2MjIzCjAwMmZzaWduYXR1cmUgi6Fk00k8Ga7QVxRxHO5j501XqBPFx02v011pKQE9ngO02IswK"
-  
+
     node_templates:
- 
+
       eubiosteo:
         type: tosca.nodes.indigo.Eubiosteo
         requirements:
           - host: onedata_client_node
-   
+
       onedata_client_node:
         type: tosca.nodes.indigo.Compute
         capabilities:
@@ -92,7 +92,7 @@ tosca_definitions_version: tosca_simple_yaml_1_0
         credential:
           token: { get_input: token }
           token_type: token
-  
+
     outputs:
       instance_ip:
         value: { get_attribute: [ eubiosteo_server, public_address, 0 ] }
