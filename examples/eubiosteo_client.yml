@@ -65,33 +65,33 @@ topology_template:
           properties:
             count: 1
 
-    requirements:
-      - local_storage:
-          node: my_onedata_storage
-          relationship:
-            type: AttachesTo
-            properties:
-              location: { get_input: location } 
-            interfaces:
-              Configure:
-                pre_configure_source:
-                  implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/onedata/oneclient_install.yml
-                  inputs:
-                    onedata_location: { get_property: [ SELF, location ] }
-                    onedata_token: { get_property: [ TARGET, credential, token ] }
-                    oneprovider_host: { get_property: [ TARGET, oneprovider_host ] }
-                    dataspace: { get_property: [ TARGET, dataspace ] }
-                    onezone_endpoint: { get_property: [ TARGET, onezone_endpoint ] }
+      requirements:
+        - local_storage:
+            node: my_onedata_storage
+            relationship:
+              type: tosca.relationships.AttachesTo
+              properties:
+                location: { get_input: location } 
+              interfaces:
+                Configure:
+                  pre_configure_source:
+                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/onedata/oneclient_install.yml
+                    inputs:
+                      onedata_location: { get_property: [ SELF, location ] }
+                      onedata_token: { get_property: [ TARGET, credential, token ] }
+                      oneprovider_host: { get_property: [ TARGET, oneprovider_host ] }
+                      dataspace: { get_property: [ TARGET, dataspace ] }
+                      onezone_endpoint: { get_property: [ TARGET, onezone_endpoint ] }
 
-  my_onedata_storage:
-    type: tosca.nodes.indigo.OneDataStorage
-    properties:
-      oneprovider_host: { get_input: oneprovider_host }
-      dataspace: "EUBIOSTEO"
-      onezone_endpoint: https://ozone01.ncg.ingrid.pt
-      credential:
-        token: { get_input: token }
-        token_type: token
+    my_onedata_storage: 
+      type: tosca.nodes.indigo.OneDataStorage
+      properties:
+        oneprovider_host: ["oprov01.ncg.ingrid.pt"]
+        dataspace: ["EUBIOSTEO"]
+        onezone_endpoint: https://ozone01.ncg.ingrid.pt
+        credential:
+          token: { get_input: token }
+          token_type: token
 
   outputs:
     instance_ip:
