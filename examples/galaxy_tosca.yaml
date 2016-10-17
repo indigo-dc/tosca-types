@@ -88,14 +88,15 @@ topology_template:
         - local_storage:
             # capability is provided by Compute Node Type
             node: my_block_storage
+            capability: tosca.capabilities.Attachment
             relationship:
-              type: AttachesTo
+              type: tosca.relationships.AttachesTo
               properties:
                 location: /mnt/disk
                 device: hdb
 
     my_block_storage:
-      type: BlockStorage
+      type: tosca.nodes.BlockStorage
       properties:
         size: 10 GB
 
