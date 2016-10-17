@@ -68,6 +68,7 @@ topology_template:
       requirements:
         - local_storage:
             node: my_onedata_storage
+            capability: tosca.capabilities.Attachment
             relationship:
               type: tosca.relationships.AttachesTo
               properties:
@@ -95,6 +96,6 @@ topology_template:
 
   outputs:
     instance_ip:
-      value: { get_attribute: [ eubiosteo_server, public_address, 0 ] }
+      value: { get_attribute: [ onedata_client_node, public_address, 0 ] }
     instance_creds:
-      value: { get_attribute: [ eubiosteo_server, endpoint, credential, 0 ] }
+      value: { get_attribute: [ onedata_client_node, endpoint, credential, 0 ] }
