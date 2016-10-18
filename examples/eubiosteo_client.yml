@@ -1,0 +1,101 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: TOSCA template for deploying an instance for EuBiOsteo
+
+topology_template:
+  inputs:
+    number_cpus:
+      type: integer
+      description: number of cpus required for the instance
+      default: 1
+    memory_size:
+      type: string
+      description: ram memory required for the instance
+      default: 1 GB
+    location: 
+      type: string
+      description: mounting point for the container
+      default: /mnt/
+    oneprovider_host: 
+      type: string
+      description: IP of the oneprovider
+      default: "oprov01.ncg.ingrid.pt"
+    token:
+      type: string
+      description: access token
+      default: "MDAxNWxvY2F00aW9uIG9uZXpvbmUKMDAzYmlkZW500aWZpZXIgbTNXMHY4Wm5kejkyZWUyXzloYm1MOEtZbjJCSG1rTHBSYzAzUDA1dWZoWQowMDFhY2lkIHRpbWUgPCAxNTA3OTA2MjIzCjAwMmZzaWduYXR1cmUgi6Fk00k8Ga7QVxRxHO5j501XqBPFx02v011pKQE9ngO02IswK"
+ 
+  node_templates:
+ 
+    eubiosteo:
+      type: tosca.nodes.indigo.Eubiosteo
+      requirements:
+        - host: onedata_client_node
+ 
+    onedata_client_node:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              oneclient_5555:
+                protocol: tcp
+                source: 5555
+              oneclient_443:
+                protocol: tcp
+                source: 443
+              ssh_port:
+                protocol: tcp
+                source: 22
+        host:
+          properties:
+            num_cpus: { get_input: number_cpus }
+            mem_size: { get_input: memory_size }
+        os:
+          properties:
+            type: linux 
+            distribution: ubuntu 
+            version: 14.04
+            image: indigodatacloudapps/eubiosteo
+        scalable:
+          properties:
+            count: 1
+
+      requirements:
+        - local_storage:
+            node: my_onedata_storage
+            capability: tosca.capabilities.Attachment
+            relationship:
+              type: tosca.relationships.AttachesTo
+              properties:
+                location: { get_input: location } 
+              interfaces:
+                Configure:
+                  pre_configure_source:
+                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/onedata/oneclient_install.yml
+                    inputs:
+                      onedata_location: { get_property: [ SELF, location ] }
+                      onedata_token: { get_property: [ TARGET, credential, token ] }
+                      oneprovider_host: { get_property: [ TARGET, oneprovider_host ] }
+                      dataspace: { get_property: [ TARGET, dataspace ] }
+                      onezone_endpoint: { get_property: [ TARGET, onezone_endpoint ] }
+
+    my_onedata_storage: 
+      type: tosca.nodes.indigo.OneDataStorage
+      properties:
+        oneprovider_host: ["oprov01.ncg.ingrid.pt"]
+        dataspace: ["EUBIOSTEO"]
+        onezone_endpoint: https://ozone01.ncg.ingrid.pt
+        credential:
+          token: { get_input: token }
+          token_type: token
+
+  outputs:
+    instance_ip:
+      value: { get_attribute: [ onedata_client_node, public_address, 0 ] }
+    instance_creds:
+      value: { get_attribute: [ onedata_client_node, endpoint, credential, 0 ] }
