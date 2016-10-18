@@ -1,51 +1,82 @@
-  tosca_definitions_version: tosca_simple_yaml_1_0
+tosca_definitions_version: tosca_simple_yaml_1_0
   
-  imports:
-    - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/custom_types.yaml
   
-  description: TOSCA template for deploying an instance for Ophidia
+description: TOSCA template for deploying an instance for Ophidia
   
-  topology_template:
-    inputs:
-      number_cpus:
-        type: integer
-        description: number of cpus required for the instance
-        default: 1
-      memory_size:
-        type: string
-        description: ram memory required for the instance
-        default: 1 GB
+topology_template:
+  inputs:
+    fe_number_cpus:
+      type: integer
+      description: number of cpus required for the server instance
+      default: 1
+    fe_memory_size:
+      type: string
+      description: ram memory required for the server instance
+      default: 1 GB
+    wn_number_cpus:
+      type: integer
+      description: number of cpus required for the WN instances
+      default: 1
+    wn_memory_size:
+      type: string
+      description: ram memory required for the WN instances
+      default: 1 GB
+    num_of_io_nodes:
+      type: integer
+      description: number of ophidia oi nodes to launch
+      default: 1
   
-    node_templates:
+  node_templates:
   
-      eubiosteo:
-        type: tosca.nodes.indigo.Ophidia
-        requirements:
-          - host: ophidia_server
-   
-      ophidia_server:
-        type: tosca.nodes.indigo.Compute
-        capabilities:
-          endpoint:
-            properties:
-              network_name: PUBLIC
-              ports:
-                ssh_port:
-                  protocol: tcp
-                  source: 22
-          host:
-           properties:
-             num_cpus: { get_input: number_cpus }
-             mem_size: { get_input: memory_size }
-          os:
-            properties:
-              type: linux 
-              distribution: ubuntu 
-              version: 14.04
-              image: indigodatacloudapps/ophidia
+    ophidiafe:
+      type: tosca.nodes.indigo.OphidiaServer
+      requirements:
+        - host: ophidia_server
+ 
+    ophidia_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              ssh_port:
+                protocol: tcp
+                source: 22
+        host:
+         properties:
+           num_cpus: { get_input: fe_number_cpus }
+           mem_size: { get_input: fe_memory_size }
+        os:
+          properties:
+            image: ophidia-server-vmi
+
+    ophidiaio:
+      type: tosca.nodes.indigo.OphidiaIO
+      requirements:
+        - host: ophidia_io
+
+    ophidia_io:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        scalable:
+          properties:
+            count: { get_input: num_of_io_nodes }
+        endpoint:
+          properties:
+            network_name: PRIVATE
+        host:
+         properties:
+           num_cpus: { get_input: wn_number_cpus }
+           mem_size: { get_input: wn_memory_size }
+        os:
+          properties:
+            image: ophidia-io-vmi
   
-    outputs:
-      instance_ip:
-        value: { get_attribute: [ ophidia_server, public_address, 0 ] }
-      instance_creds:
-        value: { get_attribute: [ ophidia_server, endpoint, credential, 0 ] }
+  outputs:
+    instance_ip:
+      value: { get_attribute: [ ophidia_server, public_address, 0 ] }
+    instance_creds:
+      value: { get_attribute: [ ophidia_server, endpoint, credential, 0 ] }

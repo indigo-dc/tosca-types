@@ -1,5 +1,0 @@
----
-- hosts: localhost
-  connection: local
-  roles:
-    - role: indigo-dc.ophidia-all

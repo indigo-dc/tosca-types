@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.ophidia-cluster
+      node_type: 'io'
+      deploy_type: 'install'
+    - role: indigo-dc.ophidia-cluster
+      node_type: 'io'
+      deploy_type: 'configure'
+      mysql_subnet: "{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask }}"
+      slurm_nodes_name: vnode-
