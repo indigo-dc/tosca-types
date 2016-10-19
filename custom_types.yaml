@@ -827,6 +827,14 @@ node_types:
 
   tosca.nodes.indigo.OphidiaServer:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      io_ips:
+        type: list
+        entry_schema:
+          type: string
+        description: List of IPs of the Ophidia IO nodes
+        required: false
+        default: []
     artifacts:
       galaxy_role:
         file: indigo-dc.ophidia-cluster
@@ -834,11 +842,17 @@ node_types:
     interfaces:
       Standard:
         configure:
-          #implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_server_install.yml
-          implementation: ophidia/ophidia_server_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_server_install.yml
+          inputs:
+            ophidia_io_ips: { get_property: [ SELF, io_ips ] }
 
   tosca.nodes.indigo.OphidiaIO:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      server_ip:
+        type: string
+        description: IP of the OphidiaServer node
+        required: true
     artifacts:
       galaxy_role:
         file: indigo-dc.ophidia-cluster
@@ -846,5 +860,6 @@ node_types:
     interfaces:
       Standard:
         configure:
-          #implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
-          implementation: ophidia/ophidia_io_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
+          inputs:
+            ophidia_server_ip: { get_property: [ SELF, server_ip ] }
