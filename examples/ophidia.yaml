@@ -32,14 +32,17 @@ topology_template:
   
     ophidiafe:
       type: tosca.nodes.indigo.OphidiaServer
+      properties:
+        io_ips: { get_attribute: [ ophidiaio, private_address ] }
       requirements:
-        - host: ophidia_server
+        - host: ophidiaserver
  
-    ophidia_server:
+    ophidiaserver:
       type: tosca.nodes.indigo.Compute
       capabilities:
         endpoint:
           properties:
+            dns_name: slurmserver
             network_name: PUBLIC
             ports:
               ssh_port:
@@ -53,12 +56,14 @@ topology_template:
           properties:
             image: ophidia-server-vmi
 
-    ophidiaio:
-      type: tosca.nodes.indigo.OphidiaIO
-      requirements:
-        - host: ophidia_io
-
     ophidia_io:
+      type: tosca.nodes.indigo.OphidiaIO
+      properties:
+        server_ip: { get_attribute: [ ophidiaserver, private_address, 0 ] }
+      requirements:
+        - host: ophidiaio
+
+    ophidiaio:
       type: tosca.nodes.indigo.Compute
       capabilities:
         scalable:
@@ -73,10 +78,11 @@ topology_template:
            mem_size: { get_input: wn_memory_size }
         os:
           properties:
-            image: ophidia-io-vmi
+            #image: ophidia-io-vmi
+            image: one://onecloud.i3m.upv.es/380
   
   outputs:
     instance_ip:
-      value: { get_attribute: [ ophidia_server, public_address, 0 ] }
+      value: { get_attribute: [ ophidiaserver, public_address, 0 ] }
     instance_creds:
-      value: { get_attribute: [ ophidia_server, endpoint, credential, 0 ] }
+      value: { get_attribute: [ ophidiaserver, endpoint, credential, 0 ] }
