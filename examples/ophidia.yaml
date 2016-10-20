@@ -78,8 +78,7 @@ topology_template:
            mem_size: { get_input: wn_memory_size }
         os:
           properties:
-            #image: ophidia-io-vmi
-            image: one://onecloud.i3m.upv.es/380
+            image: ophidia-io-vmi
   
   outputs:
     instance_ip:
