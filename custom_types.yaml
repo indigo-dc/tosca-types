@@ -836,8 +836,14 @@ node_types:
         required: false
         default: []
     artifacts:
-      galaxy_role:
+      ophidia_role:
         file: indigo-dc.ophidia-cluster
+        type: tosca.artifacts.AnsibleGalaxy.role
+      slurm_role:
+        file: indigo-dc.slurm
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -854,8 +860,14 @@ node_types:
         description: IP of the OphidiaServer node
         required: true
     artifacts:
-      galaxy_role:
+      ophidia_role:
         file: indigo-dc.ophidia-cluster
+        type: tosca.artifacts.AnsibleGalaxy.role
+      slurm_role:
+        file: indigo-dc.slurm
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
