@@ -22,7 +22,7 @@
       mysql_subnet: "{{ SUBNET }}"
       compute_subnet: "{{ SUBNET }}"
       slurm_nodes_name: "{{ vnode_prefix }}"
-      server_ip: '{{ ophidia_server_ip }}'
+      server_ip: '{{ ansible_default_ipv4 }}'
 
     - role: indigo-dc.nfs
       nfs_mode: 'server'
