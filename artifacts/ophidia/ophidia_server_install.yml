@@ -7,10 +7,6 @@
   pre_tasks:
     - service: name=firewalld state=stopped
   roles:
-    - role: indigo-dc.nfs
-      nfs_mode: 'server'
-      nfs_exports: [{path: "/data", export: "{{ vnode_prefix }}*(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
-
     - role: indigo-dc.slurm
       slurm_type_of_node: 'front'
       slurm_wn_ips: "{{ ophidia_io_ips }}"
@@ -26,3 +22,7 @@
       mysql_subnet: "{{ SUBNET }}"
       compute_subnet: "{{ SUBNET }}"
       slurm_nodes_name: "{{ vnode_prefix }}"
+
+    - role: indigo-dc.nfs
+      nfs_mode: 'server'
+      nfs_exports: [{path: "/data", export: "{{ vnode_prefix }}*(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
