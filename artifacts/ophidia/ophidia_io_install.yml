@@ -7,6 +7,7 @@
     - role: indigo-dc.slurm
       slurm_type_of_node: 'wn'
       slurm_server_ip: '{{ ophidia_server_ip }}'
+      slurm_wn_ips: "{{ groups['ophidiaio']|map('extract', hostvars,'ansible_default_ipv4')|list }}"
 
     - role: indigo-dc.ophidia-cluster
       node_type: 'io'
