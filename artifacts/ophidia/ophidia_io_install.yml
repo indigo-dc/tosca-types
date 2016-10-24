@@ -6,7 +6,7 @@
   roles:
     - role: indigo-dc.nfs
       nfs_mode: 'client'
-      nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ ophidia_server_ip }}" }]
+      nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ ophidia_server_ip }}" }]
       
     - role: indigo-dc.slurm
       slurm_type_of_node: 'wn'
