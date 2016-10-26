@@ -48,6 +48,12 @@ topology_template:
               ssh_port:
                 protocol: tcp
                 source: 22
+              ophidia_port:
+                protocol: tcp
+                source: 11732
+              data_port:
+                protocol: tcp
+                source: 8080
         host:
          properties:
            num_cpus: { get_input: fe_number_cpus }
@@ -55,6 +61,19 @@ topology_template:
         os:
           properties:
             image: ophidia-server-vmi
+      requirements:
+        - local_storage:
+            node: ophidia_server_block_storage
+            relationship:
+              type: AttachesTo
+              properties:
+                location: /data/repository
+                #device: hdb
+
+    ophidia_server_block_storage:
+      type: BlockStorage
+      properties:
+        size: 25 GB
 
     ophidia_io:
       type: tosca.nodes.indigo.OphidiaIO
@@ -79,6 +98,19 @@ topology_template:
         os:
           properties:
             image: ophidia-io-vmi
+      requirements:
+        - local_storage:
+            node: ophidia_io_block_storage
+            relationship:
+              type: AttachesTo
+              properties:
+                location: /var/lib/mysql
+                #device: hdb
+
+    ophidia_io_block_storage:
+      type: BlockStorage
+      properties:
+        size: 10 GB
   
   outputs:
     instance_ip:
