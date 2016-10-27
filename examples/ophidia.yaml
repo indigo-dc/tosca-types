@@ -98,19 +98,6 @@ topology_template:
         os:
           properties:
             image: ophidia-io-vmi
-      requirements:
-        - local_storage:
-            node: ophidia_io_block_storage
-            relationship:
-              type: AttachesTo
-              properties:
-                location: /var/lib/mysql
-                #device: hdb
-
-    ophidia_io_block_storage:
-      type: BlockStorage
-      properties:
-        size: 10 GB
   
   outputs:
     instance_ip:
