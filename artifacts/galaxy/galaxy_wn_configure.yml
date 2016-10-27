@@ -1,8 +1,8 @@
 ---
 - hosts: localhost
   connection: local
-  roles:
-    - get_url: url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
+  tasks:
+    - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
     - include_vars: /tmp/galaxywn.yml
     
     - name: Create User {{galaxy_user}} on the server
