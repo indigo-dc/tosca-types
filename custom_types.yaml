@@ -848,7 +848,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/ophidia/ophidia_server_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_server_install.yml
           inputs:
             ophidia_io_ips: { get_property: [ SELF, io_ips ] }
 
@@ -872,6 +872,6 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/ophidia/ophidia_io_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
           inputs:
             ophidia_server_ip: { get_property: [ SELF, server_ip ] }
