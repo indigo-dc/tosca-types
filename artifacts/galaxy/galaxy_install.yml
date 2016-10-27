@@ -4,3 +4,4 @@
   roles:
     - role: indigo-dc.galaxycloud
       GALAXY_VERSION: "{{ galaxy_version }}"
+      export_dir: /home/galaxy
