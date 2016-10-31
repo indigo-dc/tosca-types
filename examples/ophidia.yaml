@@ -67,7 +67,7 @@ topology_template:
             relationship:
               type: AttachesTo
               properties:
-                location: /data/repository
+                location: /data
                 #device: hdb
 
     ophidia_server_block_storage:
