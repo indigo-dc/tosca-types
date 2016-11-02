@@ -11,3 +11,4 @@
     slurm_type_of_node: 'front'
     slurm_wn_ips: '{{ wn_ips }}'
     slurm_vnode_prefix: '{{ vnode_prefix }}'
+    slurm_wn_nodenames: '{{ groups["lrms_wn"]|map("extract", hostvars, "ansible_hostname")|list if "lrms_wn" in groups else [] }}'
