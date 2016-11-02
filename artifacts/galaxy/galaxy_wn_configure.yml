@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  vars: 
+     slurm_wn_ips: "{{ groups['lrms_wn']|map('extract', hostvars,'ansible_default_ipv4')|list }}"
   tasks:
     - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
     - include_vars: /tmp/galaxywn.yml
