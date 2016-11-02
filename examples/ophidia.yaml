@@ -64,14 +64,14 @@ topology_template:
       requirements:
         - local_storage:
             node: ophidia_server_block_storage
+            capability: tosca.capabilities.Attachment
             relationship:
-              type: AttachesTo
+              type: tosca.relationships.AttachesTo
               properties:
                 location: /data
-                #device: hdb
 
     ophidia_server_block_storage:
-      type: BlockStorage
+      type: tosca.nodes.BlockStorage
       properties:
         size: 25 GB
 
