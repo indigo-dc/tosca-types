@@ -19,10 +19,9 @@
     - role: indigo-dc.ophidia-cluster
       node_type: 'server'
       deploy_type: 'configure'
-      slurm_nodes_ips: "{{ ophidia_io_ips }}"
+      io_nodes_ips: "{{ ophidia_io_ips }}"
       mysql_subnet: "{{ SUBNET }}"
       compute_subnet: "{{ SUBNET }}"
-      slurm_nodes_name: "{{ vnode_prefix }}"
       server_ip: '{{ ansible_default_ipv4.address }}'
 
     - role: indigo-dc.nfs
