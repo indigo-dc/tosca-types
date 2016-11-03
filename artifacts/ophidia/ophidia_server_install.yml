@@ -22,7 +22,7 @@
       io_nodes_ips: "{{ ophidia_io_ips }}"
       mysql_subnet: "{{ SUBNET }}"
       compute_subnet: "{{ SUBNET }}"
-      server_ip: '{{ ansible_default_ipv4.address }}'
+      server_ip: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
 
     - role: indigo-dc.nfs
       nfs_mode: 'server'
