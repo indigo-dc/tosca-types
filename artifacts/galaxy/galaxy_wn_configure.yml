@@ -16,66 +16,66 @@
     
     - name: Add the authorized_key to the user {{galaxy_user}}
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
+#
+#    - name: Install tools depedencencies
+#      yum: name={{item}} state=present
+#      with_items:
+#        - java-1.7.0-openjdk # fastqc dependency
+#        - libpng12 # samtools dependency
+#        - ncurses # samtools dependency
+#        - ncurses-devel # samtools dependency
+#        - BEDTools
+#      when: ansible_os_family == "RedHat"
+#
+#    - name: Install tools dependencies
+#      apt: name={{item}} state=present
+#      with_items:
+#        - openjdk-7-jdk # fastqc dependency
+#        - libpng-dev # samtools dependency
+#        - libncurses5-dev # samtools dependency
+#        - bedtools
+#      when: ansible_os_family == "Debian"
 
-    - name: Install tools depedencencies
-      yum: name={{item}} state=present
-      with_items:
-        - java-1.7.0-openjdk # fastqc dependency
-        - libpng12 # samtools dependency
-        - ncurses # samtools dependency
-        - ncurses-devel # samtools dependency
-        - BEDTools
-      when: ansible_os_family == "RedHat"
+#    - set_fact: samtools_path="/opt/samtools"
+#    - set_fact: samtools_version="1.3.1"
 
-    - name: Install tools dependencies
-      apt: name={{item}} state=present
-      with_items:
-        - openjdk-7-jdk # fastqc dependency
-        - libpng-dev # samtools dependency
-        - libncurses5-dev # samtools dependency
-        - bedtools
-      when: ansible_os_family == "Debian"
+#    - name: Create SamTools destination directory
+#      file: path={{samtools_path}}
+#            state=directory
+#            owner={{galaxy_user}}
+#            group={{galaxy_user}}
 
-    - set_fact: samtools_path="/opt/samtools"
-    - set_fact: samtools_version="1.3.1"
+#    - name: Download SamTools latest version
+#      get_url: url=https://github.com/samtools/samtools/releases/download/1.3.1/samtools-{{samtools_version}}.tar.bz2
+#               dest={{samtools_path}}/samtools-{{samtools_version}}.tar.bz2
+#      become_user: "{{galaxy_user}}"
+#      become: true
 
-    - name: Create SamTools destination directory
-      file: path={{samtools_path}}
-            state=directory
-            owner={{galaxy_user}}
-            group={{galaxy_user}}
+#    - name: Extract tar.bz2 file
+#      command: 'tar xvjf {{samtools_path}}/samtools-{{samtools_version}}.tar.bz2'
+#      args:
+#        chdir: '{{samtools_path}}'
+#      become_user: "{{galaxy_user}}"
+#      become: true
 
-    - name: Download SamTools latest version
-      get_url: url=https://github.com/samtools/samtools/releases/download/1.3.1/samtools-{{samtools_version}}.tar.bz2
-               dest={{samtools_path}}/samtools-{{samtools_version}}.tar.bz2
-      become_user: "{{galaxy_user}}"
-      become: true
+#    - name: Running make
+#      command: 'make'
+#      args:
+#        chdir: '{{samtools_path}}/samtools-{{samtools_version}}'
+#      become_user: "{{galaxy_user}}"
+#      become: true
 
-    - name: Extract tar.bz2 file
-      command: 'tar xvjf {{samtools_path}}/samtools-{{samtools_version}}.tar.bz2'
-      args:
-        chdir: '{{samtools_path}}'
-      become_user: "{{galaxy_user}}"
-      become: true
+#    - name: Running make install
+#      command: 'make install'
+#      args:
+#        chdir: '{{samtools_path}}/samtools-{{samtools_version}}'
 
-    - name: Running make
-      command: 'make'
-      args:
-        chdir: '{{samtools_path}}/samtools-{{samtools_version}}'
-      become_user: "{{galaxy_user}}"
-      become: true
-
-    - name: Running make install
-      command: 'make install'
-      args:
-        chdir: '{{samtools_path}}/samtools-{{samtools_version}}'
-
-    - name: Install bedGraphToBigWig
-      get_url: url=http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
-      args:
-        dest: "/usr/local/bin/"
-        force: "yes"
-        mode: "a+x"
+#    - name: Install bedGraphToBigWig
+#      get_url: url=http://hgdownload.cse.ucsc.edu/admin/exe/linux.x86_64/bedGraphToBigWig
+#      args:
+#        dest: "/usr/local/bin/"
+#        force: "yes"
+#        mode: "a+x"
 
     - set_fact: fastqc_path="/opt/fastqc"
     - set_fact: fastqc_version="0.11.5"
