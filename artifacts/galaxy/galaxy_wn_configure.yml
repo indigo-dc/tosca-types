@@ -34,6 +34,7 @@
       with_items:
         - build-essential
         - autoconf
+        - libz-dev
         - unzip
         - openjdk-7-jdk # fastqc dependency
         - libpng-dev # samtools dependency
