@@ -16,25 +16,26 @@
     
     - name: Add the authorized_key to the user {{galaxy_user}}
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
-#
-#    - name: Install tools depedencencies
-#      yum: name={{item}} state=present
-#      with_items:
-#        - java-1.7.0-openjdk # fastqc dependency
-#        - libpng12 # samtools dependency
-#        - ncurses # samtools dependency
-#        - ncurses-devel # samtools dependency
-#        - BEDTools
-#      when: ansible_os_family == "RedHat"
-#
-#    - name: Install tools dependencies
-#      apt: name={{item}} state=present
-#      with_items:
-#        - openjdk-7-jdk # fastqc dependency
-#        - libpng-dev # samtools dependency
-#        - libncurses5-dev # samtools dependency
-#        - bedtools
-#      when: ansible_os_family == "Debian"
+
+    - name: Install tools depedencencies
+      yum: name={{item}} state=present
+      with_items:
+        - java-1.7.0-openjdk # fastqc dependency
+        - libpng12 # samtools dependency
+        - ncurses # samtools dependency
+        - ncurses-devel # samtools dependency
+        - BEDTools
+      when: ansible_os_family == "RedHat"
+
+    - name: Install tools dependencies
+      apt: name={{item}} state=present
+      with_items:
+        - unzip
+        - openjdk-7-jdk # fastqc dependency
+        - libpng-dev # samtools dependency
+        - libncurses5-dev # samtools dependency
+        - bedtools
+      when: ansible_os_family == "Debian"
 
 #    - set_fact: samtools_path="/opt/samtools"
 #    - set_fact: samtools_version="1.3.1"
