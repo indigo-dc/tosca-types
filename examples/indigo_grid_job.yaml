@@ -1,0 +1,30 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+#  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: file:///home/micafer/codigo/tosca-types/custom_types.yaml
+
+
+description: TOSCA example for submitting a job to a CREAM CE 
+
+topology_template:
+
+  node_templates:
+
+    grid_job:
+      type: tosca.nodes.indigo.Grid.Job
+      properties:
+        ce_url: https://creamce.domain.com:8433/cream-pbs-queue
+        executable: /bin/ls
+        arguments: -ls
+        environment:
+          SOME_VAR: some_value
+          SOME_VAR2: some_value2
+        stdoutput: std.out
+        stderror: std.err
+        outputsandbox:
+          - std.out
+          - std.err
+        inputsandbox:
+          - "gsiftp://somserver.com./somfile.dat"
+        virtualorganisation: cms
