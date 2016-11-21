@@ -935,3 +935,47 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
           inputs:
             ophidia_server_ip: { get_property: [ SELF, server_ip ] }
+
+# https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
+  tosca.nodes.indigo.Grid.Job:
+    derived_from: tosca.nodes.Root
+    properties:
+      ce_url:
+        required: yes
+        type: string
+        description: The CREAM CE identifier to launch the job
+      executable:
+        required: yes
+        type: string
+        description: Name of the executable file
+      arguments:
+        required: no
+        type: string
+        description: Arguments for the job executable
+      environment:
+        type: map
+        entry_schema:
+          type: string
+        description: A map of string representing environment settings
+      stdoutput:
+        required: no
+        description: Name of the file to get the standard output stream of the user application
+        type: string
+      stderror:
+        required: no
+        type: string
+        description: Name of the file to get the standard error stream of the user application
+      outputsandbox:
+        type: list
+        entry_schema:
+          type: string
+        description: A list of output sandbox files
+      inputsandbox:
+        type: list
+        entry_schema:
+          type: string
+        description: A list of input sandbox files (URL of files located in gridFTP servers)
+      virtualorganisation:
+        required: no
+        type: string
+        description: Specify the VO of the user
