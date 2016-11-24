@@ -27,4 +27,4 @@
 
     - role: indigo-dc.nfs
       nfs_mode: 'server'
-      nfs_exports: [{path: "/data", export: "{{ vnode_prefix }}*(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
+      nfs_exports: [{path: "/data", export: "{{ vnode_prefix }}*.localdomain(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
