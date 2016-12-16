@@ -936,14 +936,9 @@ node_types:
           inputs:
             ophidia_server_ip: { get_property: [ SELF, server_ip ] }
 
-# https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
-  tosca.nodes.indigo.Grid.Job:
+  tosca.nodes.indigo.Batch.Job:
     derived_from: tosca.nodes.Root
     properties:
-      ce_url:
-        required: yes
-        type: string
-        description: The CREAM CE identifier to launch the job
       executable:
         required: yes
         type: string
@@ -957,6 +952,17 @@ node_types:
         entry_schema:
           type: string
         description: A map of string representing environment settings
+
+# https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
+  tosca.nodes.indigo.Grid.Job:
+    derived_from: tosca.nodes.indigo.Batch.Job
+    properties:
+      ce_urls:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+        description: A list of CREAM CE identifiers to launch the job        
       stdoutput:
         required: no
         description: Name of the file to get the standard output stream of the user application
