@@ -13,7 +13,7 @@ topology_template:
     grid_job:
       type: tosca.nodes.indigo.Grid.Job
       properties:
-        ce_url: https://creamce.domain.com:8433/cream-pbs-queue
+        ce_urls: ['https://creamce.domain.com:8433/cream-pbs-queue']
         executable: /bin/ls
         arguments: -ls
         environment:
