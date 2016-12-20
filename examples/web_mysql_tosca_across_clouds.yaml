@@ -1,0 +1,131 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  TOSCA document for launching a classic example of a two tier application with an
+  Apache web server and a MySQL DB across two different Cloud sites
+
+topology_template:
+  inputs:
+    db_name:
+      type: string
+      default: world
+    db_user:
+      type: string
+      default: dbuser
+    db_password:
+      type: string
+      default: pass
+    mysql_root_password:
+      type: string
+      default: mypass
+
+  node_templates:
+
+    apache:
+      type: tosca.nodes.WebServer.Apache
+      requirements:
+        - host: web_server
+
+    web_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              http_port:
+                protocol: tcp
+                source: 80
+              https_port:
+                protocol: tcp
+                source: 443
+
+        # Host container properties
+        host:
+         properties:
+           num_cpus: 1
+           mem_size: 1 GB
+        # Guest Operating System properties
+        os:
+          properties:
+            # host Operating System image properties
+            type: linux
+            distribution: ubuntu
+
+    test_db:
+      type: tosca.nodes.indigo.Database.MySQL
+      properties:
+        name: { get_input: db_name }
+        user: { get_input: db_user }
+        password: { get_input: db_password }
+        root_password: { get_input: mysql_root_password }
+      artifacts:
+        db_content:
+          file: http://downloads.mysql.com/docs/world.sql.gz
+          type: tosca.artifacts.File
+      requirements:
+        - host:
+            node: mysql
+      interfaces:
+        Standard:
+          configure:
+            implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_db_import.yml
+            inputs:
+              db_name: { get_property: [ SELF, name ] }
+              db_data: { get_artifact: [ SELF, db_content ] }
+              db_user: { get_property: [ SELF, user ] }
+              db_password: { get_property: [ SELF, password ] }
+
+    mysql:
+      type: tosca.nodes.DBMS.MySQL
+      properties:
+        root_password: { get_input: mysql_root_password }
+      requirements:
+        - host:
+            node: db_server
+
+    db_server:
+      type: tosca.nodes.Compute
+      capabilities:
+        # Host container properties
+        host:
+         properties:
+           num_cpus: 1
+           disk_size: 10 GB
+           mem_size: 4 GB
+        os:
+         properties:
+           architecture: x86_64
+           type: linux
+           distribution: ubuntu
+      requirements:
+        # contextually this can only be a relationship type
+        - local_storage:
+            # capability is provided by Compute Node Type
+            node: my_block_storage
+            relationship:
+              type: AttachesTo
+              properties:
+                location: /mnt/disk
+                device: hdb
+
+    my_block_storage:
+      type: BlockStorage
+      properties:
+        size: 1 GB
+
+#Front-End in OpenNebula (UPV, OneCloud). Back-End in OpenStack (INFN, Recas-Bari)
+policies:
+  - across_clouds_policy_backend:
+      type: tosca.policies.Placement
+      metadata: { sla_id: 4401ac5dc8cfbbb737b0a02575e6f4bc }
+      targets: [ db_server ]
+
+  - across_clouds_policy_fronted:
+    type: tosca.policies.Placement
+    metadata: { sla_id: 7efc59c5db69ea67c5100de0f73981be }
+    targets: [ web_server ]
+
