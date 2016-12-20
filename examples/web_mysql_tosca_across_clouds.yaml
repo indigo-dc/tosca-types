@@ -118,14 +118,13 @@ topology_template:
         size: 1 GB
 
 #Front-End in OpenNebula (UPV, OneCloud). Back-End in OpenStack (INFN, Recas-Bari)
-policies:
-  - across_clouds_policy_backend:
-      type: tosca.policies.Placement
-      metadata: { sla_id: 4401ac5dc8cfbbb737b0a02575e6f4bc }
-      targets: [ db_server ]
+  policies:
+   - across_clouds_policy_backend:
+     type: tosca.policies.Placement
+     metadata: { sla_id: 4401ac5dc8cfbbb737b0a02575e6f4bc }
+     targets: [ db_server ]
 
-  - across_clouds_policy_fronted:
-    type: tosca.policies.Placement
-    metadata: { sla_id: 7efc59c5db69ea67c5100de0f73981be }
-    targets: [ web_server ]
-
+   - across_clouds_policy_fronted:
+     type: tosca.policies.Placement
+     metadata: { sla_id: 7efc59c5db69ea67c5100de0f73981be }
+     targets: [ web_server ]
