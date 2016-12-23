@@ -38,7 +38,7 @@
     ignore_errors: yes
 
   - name: Install Ubuntu oneclient package
-    apt: pkg=oneclient
+    apt: pkg=oneclient,fuse
     when: ansible_distribution == "Ubuntu"
     
   - name: Install REL oneclient package
@@ -47,6 +47,10 @@
     
   - name: Install Ubuntu oneclient package
     apt: pkg=libtbb2 state=latest only_upgrade=yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: Add {{ansible_user}} user to fuse group
+    user: name={{ansible_user}} append=yes groups=fuse
     when: ansible_distribution == "Ubuntu"
 
   - name: Create {{ onedata_location }} directory
