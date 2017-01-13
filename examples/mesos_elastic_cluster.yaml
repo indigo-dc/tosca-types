@@ -14,13 +14,31 @@ topology_template:
       default: 5
       required: yes
 
+    marathon_password:
+      type: string
+      description: Password to configure user access to Marathon
+      default: test_pass
+      required: yes
+
+    chronos_password:
+      type: string
+      description: Password to configure user access to Chronos
+      default: test_pass
+      required: yes
+
   node_templates:
 
     elastic_cluster_front_end:
       type: tosca.nodes.indigo.ElasticCluster
       properties:
         deployment_id: orchestrator_deployment_id
-        orchestrator_url: http://jonsu.i3m.upv.es:8080
+        iam_access_token: iam_access_token
+        marathon_credentials: 
+          protocol: https
+          token:  { get_input: marathon_password }
+        chronos_credentials: 
+          protocol: https
+          token:  { get_input: chronos_password }
       requirements:
         - lrms: mesos_master
         - wn: mesos_slave
@@ -28,8 +46,8 @@ topology_template:
     mesos_master:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
       properties:
-        marathon_password: test_pass
-        chronos_password: test_pass
+        marathon_password: { get_input: marathon_password }
+        chronos_password: { get_input: chronos_password }
       requirements:
         - host: mesos_master_server
 
