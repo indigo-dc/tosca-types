@@ -387,6 +387,30 @@ node_types:
         description: INDIGO IAM access token
         required: false
         default: iam_access_token
+      marathon_credentials:
+        type: tosca.datatypes.Credential
+        description: Credentials to access the marathon endpoint from CLUES plugin
+        default:
+          protocol: http
+          user: admin
+          token: password
+        required: false
+      chronos_credentials:
+        type: tosca.datatypes.Credential
+        description: Credentials to access the chronos endpoint from CLUES plugin
+        default:
+          protocol: http
+          user: admin
+          token: password
+        required: false
+      mesos_credentials:
+        type: tosca.datatypes.Credential
+        description: Credentials to access the mesos endpoint from CLUES plugin
+        default:
+          protocol: http
+          user: admin
+          token: password
+        required: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.clues
@@ -402,6 +426,9 @@ node_types:
             ec3_deployment_id: { get_property: [ SELF, deployment_id] }
             orchestrator_url: { get_property: [ SELF, orchestrator_url] }
             ec3_iam_access_token: { get_property: [ SELF, iam_access_token] }
+            clues_marathon_credentials: { get_property: [ SELF, marathon_credentials] }
+            clues_chronos_credentials: { get_property: [ SELF, chronos_credentials] }
+            clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
