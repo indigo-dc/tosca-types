@@ -36,9 +36,11 @@ topology_template:
         marathon_credentials: 
           protocol: https
           token:  { get_input: marathon_password }
+          user: admin
         chronos_credentials: 
           protocol: https
           token:  { get_input: chronos_password }
+          user: admin
       requirements:
         - lrms: mesos_master
         - wn: mesos_slave
