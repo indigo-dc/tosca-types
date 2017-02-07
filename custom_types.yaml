@@ -211,7 +211,7 @@ node_types:
         type: list
         entry_schema:
           type: string
-      cription
+      public_address:
         type: list
         entry_schema:
           type: string
