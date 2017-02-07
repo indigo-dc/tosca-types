@@ -36,6 +36,7 @@ topology_template:
       capabilities:
         endpoint:
           properties:
+            dns_name: mesosserverpublic
             network_name: PUBLIC
         scalable:
           properties:
