@@ -3,3 +3,4 @@
   connection: local
   roles:
   - role: indigo-dc.clues
+    indigo_orchestrator_url: "{{ orchestrator_url }}"
