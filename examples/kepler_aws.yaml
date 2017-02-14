@@ -1,0 +1,70 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: TOSCA template for deploying an instance for Kepler
+
+topology_template:
+  inputs:
+    number_cpus:
+      type: integer
+      description: number of cpus required for the instance
+      default: 1
+    memory_size:
+      type: string
+      description: ram memory required for the instance
+      default: 1 GB
+    access_key:
+      type: string
+      default: AKXX
+    secret_key:
+      type: string
+      default: SKXX
+    network_name:
+      type: string
+      default: vpc-XX.subnet-XX.PUBLIC
+
+  node_templates:
+
+    kepler:
+      type: tosca.nodes.indigo.Kepler
+      requirements:
+        - host: kepler_server
+
+    kepler_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: { get_input: network_name}
+            ports:
+              ssh_port:
+                protocol: tcp
+                source: 22
+              vnc_port:
+                protocol: tcp
+                source: 5900
+        host:
+         properties:
+           num_cpus: { get_input: number_cpus }
+           mem_size: { get_input: memory_size }
+        os:
+          properties:
+            type: linux
+            distribution: ubuntu
+            version: 14.04
+
+
+  outputs:
+    instance_ip:
+      value: { get_attribute: [ kepler_server, public_address, 0 ] }
+    instance_creds:
+      value: { get_attribute: [ kepler_server, endpoint, credential, 0 ] }
+
+
+  policies:
+    - deploy_on_aws:
+       type: tosca.policies.Placement
+       properties: { sla_id: SLA_provider-AWS-us-east-1_indigo-dc,  username: {get_input: access_key}, password: {get_input: secret_key}}
+       targets: [ kepler_server ]
