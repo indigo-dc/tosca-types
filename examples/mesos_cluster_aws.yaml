@@ -27,20 +27,24 @@ topology_template:
       properties:
         marathon_password: test_pass
         chronos_password: test_pass
+        consul_servers: { get_attribute: [ mesos_master_server, private_address ] }
+        zookeeper_host_list: { get_attribute: [ mesos_master_server, private_address ] }
+        zookeeper_peers: { get_attribute: [ mesos_master_server, private_address ] }
+        mesos_masters_list: { get_attribute: [ mesos_master_server, private_address ] }
       requirements:
         - host: mesos_master_server
 
     mesos_slave:
       type: tosca.nodes.indigo.MesosSlave
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
       requirements:
         - host: mesos_slave_server
 
     mesos_load_balancer:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
       requirements:
         - host: mesos_lb_server
 
@@ -58,7 +62,9 @@ topology_template:
               marathon_port:
                 protocol: tcp
                 source: 8443
-
+              chronos_port:
+                protocol: tcp
+                source: 4443
         scalable:
           properties:
             count: 1
