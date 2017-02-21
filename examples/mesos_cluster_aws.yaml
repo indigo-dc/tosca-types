@@ -1,0 +1,134 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: TOSCA example for specifying a Mesos Cluster
+
+topology_template:
+  inputs:
+
+    access_key:
+      type: string
+      default: AKXX
+
+    secret_key:
+      type: string
+      default: SKXX
+
+    network_name:
+      type: string
+      default: vpc-XX.subnet-XX.PUBLIC
+
+  node_templates:
+
+    mesos_master:
+      type: tosca.nodes.indigo.MesosMaster
+      properties:
+        marathon_password: test_pass
+        chronos_password: test_pass
+        consul_servers: { get_attribute: [ mesos_master_server, private_address ] }
+        zookeeper_host_list: { get_attribute: [ mesos_master_server, private_address ] }
+        zookeeper_peers: { get_attribute: [ mesos_master_server, private_address ] }
+        mesos_masters_list: { get_attribute: [ mesos_master_server, private_address ] }
+      requirements:
+        - host: mesos_master_server
+
+    mesos_slave:
+      type: tosca.nodes.indigo.MesosSlave
+      properties:
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
+      requirements:
+        - host: mesos_slave_server
+
+    mesos_load_balancer:
+      type: tosca.nodes.indigo.MesosLoadBalancer
+      properties:
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
+      requirements:
+        - host: mesos_lb_server
+
+    mesos_master_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            dns_name: mesosserver
+            network_name: { get_input: network_name}
+            ports:
+              mesos_port:
+                protocol: tcp
+                source: 5050
+              marathon_port:
+                protocol: tcp
+                source: 8443
+              chronos_port:
+                protocol: tcp
+                source: 4443
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 2
+            mem_size: 2 GB
+        os:
+          properties:
+            type: linux
+            distribution: ubuntu
+            version: 14.04
+
+
+    mesos_slave_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            dns_name: mesosslave
+            network_name: { get_input: network_name}
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            type: linux
+            distribution: ubuntu
+            version: 14.04
+
+
+    mesos_lb_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            dns_name: mesoslb
+            network_name: { get_input: network_name}
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            type: linux
+            distribution: ubuntu
+            version: 14.04
+
+
+  outputs:
+    mesos_lb_ips:
+      value: { get_attribute: [ mesos_lb_server, public_address ] }
+    mesos_master_ips:
+      value: { get_attribute: [ mesos_master_server, public_address ] }
+
+  policies:
+    - deploy_on_aws:
+       type: tosca.policies.Placement
+       properties: { sla_id: SLA_provider-AWS-us-east-1_indigo-dc,  username: {get_input: access_key}, password: {get_input: secret_key}}
+       targets: [ mesos_master_server ]
