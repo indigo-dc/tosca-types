@@ -47,6 +47,8 @@ topology_template:
       properties:
         deployment_id: orchestrator_deployment_id
         iam_access_token: iam_access_token
+        iam_clues_client_id: iam_clues_client_id
+        iam_clues_client_secret: iam_clues_client_secret
       requirements:
         - lrms: torque_front_end
         - wn: wn_node
