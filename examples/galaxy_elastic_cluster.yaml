@@ -51,7 +51,7 @@ topology_template:
     instance_description:
       type: string
       description: galaxy instance description
-      default: "INDIGO Galaxy test"
+      default: INDIGO Galaxy test
     instance_key_pub:
       type: string
       description: galaxy instance ssh public key
