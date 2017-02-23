@@ -2,7 +2,7 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
   - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
- 
+
 description: >
   TOSCA test for launching a Virtual Elastic Cluster. It will launch
   a single front-end that will be in change of managing the elasticity
@@ -35,7 +35,7 @@ topology_template:
       description: Amount of Memory for the WNs
       default: 1 GB
       required: yes
-      
+
     admin_email:
       type: string
       description: email of the admin user
@@ -51,7 +51,7 @@ topology_template:
     instance_description:
       type: string
       description: galaxy instance description
-      default: "INDIGO Galaxy test"
+      default: INDIGO Galaxy test
     instance_key_pub:
       type: string
       description: galaxy instance ssh public key
@@ -143,4 +143,3 @@ topology_template:
       value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
       value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
-
