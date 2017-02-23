@@ -4,7 +4,8 @@ imports:
   - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
 
 description: >
-  TOSCA test for deploying a simple compute node based on Ubuntu Linux.
+  TOSCA test for deploying a simple compute node based on Ubuntu Linux in the
+  OneDock development testbed. 
 
 topology_template:
 
@@ -34,6 +35,7 @@ topology_template:
             # host Operating System image properties
             type: linux
             distribution: ubuntu
+            image: one://onedock.i3m.upv.es:2365/1
 
   outputs:
     server_ip:
