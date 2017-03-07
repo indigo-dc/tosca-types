@@ -225,6 +225,8 @@ node_types:
         type: list
         entry_schema:
           type: string
+      ctxt_log:
+        type: string
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
