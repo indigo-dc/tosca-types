@@ -5,6 +5,7 @@
   - name: Install Apache Web Services with PHP support
     apt: name=apache2 update_cache=yes state=present
   - apt: name=php5 state=present
+    when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
   - name: Retrieve Web Application from download url
     get_url: url={{download_url}} dest=/tmp
   - name: Unpacking Web Application

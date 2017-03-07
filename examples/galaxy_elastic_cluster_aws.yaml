@@ -1,11 +1,11 @@
-aatosca_definitions_version: tosca_simple_yaml_1_0
+tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
   - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
- 
+
 description: >
   TOSCA test for launching a Virtual Elastic Cluster. It will launch
-  a single front-end that will be in change of managing the elasticity
+  a single front-end that will be in charge of managing the elasticity
   using the specified LRMS (torque, sge, slurm and condor) workload.
 
 topology_template:
@@ -25,7 +25,7 @@ topology_template:
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
-      default: 1 GB
+      default: 2 GB
       required: yes
 
     wn_cpus:
@@ -40,11 +40,17 @@ topology_template:
       default: 1 GB
       required: yes
 
-    hybrid:
-      type: boolean
-      description: Flag to specify that this cluster will work in an hybrid environment
-      default: false
-      required: false
+    access_key:
+      type: string
+      default: AKXX
+
+    secret_key:
+      type: string
+      default: SKXX
+
+    network_name:
+      type: string
+      default: vpc-XX.subnet-XX.PUBLIC
 
   node_templates:
 
@@ -52,16 +58,20 @@ topology_template:
       type: tosca.nodes.indigo.ElasticCluster
       properties:
         deployment_id: orchestrator_deployment_id
-        iam_access_token: iam_access_token
+        orchestrator_url: https://orchestrator01-indigo.cloud.ba.infn.it/orchestrator/
       requirements:
         - lrms: lrms_front_end
         - wn: wn_node
+
+    galaxy_portal:
+      type: tosca.nodes.indigo.GalaxyPortal
+      requirements:
+        - lrms: lrms_front_end
 
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
       properties:
         wn_ips: { get_attribute: [ lrms_wn, private_address ] }
-        hybrid: { get_input: hybrid }
       requirements:
         - host: lrms_server
 
@@ -71,20 +81,28 @@ topology_template:
         endpoint:
           properties:
             dns_name: slurmserver
-            network_name: PUBLIC
+            network_name: { get_input: network_name}
+            ports:
+              http_port:
+                protocol: tcp
+                source: 80
         host:
           properties:
             num_cpus: { get_input: fe_cpus }
             mem_size: { get_input: fe_mem }
         os:
           properties:
-            image: linux-ubuntu-14.04-vmi
+            # host Operating System image properties
+            type: linux
+            distribution: ubuntu
+            version: 14.04
+            # Until the orchestrator can resolve the images use the URL
+
 
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
       properties:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
-        hybrid: { get_input: hybrid }
       capabilities:
         wn:
           properties:
@@ -92,10 +110,18 @@ topology_template:
             min_instances: 0
       requirements:
         - host: lrms_wn
-            
+
+    galaxy_wn:
+      type: tosca.nodes.indigo.GalaxyWN
+      requirements:
+        - host: lrms_wn
+
     lrms_wn:
       type: tosca.nodes.indigo.Compute
       capabilities:
+        endpoint:
+          properties:
+            network_name: { get_input: network_name}
         scalable:
           properties:
             count: 0
@@ -105,11 +131,23 @@ topology_template:
             mem_size: { get_input: wn_mem }
         os:
           properties:
-            image: linux-ubuntu-14.04-vmi
+            # host Operating System image properties
+            type: linux
+            distribution: ubuntu
+            version: 14.04
+
 
   outputs:
+    galaxy_url:
+      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], '/galaxy' ] }
     cluster_ip:
       value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
       value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
 
+
+  policies:
+    - deploy_on_aws:
+       type: tosca.policies.Placement
+       properties: { sla_id: SLA_provider-AWS-us-east-1_indigo-dc,  username: {get_input: access_key}, password: {get_input: secret_key}}
+       targets: [ lrms_wn ]

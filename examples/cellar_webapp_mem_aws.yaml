@@ -6,7 +6,7 @@ imports:
 description: >
   TOSCA test for launching the Wine Cellar Application (PHP Version)
   (https://github.com/ccoenraets/wine-cellar-php) using the simple
-  in memory DB with a single web server node.
+  in memory DB with a single web server node - deployed on AWS
 
 topology_template:
 
@@ -14,6 +14,15 @@ topology_template:
     download_url:
       type: string
       default: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/webapps/cellar-webapp-mem.tgz
+    access_key:
+      type: string
+      default: AKXX
+    secret_key:
+      type: string
+      default: SKXX
+    network_name:
+      type: string
+      default: vpc-XX.subnet-XX.PUBLIC
 
   node_templates:
     apache:
@@ -32,7 +41,7 @@ topology_template:
       capabilities:
         endpoint:
           properties:
-            network_name: PUBLIC
+            network_name: { get_input: network_name}
             ports:
               http_port:
                 protocol: tcp
@@ -51,7 +60,16 @@ topology_template:
             # host Operating System image properties
             type: linux
             distribution: ubuntu
+            version: 16.04
 
   outputs:
     server_url:
       value: { concat: [ 'http://', get_attribute: [ web_server, public_address, 0 ], '/cellar-webapp-mem' ] }
+    instance_creds:
+      value: { get_attribute: [ web_server, endpoint, credential, 0 ] }
+
+  policies:
+    - deploy_on_aws:
+       type: tosca.policies.Placement
+       properties: { sla_id: SLA_provider-AWS-us-east-1_indigo-dc,  username: {get_input: access_key}, password: {get_input: secret_key}}
+       targets: [ web_server ]

@@ -33,12 +33,16 @@ topology_template:
       properties:
         deployment_id: orchestrator_deployment_id
         iam_access_token: iam_access_token
-        marathon_credentials: 
+        iam_clues_client_id: iam_clues_client_id
+        iam_clues_client_secret: iam_clues_client_secret
+        marathon_credentials:
           protocol: https
           token:  { get_input: marathon_password }
-        chronos_credentials: 
+          user: admin
+        chronos_credentials:
           protocol: https
           token:  { get_input: chronos_password }
+          user: admin
       requirements:
         - lrms: mesos_master
         - wn: mesos_slave
@@ -63,13 +67,13 @@ topology_template:
         master_ips: { get_attribute: [ mesos_master_server, public_address ] }
       requirements:
         - host: mesos_slave_server
-        
+
     mesos_load_balancer:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
         master_ips: { get_attribute: [ mesos_master_server, public_address ] }
       requirements:
-        - host: mesos_lb_server        
+        - host: mesos_lb_server
 
     mesos_master_server:
       type: tosca.nodes.indigo.Compute
@@ -109,7 +113,7 @@ topology_template:
 #            distribution: ubuntu
 #            version: 14.04
             image: linux-ubuntu-14.04-vmi
-            
+
     mesos_lb_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
@@ -129,10 +133,9 @@ topology_template:
 #            distribution: ubuntu
 #            version: 14.04
             image: linux-ubuntu-14.04-vmi
-            
+
   outputs:
     mesos_lb_ips:
       value: { get_attribute: [ mesos_lb_server, public_address ] }
     mesos_master_ips:
       value: { get_attribute: [ mesos_master_server, public_address ] }
-      

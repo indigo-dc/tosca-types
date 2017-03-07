@@ -1145,3 +1145,4 @@ node_types:
         required: no
         type: string
         description: Specify the VO of the user
+
