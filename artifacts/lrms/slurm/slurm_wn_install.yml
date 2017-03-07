@@ -2,6 +2,10 @@
 - hosts: localhost
   connection: local
   roles:
+  - role: indigo-dc.openvpn
+    openvpn_type_of_node: 'wn'
+    openvpn_frontname: 'slurmserver'
+    when: wn_hybrid_cluster
   - role: indigo-dc.nfs
     nfs_mode: 'client'
     nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ slurm_front_end_ip }}" }]

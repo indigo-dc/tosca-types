@@ -40,6 +40,12 @@ topology_template:
       default: 1 GB
       required: yes
 
+    hybrid:
+      type: boolean
+      description: Flag to specify that this cluster will work in an hybrid environment
+      default: false
+      required: false
+
   node_templates:
 
     elastic_cluster_front_end:
@@ -48,22 +54,23 @@ topology_template:
         deployment_id: orchestrator_deployment_id
         iam_access_token: iam_access_token
       requirements:
-        - lrms: torque_front_end
+        - lrms: lrms_front_end
         - wn: wn_node
 
-    torque_front_end:
-      type: tosca.nodes.indigo.LRMS.FrontEnd.Torque
+    lrms_front_end:
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
       properties:
-        wn_ips: { get_attribute: [ torque_wn, private_address ] }
+        wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+        hybrid: { get_input: hybrid }
       requirements:
-        - host: torque_server
+        - host: lrms_server
 
-    torque_server:
+    lrms_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
         endpoint:
           properties:
-            dns_name: torqueserver
+            dns_name: slurmserver
             network_name: PUBLIC
         host:
           properties:
@@ -74,18 +81,19 @@ topology_template:
             image: linux-ubuntu-14.04-vmi
 
     wn_node:
-      type: tosca.nodes.indigo.LRMS.WorkerNode.Torque
+      type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
       properties:
-        front_end_ip: { get_attribute: [ torque_server, private_address, 0 ] }
+        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        hybrid: { get_input: hybrid }
       capabilities:
         wn:
           properties:
             max_instances: { get_input: wn_num }
             min_instances: 0
       requirements:
-        - host: torque_wn
+        - host: lrms_wn
             
-    torque_wn:
+    lrms_wn:
       type: tosca.nodes.indigo.Compute
       capabilities:
         scalable:
@@ -101,6 +109,6 @@ topology_template:
 
   outputs:
     cluster_ip:
-      value: { get_attribute: [ torque_server, public_address, 0 ] }
+      value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
-      value: { get_attribute: [ torque_server, endpoint, credential, 0 ] }
+      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
