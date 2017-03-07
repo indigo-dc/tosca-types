@@ -494,6 +494,9 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
@@ -547,6 +550,9 @@ node_types:
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
