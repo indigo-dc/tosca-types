@@ -225,8 +225,6 @@ node_types:
         type: list
         entry_schema:
           type: string
-      ctxt_log:
-        type: string
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
@@ -389,16 +387,6 @@ node_types:
         description: INDIGO IAM access token
         required: false
         default: iam_access_token
-      iam_clues_client_id:
-        type: string
-        description: INDIGO IAM client id to be used by CLUES
-        required: false
-        default: iam_clues_client_id
-      iam_clues_client_secret:
-        type: string
-        description: INDIGO IAM client secret to be used by CLUES
-        required: false
-        default: iam_clues_client_secret
       marathon_credentials:
         type: tosca.datatypes.Credential
         description: Credentials to access the marathon endpoint from CLUES plugin
@@ -423,6 +411,11 @@ node_types:
           user: admin
           token: password
         required: false
+      hybrid:
+        type: boolean
+        description: Flag to specify that this ElasticCluster will work in a hybrid environment
+        default: false
+        required: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.clues
@@ -438,11 +431,10 @@ node_types:
             ec3_deployment_id: { get_property: [ SELF, deployment_id] }
             orchestrator_url: { get_property: [ SELF, orchestrator_url] }
             ec3_iam_access_token: { get_property: [ SELF, iam_access_token] }
-            ec3_iam_clues_client_id: { get_property: [ SELF, iam_clues_client_id] }
-            ec3_iam_clues_client_secret: { get_property: [ SELF, iam_clues_client_secret] }
             clues_marathon_credentials: { get_property: [ SELF, marathon_credentials] }
             clues_chronos_credentials: { get_property: [ SELF, chronos_credentials] }
             clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
+            ec3_hybrid_cluster:  { get_property: [ SELF, hybrid] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
@@ -460,6 +452,11 @@ node_types:
         type: string
         description: IP of the Front-End node
         required: true
+      hybrid:
+        type: boolean
+        description: Flag to specify that this WorkerNode will work in a hybrid environment
+        default: false
+        required: false
     capabilities:
         wn:
           type: tosca.capabilities.Scalable
@@ -478,6 +475,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_wn_install.yml
           inputs:
             torque_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Slurm:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -494,6 +492,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.LRMS.FrontEnd:
     derived_from: tosca.nodes.SoftwareComponent
@@ -544,6 +543,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_ips: { get_property: [ SELF, wn_ips ] }
+            slurm_front_end_ip: { get_property: [ HOST, private_address, 0 ] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Local:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -682,19 +682,19 @@ node_types:
       consul_servers:
         type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: localhost
       zookeeper_host_list:
         type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: localhost
       zookeeper_peers:
         type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: localhost
       mesos_masters_list:
         type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: localhost
       marathon_username:
         type: string
         required: no
@@ -733,10 +733,10 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
           inputs:
-            consul_server_ips: { get_property: [ SELF, consul_servers ] }
-            zookeeper_host_list_ips: { get_property: [ SELF, zookeeper_host_list ] }
-            zookeeper_peers_ips: { get_property: [ SELF, zookeeper_peers ] }
-            mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
+            consul_server_ips: { get_attribute: [ HOST, public_address ] }
+            zookeeper_host_list_ips: { get_attribute: [ HOST, public_address ] }
+            zookeeper_peers_ips: { get_attribute: [ HOST, public_address ] }
+            mesos_masters_list_ips: { get_attribute: [ HOST, public_address ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             chronos_user: { get_property: [ SELF, chronos_username ] }
@@ -916,7 +916,6 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
-
 
   tosca.nodes.indigo.OneDataStorage:
     derived_from: tosca.nodes.BlockStorage
@@ -1145,3 +1144,4 @@ node_types:
         required: no
         type: string
         description: Specify the VO of the user
+
