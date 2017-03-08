@@ -55,6 +55,7 @@ topology_template:
         iam_access_token: iam_access_token
         iam_clues_client_id: iam_clues_client_id
         iam_clues_client_secret: iam_clues_client_secret
+        hybrid: { get_input: hybrid }
       requirements:
         - lrms: lrms_front_end
         - wn: wn_node

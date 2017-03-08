@@ -423,6 +423,11 @@ node_types:
           user: admin
           token: password
         required: false
+      hybrid:
+        type: boolean
+        description: Flag to specify that this ElasticCluster will work in a hybrid environment
+        default: false
+        required: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.clues

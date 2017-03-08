@@ -8,7 +8,12 @@
     when: wn_hybrid_cluster
   - role: indigo-dc.nfs
     nfs_mode: 'client'
+    nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "10.8.0.1" }]
+    when: wn_hybrid_cluster
+  - role: indigo-dc.nfs
+    nfs_mode: 'client'
     nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ slurm_front_end_ip }}" }]
+    when: not wn_hybrid_cluster
   - role: indigo-dc.slurm
     slurm_type_of_node: 'wn'
     slurm_server_ip: '{{ slurm_front_end_ip }}'
