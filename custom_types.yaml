@@ -344,6 +344,11 @@ node_types:
         description: name of the Galaxy flavor
         required: true
         default: galaxy-no-tools
+      admin_api_key:
+        type: string
+        description: key to access the API with admin role
+        default: not_very_secret_api_key
+        required: false
     requirements:
       - host:
           capability: tosca.capabilities.Container
