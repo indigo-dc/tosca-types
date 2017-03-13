@@ -62,7 +62,7 @@ topology_template:
     galaxy_tools:
       type: tosca.nodes.indigo.GalaxyShedTool
       properties:
-        galaxy_flavor: { get_input: flavor }
+        flavor: { get_input: flavor }
         admin_api_key: { get_input: admin_api_key }
       requirements:
         - host: galaxy
