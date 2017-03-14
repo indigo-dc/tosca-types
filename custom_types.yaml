@@ -339,18 +339,16 @@ node_types:
   tosca.nodes.indigo.GalaxyShedTool:
     derived_from: tosca.nodes.WebApplication
     properties:
-      name:
+      flavor:
         type: string
-        description: name of the tool
+        description: name of the Galaxy flavor
         required: true
-      owner:
+        default: galaxy-no-tools
+      admin_api_key:
         type: string
-        description: developer of the tool
-        required: true
-      tool_panel_section_id:
-        type: string
-        description: panel section to install the tool
-        required: true
+        description: key to access the API with admin role
+        default: not_very_secret_api_key
+        required: false
     requirements:
       - host:
           capability: tosca.capabilities.Container
@@ -361,11 +359,9 @@ node_types:
         create:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_tools_configure.yml
           inputs:
-            galaxy_install_path: { get_property: [ HOST, install_path ] }
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
-            galaxy_tool_name: { get_property: [ SELF, name ] }
-            galaxy_tool_owner: { get_property: [ SELF, owner ] }
-            galaxy_tool_panel_section_id: { get_property: [ SELF, tool_panel_section_id ] }
+            instance_public_ip: { get_attribute: [ HOST, public_address ] }
 
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent
