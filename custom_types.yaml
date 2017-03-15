@@ -39,7 +39,7 @@ capability_types:
           type: string
 
   tosca.capabilities.indigo.LRMS:
-    derived_from: tosca.capabilities.Root
+    derived_from: tosca.capabilities.Container
     properties:
       type:
         type: string
