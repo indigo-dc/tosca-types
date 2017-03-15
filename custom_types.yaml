@@ -354,9 +354,13 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.GalaxyPortal
           relationship: tosca.relationships.HostedOn
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.galaxy-tools
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        create:
+        configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_tools_configure.yml
           inputs:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
