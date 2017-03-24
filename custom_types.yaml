@@ -112,6 +112,30 @@ capability_types:
   tosca.capabilities.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.capabilities.Root
 
+  tosca.capabilities.VPN:
+    derived_from: tosca.capabilities.Root
+    properties:
+      server_name:
+        description: The hostname of th VPN server
+        type: string
+        default: slurmserver
+        required: false
+      vpn_address:
+        description: The VPN IP of the VPN server
+        type: string
+        default: 10.8.0.1
+        required: false
+      net:
+        description: The VPN subnet
+        type: string
+        default: 10.8.0.0
+        required: false
+      net_mask:
+        description: The VPN subnet mask
+        type: string
+        default: 255.255.255.0
+        required: false
+
 
 artifact_types:
 
@@ -1146,3 +1170,45 @@ node_types:
         required: no
         type: string
         description: Specify the VO of the user
+
+  tosca.nodes.indigo.VPNServer:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+      vpn_server:
+        type: tosca.capabilities.VPN
+        valid_source_types: [tosca.nodes.indigo.VPNNode]
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/hybrid2/artifacts/openvpn/openvpn_server_install.yml
+          inputs:
+            openvpn_server_vpn_ip: { get_property: [ SELF, vpn_server, vpn_address ] }
+            openvpn_server_net_mask: { get_property: [ SELF, vpn_server, net_mask ] }
+            openvpn_server_net: { get_property: [ SELF, vpn_server, net ] }
+
+  tosca.nodes.indigo.VPNCompute:
+    derived_from: tosca.nodes.indigo.Compute
+    attributes:
+      vpn_address:
+        type: list
+        entry_schema:
+          type: string
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    requirements:
+      - vpn_server:
+          capability: tosca.capabilities.VPN
+          node: tosca.nodes.indigo.VPNServer
+          relationship: tosca.relationships.ConnectsTo
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/hybrid2/artifacts/openvpn/openvpn_node_install.yml
+          openvpn_server_vpn_ip: { get_property: [ SELF, vpn_server, vpn_address ] }
+          openvpn_frontname: { get_property: [ SELF, vpn_server, server_name ] }

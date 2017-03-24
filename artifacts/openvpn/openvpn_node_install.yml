@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - role: indigo-dc.openvpn
+    openvpn_type_of_node: 'wn'
+    openvpn_frontname: 'slurmserver'
