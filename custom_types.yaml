@@ -1189,6 +1189,7 @@ node_types:
             openvpn_server_vpn_ip: { get_property: [ SELF, vpn_server, vpn_address ] }
             openvpn_server_net_mask: { get_property: [ SELF, vpn_server, net_mask ] }
             openvpn_server_net: { get_property: [ SELF, vpn_server, net ] }
+            openvpn_frontname: { get_property: [ SELF, vpn_server, server_name ] }
 
   tosca.nodes.indigo.VPNCompute:
     derived_from: tosca.nodes.indigo.Compute
