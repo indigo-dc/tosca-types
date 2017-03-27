@@ -1211,5 +1211,6 @@ node_types:
       Standard:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/hybrid2/artifacts/openvpn/openvpn_node_install.yml
-          openvpn_server_vpn_ip: { get_property: [ SELF, vpn_server, vpn_address ] }
-          openvpn_frontname: { get_property: [ SELF, vpn_server, server_name ] }
+          inputs:
+            openvpn_server_vpn_ip: { get_property: [ SELF, vpn_server, vpn_address ] }
+            openvpn_frontname: { get_property: [ SELF, vpn_server, server_name ] }

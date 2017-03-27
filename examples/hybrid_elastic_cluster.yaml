@@ -56,7 +56,7 @@ topology_template:
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
       properties:
-        wn_ips: { get_attribute: [ openvpn_node, vpn_address ] }
+        wn_ips: { get_attribute: [ lrms_wn, vpn_address ] }
       requirements:
         - host: lrms_server
 
@@ -87,7 +87,7 @@ topology_template:
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
       properties:
-        front_end_ip: { get_attribute: [ openvpn_server, vpn_server, vpn_address ] }
+        front_end_ip: { get_property: [ openvpn_server, vpn_server, vpn_address ] }
       capabilities:
         wn:
           properties:
