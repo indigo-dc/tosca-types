@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-indigo-2/custom_types.yaml
 
 description: TOSCA example for specifying a Mesos Cluster
 
@@ -10,7 +10,7 @@ topology_template:
   inputs:
     slave_num:
       type: integer
-      description: Maximum number of WNs in the elastic cluster
+      description: Maximum number of slaves in the elastic cluster
       default: 5
       required: yes
 
@@ -72,6 +72,7 @@ topology_template:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
         master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        marathon_password: { get_input: marathon_password }
       requirements:
         - host: mesos_lb_server
 
@@ -82,6 +83,16 @@ topology_template:
           properties:
             dns_name: mesosserverpublic
             network_name: PUBLIC
+            ports:
+              mesos_port:
+                protocol: tcp
+                source: 5050
+              marathon_port:
+                protocol: tcp
+                source: 8443
+              chronos_port:
+                protocol: tcp
+                source: 4443
         scalable:
           properties:
             count: 1
@@ -120,6 +131,10 @@ topology_template:
         endpoint:
           properties:
             network_name: PUBLIC
+            ports:
+              all_tcp:
+                protocol: tcp
+                source_range: [ 1, 65535 ]
         scalable:
           properties:
             count: 1
