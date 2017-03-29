@@ -11,7 +11,7 @@
       delay: 10
       when: galaxy_flavor != 'galaxy-no-tools'
     - name: Get tool-list
-      get_url: url="https://raw.githubusercontent.com/indigo-dc/Galaxy-flavors-recipes/master/galaxy-flavors/galaxy-{{ galaxy_flavor }}-tool-list.yml" dest="/tmp/"
+      get_url: url="https://raw.githubusercontent.com/indigo-dc/Galaxy-flavors-recipes/master/galaxy-flavors/{{ galaxy_flavor }}-tool-list.yml" dest="/tmp/"
       when: galaxy_flavor != 'galaxy-no-tools'
   vars:
       galaxy_tools_tool_list_files: [ "/tmp/{{ galaxy_flavor }}-tool-list.yml" ]
