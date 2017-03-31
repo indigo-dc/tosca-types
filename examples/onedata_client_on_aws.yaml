@@ -1,0 +1,92 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  TOSCA test for launching compute node mounting a onedata space
+
+topology_template:
+
+  inputs:
+    access_key:
+      type: string
+      default: AKXX
+    secret_key:
+      type: string
+      default: SKXX
+    network_name:
+      type: string
+      default: vpc-XX.subnet-XX.PUBLIC
+
+  node_templates:
+    onedata_client_node:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: { get_input: network_name}
+            ports:
+              oneclient_5555:
+                protocol: tcp
+                source: 5555
+              oneclient_443:
+                protocol: tcp
+                source: 443
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            type: linux
+            distribution: ubuntu
+            version: 16.04
+            image: us-east-1/ami-3957b02f
+            credential:
+               user: ubuntu
+               token: ''
+
+      requirements:
+        - local_storage:
+            node: my_onedata_storage
+            capability: tosca.capabilities.Attachment
+            relationship:
+              type: tosca.relationships.AttachesTo
+              properties:
+                location: /tmp/onedataspace
+              interfaces:
+                Configure:
+                  pre_configure_source:
+                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/onedata/oneclient_install.yml
+                    inputs:
+                      onedata_location: { get_property: [ SELF, location ] }
+                      onedata_token: { get_property: [ TARGET, credential, token ] }
+                      oneprovider_host: { get_property: [ TARGET, oneprovider_host ] }
+                      dataspace: { get_property: [ TARGET, dataspace ] }
+                      onezone_endpoint: { get_property: [ TARGET, onezone_endpoint ] }
+
+    my_onedata_storage:
+      type: tosca.nodes.indigo.OneDataStorage
+      properties:
+        oneprovider_host: ["oneprovider.com", "twoprovider.net"]
+        dataspace: ["space1","space2"]
+        onezone_endpoint: http://server.com
+        credential:
+          token: some_token
+          token_type: token
+
+  outputs:
+    server_url:
+      value: { get_attribute: [ onedata_client_node, public_address, 0 ] }
+    instance_creds:
+      value: { get_attribute: [ onedata_client_node, endpoint, credential, 0 ] }
+
+  policies:
+    - deploy_on_aws:
+        type: tosca.policies.Placement
+        properties: { sla_id: SLA_provider-AWS-us-east-1_indigo-dc,  username: {get_input: access_key}, password: {get_input: secret_key}}
+        targets: [ onedata_client_node ]
