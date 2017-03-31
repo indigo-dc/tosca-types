@@ -1,29 +1,33 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-add-marathon/custom_types.yaml
 
 description: >
-  TOSCA examples for specifying Chronos and Marathon jobs to enable the
-  specification of applications and services in INDIGO.
+  TOSCA examples for specifying Marathon applications to enable the
+  specification of long-running services in INDIGO.
 
 topology_template:
 
   node_templates:
 
-    marathon_job:
+    marathon_app:
       type: tosca.nodes.indigo.Container.Application.Docker.Marathon
       properties:
         command: echo "hola"
         uris: ['http://algo.para.bajar.com', 'http://otro.para.bajar.com']
+        environment_variables:
+          SOME_ENV_VAR: some_env_value 
+        labels:
+          SOME_KEY: some_value
       artifacts:
         image:
           file: mysql
           type: tosca.artifacts.Deployment.Image.Container.Docker
       requirements:
-        - host: docker_runtime2
+        - host: docker_runtime
 
-    docker_runtime2:
+    docker_runtime:
       type: tosca.nodes.indigo.Container.Runtime.Docker
       capabilities:
         host:
@@ -37,3 +41,4 @@ topology_template:
                - protocol: tcp
                  target: 22
                  source: 22
+            volumes: ['mysql:/var/lib/mysql:rw:dvi:rexray']
