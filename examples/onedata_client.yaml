@@ -38,8 +38,9 @@ topology_template:
       requirements:
         - local_storage:
             node: my_onedata_storage
+            capability: tosca.capabilities.Attachment
             relationship:
-              type: AttachesTo
+              type: tosca.relationships.AttachesTo
               properties:
                 location: /mnt/disk
               interfaces:
