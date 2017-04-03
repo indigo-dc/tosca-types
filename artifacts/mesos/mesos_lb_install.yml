@@ -2,12 +2,10 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: indigo-dc.docker
-      docker_bridge_ip: "172.0.17.1"
-
     - role: indigo-dc.consul
       consul_mode: "agent"
       docker_bridge_ip: "172.0.17.1"
       consul_servers: "{{ consul_server_ips }}"
 
-    - role: indigo-dc.haproxy-consul
+    - role: indigo-dc.marathon-lb
+      marathon_lb_auth_creds: "{{marathon_username}}:{{marathon_password}}"

@@ -41,6 +41,10 @@ topology_template:
       type: string
       description: galaxy instance ssh public key
       default: your_ssh_public_key
+    flavor:
+      type: string
+      description: Galaxy flavor for tools installation
+      default: "galaxy-no-tools"
  
   node_templates:
 
@@ -54,6 +58,14 @@ topology_template:
         instance_key_pub: { get_input: instance_key_pub }
       requirements:
         - lrms: local_lrms
+
+    galaxy_tools:
+      type: tosca.nodes.indigo.GalaxyShedTool
+      properties:
+        flavor: { get_input: flavor }
+        admin_api_key: { get_input: admin_api_key }
+      requirements:
+        - host: galaxy
 
     # type to describe a Galaxy not using any LRMS but using the local system
     local_lrms:
