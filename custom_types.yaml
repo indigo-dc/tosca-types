@@ -349,6 +349,11 @@ node_types:
         description: key to access the API with admin role
         default: not_very_secret_api_key
         required: false
+      reference_data:
+        type: boolean
+        description: Install Reference data
+        default: true
+        required: true
     requirements:
       - host:
           capability: tosca.capabilities.Container
@@ -356,7 +361,10 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxy-tools
+        file: indigo-dc.galaxy-tools,handler-include-static-no
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role:
+        file: indigo-dc.galaxycloud-refdata
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -366,6 +374,7 @@ node_types:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
             instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
+            get_refdata: { get_property: [ SELF, reference_data ] }
 
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent

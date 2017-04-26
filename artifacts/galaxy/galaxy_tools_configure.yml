@@ -20,3 +20,8 @@
   roles:
     - { role: indigo-dc.galaxy-tools, when: galaxy_flavor != 'galaxy-no-tools' }
 
+
+- hosts: localhost
+  connection: local
+  roles:
+    - { role: indigo-dc.galaxycloud-refdata, galaxy_flavor: "{{ galaxy_flavor }}", get_refdata: "{{ reference_data }}" }
