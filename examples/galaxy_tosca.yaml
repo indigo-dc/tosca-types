@@ -43,7 +43,7 @@ topology_template:
       default: your_ssh_public_key
     storage:
       type: string
-      description: Storage type: Iaas Block Storage (default), Onedaata, Filesystem encryption
+      description: Storage type (Iaas Block Storage, Onedaata, Filesystem encryption)
       default: "open"
     token:
       type: string
