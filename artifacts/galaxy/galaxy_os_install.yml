@@ -2,8 +2,8 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: indigo-dc.galaxycloud-os,
-      isolation_level: "{{ os-storage }}", 
+    - role: indigo-dc.galaxycloud-os
+      isolation_level: "{{ os-storage }}"
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
 
     - role: indigo-dc.galaxycloud
