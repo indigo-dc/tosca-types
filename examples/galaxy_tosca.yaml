@@ -69,9 +69,16 @@ topology_template:
       properties:
         flavor: { get_input: flavor }
         admin_api_key: { get_input: admin_api_key }
-        reference_data: { get_input: reference_data }
       requirements:
         - host: galaxy
+
+    galaxy_refdata:
+      type: tosca.nodes.indigo.GalaxyReferenceData
+      properties:
+        reference_data: { get_input: reference_data }
+        flavor: { get_input: flavor }
+      requirements:
+        - host: galaxy_tools
 
     # type to describe a Galaxy not using any LRMS but using the local system
     local_lrms:
