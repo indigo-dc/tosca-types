@@ -340,7 +340,7 @@ node_types:
       oneprovider:
         type: string
         description: default OneProvider
-        default: "not_a_privder_url"
+        default: "not_a_provider_url"
         required: false
     artifacts:
       galaxy_role:
