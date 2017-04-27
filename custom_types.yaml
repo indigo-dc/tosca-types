@@ -356,7 +356,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxy-tools
+        file: indigo-dc.galaxy-tools,handler-include-static-no
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -366,6 +366,36 @@ node_types:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
             instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
+
+  tosca.nodes.indigo.GalaxyReferenceData:
+    derived_from: tosca.nodes.WebApplication
+    properties:
+      reference_data:
+        type: boolean
+        description: Install Reference data
+        default: true
+        required: true
+      flavor:
+        type: string
+        description: name of the Galaxy flavor
+        required: true
+        default: galaxy-no-tools
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.GalaxyShedTool
+          relationship: tosca.relationships.HostedOn
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.galaxycloud-refdata
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro-galaxy-tools/artifacts/galaxy/galaxy_refdata_configure.yml
+          inputs:
+            get_refdata: { get_property: [ SELF, reference_data ] }
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
 
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent
