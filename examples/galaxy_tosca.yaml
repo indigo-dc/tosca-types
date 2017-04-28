@@ -41,6 +41,18 @@ topology_template:
       type: string
       description: galaxy instance ssh public key
       default: your_ssh_public_key
+    storage:
+      type: string
+      description: Storage type (Iaas Block Storage, Onedaata, Filesystem encryption)
+      default: "open"
+    token:
+      type: string
+      description: Access token for onedata space
+      default: "not_a_token"
+    oneprovider:
+      type: string
+      description: default OneProvider
+      default: "not_a_privder_url"
     flavor:
       type: string
       description: Galaxy flavor for tools installation
@@ -54,8 +66,9 @@ topology_template:
   node_templates:
 
     galaxy:
-      type: tosca.nodes.indigo.GalaxyPortal
+      type: tosca.nodes.indigo.GalaxyPortalAndStorage
       properties:
+        storage: { get_input: storage }
         admin_email: { get_input: admin_email }
         admin_api_key: { get_input: admin_api_key }
         version: { get_input: version }

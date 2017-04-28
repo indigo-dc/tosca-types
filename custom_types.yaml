@@ -324,6 +324,48 @@ node_types:
             galaxy_instance_description: { get_property: [ SELF, instance_description ] }
             galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
 
+  tosca.nodes.indigo.GalaxyPortalAndStorage:
+    derived_from: tosca.nodes.indigo.GalaxyPortal
+    properties:
+      storage:
+        type: string
+        description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
+        default: "open"
+        requred: true
+      token:
+        type: string
+        description: Access token for onedata space
+        default: "not_a_token"
+        required: false
+      oneprovider:
+        type: string
+        description: default OneProvider
+        default: "not_a_provider_url"
+        required: false
+    artifacts:
+      galaxy_os_role:
+        file: indigo-dc.galaxycloud-os
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role:
+        file: indigo-dc.galaxycloud
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro-galaxy-tools/artifacts/galaxy/galaxy_os_install.yml
+          inputs:
+            os-storage: { get_property: [ SELF, storage ] }
+            userdata-token: { get_property: [ SELF, token ] }
+            userdata-oneprovider: { get_property: [ SELF, oneprovider ] }
+            galaxy_install_path: { get_property: [ SELF, install_path ] }
+            galaxy_user: { get_property: [ SELF, user ] }
+            galaxy_admin: { get_property: [ SELF, admin_email ] }
+            galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
+            galaxy_lrms: { get_property: [ SELF, lrms, type ] }
+            galaxy_version: { get_property: [ SELF, version ] }
+            galaxy_instance_description: { get_property: [ SELF, instance_description ] }
+            galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
+            
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
     requirements:
