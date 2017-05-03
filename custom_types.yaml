@@ -87,6 +87,9 @@ capability_types:
         constraints:
           - equal: mesos
 
+  tosca.capabilities.indigo.MesosMaster:        
+    derived_from: tosca.capabilities.Container
+
   tosca.capabilities.indigo.Container.Docker:
     derived_from: tosca.capabilities.Container.Docker
     properties:
@@ -679,6 +682,30 @@ node_types:
           relationship: tosca.relationships.DependsOn
           occurrences: [0, 1]
 
+
+  tosca.nodes.indigo.DariahRepository:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_password:
+        type: string
+        required: yes
+    artifacts:
+      dariahrepo_role:
+        file: maricaantonacci.dariahrepo
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-dariah/artifacts/mesos/dariahrepo-setup.yml
+          inputs:
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
 
@@ -687,6 +714,8 @@ node_types:
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Mesos
+        host:
+          type: tosca.capabilities.indigo.MesosMaster
     properties:
       # Set the current data of the mesos server
       # but it can also specified in the TOSCA document
@@ -779,6 +808,9 @@ node_types:
       chronos_password:
         type: string
         required: yes
+    capabilities:
+      host: 
+        type: tosca.capabilities.indigo.MesosMaster
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
