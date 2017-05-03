@@ -3,7 +3,7 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 imports:
   - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
 
-description: TOSCA example for specifying a Mesos Cluster
+description: TOSCA example for deploying the Dariah Repository on top of a Mesos cluster using Marathon
 
 topology_template:
 
@@ -12,12 +12,6 @@ topology_template:
     marathon_password:
       type: string
       description: Admin password for accessing Marathon HTTP service
-      default: 's3cret'
-      required: yes
-
-    chronos_password:    
-      type: string
-      description: Admin password for accessing Chronos HTTP service
       default: 's3cret'
       required: yes
 
@@ -65,7 +59,7 @@ topology_template:
       type: tosca.nodes.indigo.MesosMaster
       properties:
         marathon_password: { get_input: marathon_password }
-        chronos_password: { get_input: chronos_password }
+        chronos_password: 's3cret'
       requirements:
         - host: mesos_master_server
 
@@ -145,15 +139,16 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            image: linux-ubuntu-14.04-mesos-vmi
+            image: linux-ubuntu-14.04-vmi
 
   outputs:
     mesos_lb_ips:
       value: { get_attribute: [ mesos_lb_server, public_address ] }
     mesos_master_ips:
       value: { get_attribute: [ mesos_master_server, public_address ] }
+    zenodo_http_endpoint: 
+      value: { concat: [ 'http://', get_attribute: [ mesos_lb_server, public_address, 0 ], ':5000' ] }
+    zenodo_https_endpoint: 
+      value: { concat: [ 'https://', get_attribute: [ mesos_lb_server, public_address, 0 ] ] }
     marathon_endpoint: 
       value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8080' ] }
-    chronos_endpoint: 
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4400' ] }
-      
