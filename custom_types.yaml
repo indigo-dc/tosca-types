@@ -334,7 +334,7 @@ node_types:
         type: string
         description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
         default: "open"
-        requred: true
+        required: true
       token:
         type: string
         description: Access token for onedata space
