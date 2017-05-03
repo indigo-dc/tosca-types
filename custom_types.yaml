@@ -691,12 +691,12 @@ node_types:
         required: yes
     artifacts:
       dariahrepo_role:
-        file: maricaantonacci.dariahrepo
+        file: indigo-dc.dariahrepo
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-dariah/artifacts/mesos/dariahrepo-setup.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/dariahrepo-setup.yml
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
     requirements:
