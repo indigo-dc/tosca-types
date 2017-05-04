@@ -161,7 +161,7 @@ topology_template:
             mem_size: { get_input: wn_mem }
         os:
           properties:
-            image: one://onecloud.i3m.upv.es:2365/444
+            image: onecloud-linux-ubuntu-16.04.vmi
 
       artifacts:
         docker_agent_role:
