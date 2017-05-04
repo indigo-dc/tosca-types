@@ -105,7 +105,7 @@ topology_template:
             mem_size: { get_input: fe_mem }
         os:
           properties:
-            image: one://onecloud.i3m.upv.es:2365/444
+            image: onecloud-linux-ubuntu-16.04.vmi
        
       requirements:
         - local_storage:
@@ -132,8 +132,7 @@ topology_template:
       capabilities:
         wn:
           properties:
-            max_instances: { get_input: wn_num }
-            min_instances: 2
+            max_instances: { get_input: wn_num }       
       requirements:
         - host: slurm_wn
             
