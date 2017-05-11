@@ -428,7 +428,7 @@ node_types:
     requirements:
       - host:
           capability: tosca.capabilities.Container
-          node: tosca.nodes.indigo.GalaxyShedTool
+          node: tosca.nodes.indigo.GalaxyPortal
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
