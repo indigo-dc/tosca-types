@@ -92,7 +92,7 @@ topology_template:
         flavor: { get_input: flavor }
       requirements:
         - host: galaxy
-        - dpendency: galaxy_tools
+        - dependency: galaxy_tools
 
     # type to describe a Galaxy not using any LRMS but using the local system
     local_lrms:
