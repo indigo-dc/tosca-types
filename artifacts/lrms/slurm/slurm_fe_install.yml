@@ -3,6 +3,7 @@
   connection: local
   vars:
      vnode_prefix: vnode-
+     slurm_front_end_ip: '{{ ansible_default_ipv4.address }}'
   pre_tasks:
   - name: "Add nodes mapping in hosts file"
     lineinfile: dest=/etc/hosts regexp='.*{{ item.1 }}.*$' line="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain" state=present
