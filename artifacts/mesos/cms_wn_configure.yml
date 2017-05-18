@@ -2,20 +2,5 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: indigo-dc.docker
-      docker_bridge_ip: "172.0.17.1"
-
-    - role: indigo-dc.consul
-      consul_mode: "agent"
-      docker_bridge_ip: "172.0.17.1"
-      consul_servers: "{{ mesos_master_ips }}"
-
-    - role: indigo-dc.mesos
-      mesos_install_mode: "slave"
-      zookeeper_peers: "{{ mesos_masters_list_ips }}"
-      mesos_masters_list: "{{ mesos_masters_list_ips }}"
-
     - role: indigo-dc.cms_config
       cms_config_node: "wn"
-      cms_config_mysquid_host: "{{ mysquid_ip }}"
-      cms_config_proxycache_host: "{{ proxycache_ip }}"
