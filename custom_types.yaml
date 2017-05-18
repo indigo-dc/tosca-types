@@ -357,9 +357,9 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
           inputs:
-            os-storage: { get_property: [ SELF, storage ] }
-            userdata-token: { get_property: [ SELF, token ] }
-            userdata-oneprovider: { get_property: [ SELF, oneprovider ] }
+            os_storage: { get_property: [ SELF, storage ] }
+            userdata_token: { get_property: [ SELF, token ] }
+            userdata_oneprovider: { get_property: [ SELF, oneprovider ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_admin: { get_property: [ SELF, admin_email ] }
