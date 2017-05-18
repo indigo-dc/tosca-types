@@ -66,6 +66,7 @@ topology_template:
       type: tosca.nodes.indigo.MesosSlave
       properties:
         master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
       requirements:
         - host: mesos_slave_server
         
@@ -138,7 +139,7 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            image: linux-ubuntu-14.04-mesos-vmi
+            image: linux-ubuntu-14.04-vmi
 
   outputs:
     mesos_lb_ips:
