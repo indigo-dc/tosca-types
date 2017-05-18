@@ -401,7 +401,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxy-tools,handler-include-static-no
+        file: indigo-dc.galaxy-tools,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
