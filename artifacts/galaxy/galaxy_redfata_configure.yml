@@ -3,5 +3,3 @@
   connection: local
   roles:
     - role: indigo-dc.galaxycloud-refdata
-      galaxy_flavor: "{{ galaxy_flavor }}"
-      get_refdata: "{{ get_refdata }}"
