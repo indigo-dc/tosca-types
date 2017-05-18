@@ -3,7 +3,7 @@
   connection: local
   roles:
     - role: indigo-dc.galaxycloud-os
-      isolation_level: "{{ os-storage }}"
+      isolation_level: "{{ os_storage }}"
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
 
     - role: indigo-dc.galaxycloud
