@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/mtangaro-galaxy-tools/tosca-types/master/custom_types.yaml
 
 description: >
   TOSCA test for launching a Galaxy Server also configuring the bowtie2
@@ -61,6 +61,38 @@ topology_template:
       type: boolean
       description: Install Reference data
       default: true
+    refdata_repository_name:
+      type: string
+      description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
+      default: 'elixir-italy.galaxy.refdata'
+    refdata_provider_type:
+      type: string
+      description: Select Reference data provider type (Onedata, CernVM-FS or download)
+      default: 'onedata'
+    refdata_provider:
+      type: string
+      description: Oneprovider for reference data
+      default: 'not_a_provider'
+    refdata_token:
+      type: string
+      description: Access token for reference data
+      default: 'not_a_token'
+    refdata_cvmfs_server_url:
+      type: string
+      description: CernVM-FS server, replica or stratum-zero
+      default: 'server_url'
+    refdata_cvmfs_key_file:
+      type: string
+      description: CernVM-FS public key
+      default: 'not_a_key'
+    refdata_cvmfs_proxy_url:
+      type: string
+      description: CernVM-FS proxy url
+      default: 'DIRECT'
+    refdata_cvmfs_proxy_port:
+      type: integer
+      description: CernVM-FS proxy port
+      default: 80
 
  
   node_templates:
@@ -90,6 +122,15 @@ topology_template:
       properties:
         reference_data: { get_input: reference_data }
         flavor: { get_input: flavor }
+        refdata_repository_name: { get_input: refdata_repository_name }
+        refdata_provider_type: { get_input: refdata_provider_type }
+        refdata_provider: { get_input: refdata_provider }
+        refdata_token: { get_input: refdata_token }
+        refdata_cvmfs_server_url: { get_input: refdata_cvmfs_server_url }
+        refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
+        refdata_cvmfs_key_file: { get_input: refdata_cvmfs_key_file }
+        refdata_cvmfs_proxy_url: { get_input: refdata_cvmfs_proxy_url }
+        refdata_cvmfs_proxy_port: { get_input: refdata_cvmfs_proxy_port }
       requirements:
         - host: galaxy
         - dependency: galaxy_tools
