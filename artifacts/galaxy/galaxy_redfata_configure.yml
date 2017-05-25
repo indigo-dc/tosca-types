@@ -1,5 +1,10 @@
 ---
 - hosts: localhost
   connection: local
+  pre_tasks:
+    - name: Get refdata-list
+      get_url:
+        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refata_cvmfs_key_file }}'
+        dest: '/tmp'
   roles:
     - role: indigo-dc.galaxycloud-refdata
