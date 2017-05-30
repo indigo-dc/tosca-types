@@ -38,6 +38,13 @@ capability_types:
         entry_schema:
           type: string
 
+  tosca.capabilities.indigo.Container:
+    derived_from: tosca.capabilities.Container
+    properties:
+      instance_type:
+        type: string
+        required: no
+
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
     properties:
@@ -86,6 +93,12 @@ capability_types:
         default: mesos
         constraints:
           - equal: mesos
+
+  tosca.capabilities.indigo.MesosMaster:        
+    derived_from: tosca.capabilities.Container
+
+  tosca.capabilities.indigo.MesosSlave:
+    derived_from: tosca.capabilities.Container
 
   tosca.capabilities.indigo.Container.Docker:
     derived_from: tosca.capabilities.Container.Docker
@@ -234,6 +247,9 @@ node_types:
          type: tosca.capabilities.indigo.OperatingSystem
       endpoint:
         type: tosca.capabilities.indigo.Endpoint
+      host:
+        type: tosca.capabilities.indigo.Container
+        valid_source_types: [tosca.nodes.SoftwareComponent]
 
   tosca.nodes.indigo.MonitoredCompute:
     derived_from: tosca.nodes.Compute
@@ -324,6 +340,48 @@ node_types:
             galaxy_instance_description: { get_property: [ SELF, instance_description ] }
             galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
 
+  tosca.nodes.indigo.GalaxyPortalAndStorage:
+    derived_from: tosca.nodes.indigo.GalaxyPortal
+    properties:
+      storage:
+        type: string
+        description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
+        default: "open"
+        required: true
+      token:
+        type: string
+        description: Access token for onedata space
+        default: "not_a_token"
+        required: false
+      oneprovider:
+        type: string
+        description: default OneProvider
+        default: "not_a_provider_url"
+        required: false
+    artifacts:
+      galaxy_os_role:
+        file: indigo-dc.galaxycloud-os
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role:
+        file: indigo-dc.galaxycloud
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
+          inputs:
+            os_storage: { get_property: [ SELF, storage ] }
+            userdata_token: { get_property: [ SELF, token ] }
+            userdata_oneprovider: { get_property: [ SELF, oneprovider ] }
+            galaxy_install_path: { get_property: [ SELF, install_path ] }
+            galaxy_user: { get_property: [ SELF, user ] }
+            galaxy_admin: { get_property: [ SELF, admin_email ] }
+            galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
+            galaxy_lrms: { get_property: [ SELF, lrms, type ] }
+            galaxy_version: { get_property: [ SELF, version ] }
+            galaxy_instance_description: { get_property: [ SELF, instance_description ] }
+            galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
+            
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
     requirements:
@@ -356,7 +414,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxy-tools
+        file: indigo-dc.galaxy-tools,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -366,6 +424,96 @@ node_types:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
             instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
+
+  tosca.nodes.indigo.GalaxyReferenceData:
+    derived_from: tosca.nodes.WebApplication
+    properties:
+      reference_data:
+        type: boolean
+        description: Install Reference data
+        default: true
+        required: true
+      flavor:
+        type: string
+        description: name of the Galaxy flavor
+        required: true
+        default: galaxy-no-tools
+      refdata_repository_name:
+        type: string
+        description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
+        default: 'elixir-italy.galaxy.refdata'
+        required: false
+      refdata_provider_type:
+        type: string
+        description: Select Reference data provider type (Onedata, CernVM-FS or download)
+        default: 'onedata'
+        required: false
+      refdata_provider:
+        type: string
+        description: Oneprovider for reference data
+        default: 'not_a_provider'
+        required: false
+      refdata_token:
+        type: string
+        description: Access token for reference data
+        default: 'not_a_token'
+        required: false
+      refdata_cvmfs_server_url:
+        type: string
+        description: CernVM-FS server, replica or stratum-zero
+        default: 'server_url'
+        required: false
+      refdata_cvmfs_repository_name:
+        type: string
+        description: Reference data CernVM-FS repository name
+        default: 'not_a_cvmfs_repository_name'
+        requred: false
+      refdata_cvmfs_key_file:
+        type: string
+        description: CernVM-FS public key
+        default: 'not_a_key'
+        required: false
+      refdata_cvmfs_proxy_url:
+        type: string
+        description: CernVM-FS proxy url
+        default: 'DIRECT'
+        required: false
+      refdata_cvmfs_proxy_port:
+        type: integer 
+        description: CernVM-FS proxy port
+        default: 80
+        required: false
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.GalaxyPortal
+          relationship: tosca.relationships.HostedOn
+    artifacts:
+      oneclient_role:
+        file: indigo-dc.oneclient
+        type: tosca.artifacts.AnsibleGalaxy.role
+      cvmfs_role:
+        file: indigo-dc.cvmfs-client
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role:
+        file: indigo-dc.galaxycloud-refdata
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_redfata_configure.yml
+          inputs:
+            get_refdata: { get_property: [ SELF, reference_data ] }
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
+            refdata_repository_name: { get_property: [ SELF, refdata_repository_name ] }
+            refdata_provider_type: { get_property: [ SELF, refdata_provider_type ] }
+            refdata_provider: { get_property: [ SELF, refdata_provider ] }
+            refdata_token: { get_property: [ SELF, refdata_token ] }
+            refdata_cvmfs_server_url: { get_property: [ SELF, refdata_cvmfs_server_url ] }
+            refdata_cvmfs_repository_name: { get_property: [ SELF, refdata_cvmfs_repository_name ] }
+            refdata_cvmfs_key_file: { get_property: [ SELF, refdata_cvmfs_key_file ] }
+            refdata_cvmfs_proxy_url: { get_property: [ SELF, refdata_cvmfs_proxy_url ] }
+            refdata_cvmfs_proxy_port: { get_property: [ SELF, refdata_cvmfs_proxy_port ] }
 
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent
@@ -576,6 +724,12 @@ node_types:
         type: map
         entry_schema:
           type: string
+      labels:
+        required: no
+        type: map
+        entry_schema:
+          type: string
+
 
   tosca.nodes.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
@@ -601,14 +755,41 @@ node_types:
           relationship: tosca.relationships.DependsOn
           occurrences: [0, 1]
 
+
+  tosca.nodes.indigo.DariahRepository:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_password:
+        type: string
+        required: yes
+    artifacts:
+      dariahrepo_role:
+        file: indigo-dc.dariahrepo
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/dariahrepo-setup.yml
+          inputs:
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
+
 
   tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Mesos
+        host:
+          type: tosca.capabilities.indigo.MesosMaster
     properties:
       # Set the current data of the mesos server
       # but it can also specified in the TOSCA document
@@ -671,77 +852,35 @@ node_types:
             chronos_pass: { get_property: [ SELF, chronos_password ] }
 
   tosca.nodes.indigo.MesosMaster:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
+
+  tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      # Set the current data of the mesos server
-      # but it can also specified in the TOSCA document
-      mesos_masters_list:
-        type: string
-        required: no
-        default: { get_attribute: [ HOST, public_address ] }
-      marathon_enable_ssl:
-        type: boolean
-        required: no
-        default: false
-      marathon_username:
-        type: string
-        required: no
-        default: admin
-      marathon_password:
+      cms_local_site:
         type: string
         required: yes
-      chronos_enable_ssl:
-        type: boolean
-        required: no
-        default: false
-      chronos_username:
-        type: string
-        required: no
-        default: admin
-      chronos_password:
+      cms_stageoutsite:
         type: string
         required: yes
-    artifacts:
-      docker_agent_role:
-        file: indigo-dc.docker
-        type: tosca.artifacts.AnsibleGalaxy.role
-      consul_agent_role:
-        file: indigo-dc.consul
-        type: tosca.artifacts.AnsibleGalaxy.role
-      zookeeper_agent_role:
-        file: indigo-dc.zookeeper
-        type: tosca.artifacts.AnsibleGalaxy.role
-      mesos_agent_role:
-        file: indigo-dc.mesos
-        type: tosca.artifacts.AnsibleGalaxy.role
-      marathon_agent_role:
-        file: indigo-dc.marathon
-        type: tosca.artifacts.AnsibleGalaxy.role
-      chronos_agent_role:
-        file: indigo-dc.chronos
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
-          inputs:
-            mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
-            marathon_user: { get_property: [ SELF, marathon_username ] }
-            marathon_pass: { get_property: [ SELF, marathon_password ] }
-            chronos_user: { get_property: [ SELF, chronos_username ] }
-            chronos_pass: { get_property: [ SELF, chronos_password ] }
-            marathon_enable_ssl: { get_property: [ SELF, marathon_enable_ssl ] }
-            chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
-    requirements:
-      - host:
-          capability: tosca.capabilities.Container
-          node: tosca.nodes.indigo.Compute
-          relationship: tosca.relationships.HostedOn
-
-
-  tosca.nodes.indigo.MesosMasterCms:
-    derived_from: tosca.nodes.indigo.MesosMaster
-    properties:
+      cms_stageoutserver:
+        type: string
+        required: yes
+      cms_stageoutprefix:
+        type: string
+        required: yes
+      cms_squid_image:
+        type: string
+        required: no
+        default: "spiga/frontiersquidv1"
+      cms_wn_image:
+        type: string
+        default: "spiga/cmswn"
+        required: no
+      cms_proxycache_image:
+        type: string
+        required: no
+        default: "spiga/ttscache"
       mysquid_host:
         type: string
         required: yes
@@ -752,29 +891,57 @@ node_types:
         type: string
         description: INDIGO IAM access token
         required: yes
+      iam_client_id:
+        type: string
+        description: INDIGO IAM client id
+        required: yes
+      iam_client_secret:
+        type: string
+        description: INDIGO IAM client secret
+        required: yes
+      marathon_username:
+        type: string
+        required: no
+        default: admin
+      marathon_password:
+        type: string
+        required: yes
     artifacts:
       cms_config_role:
         file: indigo-dc.cms_config
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_mesos_master_install.yml
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_services_start.yml
           inputs:
-            consul_server_ips: { get_attribute: [ HOST, public_address ] }
-            zookeeper_host_list_ips: { get_attribute: [ HOST, public_address ] }
-            zookeeper_peers_ips: { get_attribute: [ HOST, public_address ] }
-            mesos_masters_list_ips: { get_attribute: [ HOST, public_address ] }
+            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
+            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            cms_config_iamtoken: { get_property: [ SELF, iam_access_token ] }
+            cms_config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            cms_config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
+            cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
+            cms_config_stageoutserver: { get_property: [ SELF, cms_stageoutserver ] }
+            cms_config_stageoutprefix: { get_property: [ SELF, cms_stageoutprefix ] }
+            cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
+            cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
+            cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
-            chronos_user: { get_property: [ SELF, chronos_username ] }
-            chronos_pass: { get_property: [ SELF, chronos_password ] }
-            mysquid_ip: { get_property: [ SELF, mysquid_host ] }
-            proxycache_ip: { get_property: [ SELF, proxycache_host ] }
-            iam_token: { get_property: [ SELF, iam_access_token ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    capabilities:
+        host:
+          type: tosca.capabilities.indigo.MesosSlave
     properties:
       # Set the current data of the mesos server
       # but it can also specified in the TOSCA document
@@ -802,41 +969,24 @@ node_types:
 
 
   tosca.nodes.indigo.MesosSlave:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
+
+
+  tosca.nodes.indigo.CmsWnConfig:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      # Set the current data of the mesos server
-      # but it can also specified in the TOSCA document
-      master_ips:
+      cms_local_site:
+        type: string
         required: yes
-        type: list
-        entry_schema:
-          type: string
-    artifacts:
-      docker_agent_role:
-        file: indigo-dc.docker
-        type: tosca.artifacts.AnsibleGalaxy.role
-      consul_agent_role:
-        file: indigo-dc.consul
-        type: tosca.artifacts.AnsibleGalaxy.role
-      mesos_agent_role:
-        file: indigo-dc.mesos
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
-          inputs:
-            mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
-    requirements:
-      - host:
-          capability: tosca.capabilities.Container
-          node: tosca.nodes.indigo.Compute
-          relationship: tosca.relationships.HostedOn
-
-
-  tosca.nodes.indigo.MesosSlaveCms:
-    derived_from: tosca.nodes.indigo.MesosSlave
-    properties:
+      cms_stageoutsite:
+        type: string
+        required: yes
+      cms_stageoutserver:
+        type: string
+        required: yes
+      cms_stageoutprefix:
+        type: string
+        required: yes
       mysquid_host:
         type: string
         required: yes
@@ -849,14 +999,22 @@ node_types:
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
-        create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_mesos_slave_install.yml
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_wn_configure.yml
           inputs:
-            mesos_master_ips: { get_property: [ SELF, master_ips ] }
-            consul_server_ips: { get_property: [ SELF, master_ips ] }
-            mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
-            mysquid_ip: { get_property: [ SELF, mysquid_host ] }
-            proxycache_ip: { get_property: [ SELF, proxycache_host ] }
+            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
+            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
+            cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
+            cms_config_stageoutserver: { get_property: [ SELF, cms_stageoutserver ] }
+            cms_config_stageoutprefix: { get_property: [ SELF, cms_stageoutprefix ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosSlave
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
 
   tosca.nodes.indigo.MesosLoadBalancer:
     derived_from: tosca.nodes.SoftwareComponent
