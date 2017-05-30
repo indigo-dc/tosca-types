@@ -53,8 +53,5 @@
     file: path={{ onedata_location }} state=directory owner={{ansible_user}} group={{ansible_user}} mode=755
 
   - name: Mount onedata path at {{ onedata_location }} using as provider {{ oneprovider_host[0] }}
-    shell: oneclient --authentication token --no-check-certificate {{ onedata_location }} creates={{ onedata_location }}/spaces
+    shell: oneclient --token {{ onedata_token }} --host {{ oneprovider_host[0] }} --insecure {{ onedata_location }} creates={{ onedata_location }}/spaces
     become: no
-    environment:
-      ONECLIENT_AUTHORIZATION_TOKEN: "{{ onedata_token }}"
-      PROVIDER_HOSTNAME: "{{ oneprovider_host[0] }}"
