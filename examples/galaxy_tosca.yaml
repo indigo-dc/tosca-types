@@ -41,16 +41,70 @@ topology_template:
       type: string
       description: galaxy instance ssh public key
       default: your_ssh_public_key
+    storage:
+      type: string
+      description: Storage type (Iaas Block Storage, Onedaata, Filesystem encryption)
+      default: "open"
+    token:
+      type: string
+      description: Access token for onedata space
+      default: "not_a_token"
+    oneprovider:
+      type: string
+      description: default OneProvider
+      default: "not_a_privder_url"
     flavor:
       type: string
       description: Galaxy flavor for tools installation
       default: "galaxy-no-tools"
+    reference_data:
+      type: boolean
+      description: Install Reference data
+      default: true
+    refdata_repository_name:
+      type: string
+      description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
+      default: 'elixir-italy.galaxy.refdata'
+    refdata_provider_type:
+      type: string
+      description: Select Reference data provider type (Onedata, CernVM-FS or download)
+      default: 'onedata'
+    refdata_provider:
+      type: string
+      description: Oneprovider for reference data
+      default: 'not_a_provider'
+    refdata_token:
+      type: string
+      description: Access token for reference data
+      default: 'not_a_token'
+    refdata_cvmfs_server_url:
+      type: string
+      description: CernVM-FS server, replica or stratum-zero
+      default: 'server_url'
+    refdata_cvmfs_repository_name:
+      type: string
+      description: Reference data CernVM-FS repository name
+      default: 'not_a_cvmfs_repository_name'
+    refdata_cvmfs_key_file:
+      type: string
+      description: CernVM-FS public key
+      default: 'not_a_key'
+    refdata_cvmfs_proxy_url:
+      type: string
+      description: CernVM-FS proxy url
+      default: 'DIRECT'
+    refdata_cvmfs_proxy_port:
+      type: integer
+      description: CernVM-FS proxy port
+      default: 80
+
  
   node_templates:
 
     galaxy:
-      type: tosca.nodes.indigo.GalaxyPortal
+      type: tosca.nodes.indigo.GalaxyPortalAndStorage
       properties:
+        storage: { get_input: storage }
         admin_email: { get_input: admin_email }
         admin_api_key: { get_input: admin_api_key }
         version: { get_input: version }
@@ -66,6 +120,24 @@ topology_template:
         admin_api_key: { get_input: admin_api_key }
       requirements:
         - host: galaxy
+
+    galaxy_refdata:
+      type: tosca.nodes.indigo.GalaxyReferenceData
+      properties:
+        reference_data: { get_input: reference_data }
+        flavor: { get_input: flavor }
+        refdata_repository_name: { get_input: refdata_repository_name }
+        refdata_provider_type: { get_input: refdata_provider_type }
+        refdata_provider: { get_input: refdata_provider }
+        refdata_token: { get_input: refdata_token }
+        refdata_cvmfs_server_url: { get_input: refdata_cvmfs_server_url }
+        refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
+        refdata_cvmfs_key_file: { get_input: refdata_cvmfs_key_file }
+        refdata_cvmfs_proxy_url: { get_input: refdata_cvmfs_proxy_url }
+        refdata_cvmfs_proxy_port: { get_input: refdata_cvmfs_proxy_port }
+      requirements:
+        - host: galaxy
+        - dependency: galaxy_tools
 
     # type to describe a Galaxy not using any LRMS but using the local system
     local_lrms:
@@ -104,7 +176,7 @@ topology_template:
             relationship:
               type: tosca.relationships.AttachesTo
               properties:
-                location: /mnt/disk
+                location: /export
                 device: hdb
 
     my_block_storage:
