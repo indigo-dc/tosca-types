@@ -78,6 +78,7 @@ topology_template:
       type: tosca.nodes.indigo.MesosSlave
       properties:
         master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
       requirements:
         - host: mesos_slave_server
         
