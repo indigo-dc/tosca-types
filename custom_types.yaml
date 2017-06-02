@@ -38,6 +38,13 @@ capability_types:
         entry_schema:
           type: string
 
+  tosca.capabilities.indigo.Container:
+    derived_from: tosca.capabilities.Container
+    properties:
+      instance_type:
+        type: string
+        required: no
+
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
     properties:
@@ -240,6 +247,9 @@ node_types:
          type: tosca.capabilities.indigo.OperatingSystem
       endpoint:
         type: tosca.capabilities.indigo.Endpoint
+      host:
+        type: tosca.capabilities.indigo.Container
+        valid_source_types: [tosca.nodes.SoftwareComponent]
 
   tosca.nodes.indigo.MonitoredCompute:
     derived_from: tosca.nodes.Compute
