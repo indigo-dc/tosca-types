@@ -343,7 +343,7 @@ node_types:
   tosca.nodes.indigo.GalaxyPortalAndStorage:
     derived_from: tosca.nodes.indigo.GalaxyPortal
     properties:
-      storage:
+      os_storage:
         type: string
         description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
         default: "open"
@@ -353,12 +353,20 @@ node_types:
         description: Access token for onedata space
         default: "not_a_token"
         required: false
-      oneprovider:
+      provider:
         type: string
         description: default OneProvider
         default: "not_a_provider_url"
         required: false
+      space:
+        type: string
+        description: Onedata space
+        default: "galaxy"
+        required: false
     artifacts:
+      oneclient_role:
+        file: indigo-dc.oneclient
+        type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
         file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
@@ -368,11 +376,12 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro-galaxy-tools/artifacts/galaxy/galaxy_os_install.yml
           inputs:
-            os_storage: { get_property: [ SELF, storage ] }
+            os_storage: { get_property: [ SELF, os_storage ] }
             userdata_token: { get_property: [ SELF, token ] }
-            userdata_oneprovider: { get_property: [ SELF, oneprovider ] }
+            userdata_oneprovider: { get_property: [ SELF, provider ] }
+            userdata_space: { get_property: [ SELF, space ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_admin: { get_property: [ SELF, admin_email ] }
