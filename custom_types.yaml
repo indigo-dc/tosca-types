@@ -376,7 +376,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro-galaxy-tools/artifacts/galaxy/galaxy_os_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
           inputs:
             os_storage: { get_property: [ SELF, os_storage ] }
             userdata_token: { get_property: [ SELF, token ] }
