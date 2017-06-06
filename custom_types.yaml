@@ -346,7 +346,7 @@ node_types:
       os_storage:
         type: string
         description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
-        default: "open"
+        default: "IaaS"
         required: true
       token:
         type: string
