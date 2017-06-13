@@ -1076,7 +1076,7 @@ node_types:
         required: yes
     artifacts:
       spark_mesos_role:
-        file: maricaantonacci.spark_mesos
+        file: maricaantonacci.spark-mesos
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
