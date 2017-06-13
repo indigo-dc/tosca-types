@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.cms_config
+      cms_config_node: "wn"
