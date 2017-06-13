@@ -1065,6 +1065,34 @@ node_types:
           relationship: tosca.relationships.HostedOn
 
 
+  tosca.nodes.indigo.SparkMesosDispatcher:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_password:
+        type: string
+        required: yes
+      zookeeper_peers:
+        type: string
+        required: yes
+    artifacts:
+      spark_mesos_role:
+        file: maricaantonacci.spark_mesos
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/spark_on_mesos/artifacts/mesos/spark_mesos_setup.yml
+          inputs:
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            zookeeper_peers: { get_property: [ SELF, zookeeper_peers ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+
   tosca.nodes.indigo.OneDataStorage:
     derived_from: tosca.nodes.BlockStorage
     properties:
