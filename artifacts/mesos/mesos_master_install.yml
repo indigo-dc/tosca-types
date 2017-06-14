@@ -1,10 +1,11 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    - docker_bridge_ip: "172.0.17.1"
   roles:
     - role: indigo-dc.consul
       consul_mode: "server"
-      docker_bridge_ip: "172.0.17.1"
       consul_servers: "{{ mesos_masters_list_ips }}"
 
     - role: indigo-dc.zookeeper
