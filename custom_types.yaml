@@ -1128,7 +1128,7 @@ node_types:
       spark_driver_mem: 
         type: scalar-unit.size
         required: false
-        default: '0G'
+        default: ''
       spark_driver_cores: 
         type: integer
         required: false
