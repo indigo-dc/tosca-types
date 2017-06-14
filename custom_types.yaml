@@ -1227,7 +1227,7 @@ node_types:
       spark_driver_mem: 
         type: string
         required: false
-        default: ''
+        default: '0G'
       spark_driver_cores: 
         type: string
         required: false
