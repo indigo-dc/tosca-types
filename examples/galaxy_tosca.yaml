@@ -172,7 +172,7 @@ topology_template:
           properties:
             type: linux 
             distribution: centos
-            version: 7
+            version: 7.2
             image: indigodatacloudapps/galaxy
       requirements:
         # contextually this can only be a relationship type
