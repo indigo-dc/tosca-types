@@ -1090,7 +1090,7 @@ node_types:
       spark_swift_http_port:
         type: string
         required: false
-        default: ''
+        default: '8080'
       spark_swift_region: 
         type: string
         required: false
