@@ -1082,42 +1082,55 @@ node_types:
       spark_hdfs_uri:
         type: string
         required: false
+        default: ''
       spark_swift_auth_url: 
         type: string
         required: false
+        default: ''
       spark_swift_http_port:
         type: string
         required: false
+        default: ''
       spark_swift_region: 
         type: string
         required: false
+        default: ''
       spark_swift_tenant:
         type: string
         required: false
+        default: ''
       spark_swift_username: 
         type: string
         required: false
+        default: ''
       spark_swift_password: 
         type: string
         required: false
+        default: ''
       spark_swift_provider: 
         type: string
         required: false
+        default: 'Test'
       spark_cores_max: 
         type: integer
         required: false
+        default: ''
       spark_executor_cores: 
         type: integer
         required: false
+        default: ''
       spark_executor_mem:
         type: scalar-unit.size
         required: false
+        default: ''
       spark_driver_mem: 
         type: scalar-unit.size
         required: false
+        default: ''
       spark_driver_cores: 
         type: integer
         required: false
+        default: ''
     artifacts:
       spark_mesos_role:
         file: maricaantonacci.spark-mesos
