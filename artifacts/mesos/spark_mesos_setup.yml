@@ -2,4 +2,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: maricaantonacci.spark-mesos
+    - role: indigo-dc.spark-mesos
