@@ -1240,58 +1240,6 @@ node_types:
   tosca.nodes.indigo.Disvis:
     derived_from: tosca.nodes.indigo.HaddockApp
     properties:
-    derived_from: tosca.nodes.SoftwareComponent
-    artifacts:
-      hadoop_role:
-        file: indigo-dc.hadoop
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/hadoop/hadoop_master_install.yml
-          inputs:
-            hadoop_master_ip: { get_attribute: [ HOST, private_address, 0 ] }
-
-  tosca.nodes.indigo.HadoopSlave:
-    derived_from: tosca.nodes.SoftwareComponent
-    properties:
-      master_ip:
-        required: yes
-        type: string
-    artifacts:
-      hadoop_role:
-        file: indigo-dc.hadoop
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/hadoop/hadoop_wn_install.yml
-          inputs:
-            hadoop_master_ip: { get_property: [ SELF, master_ip ] }
-
-  tosca.nodes.indigo.HaddockApp:
-    derived_from: tosca.nodes.SoftwareComponent
-    properties:
-      haddock_app_name:
-        type: string
-        description: Haddocking application
-        required: true
-        constraints:
-        - valid_values: [ disvis, powerfit ]
-    artifacts:
-      galaxy_role:
-        file: indigo-dc.disvis-powerfit
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/haddock/haddock_install.yml
-          inputs:
-            haddock_app_name: { get_property: [ SELF, haddock_app_name ] }
-
-  tosca.nodes.indigo.Disvis:
-    derived_from: tosca.nodes.indigo.HaddockApp
-    properties:
       haddock_app_name:
         type: string
         required: true
@@ -1390,3 +1338,55 @@ node_types:
       Standard:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
+          inputs:
+            ophidia_server_ip: { get_property: [ SELF, server_ip ] }
+
+  tosca.nodes.indigo.Batch.Job:
+    derived_from: tosca.nodes.Root
+    properties:
+      executable:
+        required: yes
+        type: string
+        description: Name of the executable file
+      arguments:
+        required: no
+        type: string
+        description: Arguments for the job executable
+      environment:
+        type: map
+        entry_schema:
+          type: string
+        description: A map of string representing environment settings
+
+# https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
+  tosca.nodes.indigo.Grid.Job:
+    derived_from: tosca.nodes.indigo.Batch.Job
+    properties:
+      ce_urls:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+        description: A list of CREAM CE identifiers to launch the job
+      stdoutput:
+        required: no
+        description: Name of the file to get the standard output stream of the user application
+        type: string
+      stderror:
+        required: no
+        type: string
+        description: Name of the file to get the standard error stream of the user application
+      outputsandbox:
+        type: list
+        entry_schema:
+          type: string
+        description: A list of output sandbox files
+      inputsandbox:
+        type: list
+        entry_schema:
+          type: string
+        description: A list of input sandbox files (URL of files located in gridFTP servers)
+      virtualorganisation:
+        required: no
+        type: string
+        description: Specify the VO of the user
