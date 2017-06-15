@@ -93,7 +93,7 @@ topology_template:
 
     spark_swift_auth_url:
       type: string
-      description: Keystone auth URL. Ex: https://cloud.recas.ba.infn.it:5000/v2.0/tokens
+      description: 'Keystone auth URL. Ex: https://cloud.recas.ba.infn.it:5000/v2.0/tokens'
       required: false
       default: ''
 
