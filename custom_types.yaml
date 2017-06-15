@@ -850,7 +850,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/spark_on_mesos/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_attribute: [ HOST, public_address ] }
             marathon_enable_ssl: { get_property: [ SELF, marathon_enable_ssl ] }
@@ -972,7 +972,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/spark_on_mesos/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
 
@@ -1053,7 +1053,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_lb_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/spark_on_mesos/artifacts/mesos/mesos_lb_install.yml
           inputs:
             consul_server_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
@@ -1063,6 +1063,104 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
+
+
+  tosca.nodes.indigo.SparkMesos:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_password:
+        type: string
+        required: true
+      zookeeper_peers:
+        type: string
+        required: true
+      spark_mesos_deploy_app:
+        type: string
+        constraints:
+        - valid_values: [ apache-zeppelin, spark-dispatcher ]
+        required: false
+      spark_hdfs_uri:
+        type: string
+        required: false
+        default: ''
+      spark_swift_auth_url: 
+        type: string
+        required: false
+        default: ''
+      spark_swift_http_port:
+        type: string
+        required: false
+        default: '8080'
+      spark_swift_region: 
+        type: string
+        required: false
+        default: ''
+      spark_swift_tenant:
+        type: string
+        required: false
+        default: ''
+      spark_swift_username: 
+        type: string
+        required: false
+        default: ''
+      spark_swift_password: 
+        type: string
+        required: false
+        default: ''
+      spark_swift_provider: 
+        type: string
+        required: false
+        default: 'Test'
+      spark_cores_max: 
+        type: integer
+        required: false
+        default: ''
+      spark_executor_cores: 
+        type: integer
+        required: false
+        default: ''
+      spark_executor_mem:
+        type: scalar-unit.size
+        required: false
+        default: ''
+      spark_driver_mem: 
+        type: scalar-unit.size
+        required: false
+        default: ''
+      spark_driver_cores: 
+        type: integer
+        required: false
+        default: ''
+    artifacts:
+      spark_mesos_role:
+        file: indigo-dc.spark-mesos
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/spark_on_mesos/artifacts/mesos/spark_mesos_setup.yml
+          inputs:
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            zookeeper_peers: { get_property: [ SELF, zookeeper_peers ] }
+            spark_mesos_hdfs_uri: { get_property: [ SELF, spark_hdfs_uri ] }
+            spark_mesos_swift_auth_url: { get_property: [ SELF, spark_swift_auth_url ] }
+            spark_mesos_swift_http_port: { get_property: [ SELF, spark_swift_http_port ] }
+            spark_mesos_swift_region: { get_property: [ SELF, spark_swift_region  ] }
+            spark_mesos_swift_tenant: { get_property: [ SELF, spark_swift_tenant ] }
+            spark_mesos_swift_username:  { get_property: [ SELF, spark_swift_username ] }
+            spark_mesos_swift_password: { get_property: [ SELF, spark_swift_password ] }
+            spark_mesos_swift_provider: { get_property: [ SELF, spark_swift_provider ] }
+            spark_mesos_cores_max: { get_property: [ SELF, spark_cores_max ] }
+            spark_mesos_executor_cores: { get_property: [ SELF, spark_executor_cores ] }
+            spark_mesos_executor_memory: { get_property: [ SELF, spark_executor_mem ] }
+            spark_mesos_driver_memory: { get_property: [ SELF, spark_driver_mem ] }
+            spark_mesos_driver_cores: { get_property: [ SELF, spark_driver_cores ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
 
 
   tosca.nodes.indigo.OneDataStorage:
