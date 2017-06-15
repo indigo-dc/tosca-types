@@ -1133,7 +1133,7 @@ node_types:
         default: ''
     artifacts:
       spark_mesos_role:
-        file: maricaantonacci.spark-mesos
+        file: indigo-dc.spark-mesos
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
