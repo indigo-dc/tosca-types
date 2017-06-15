@@ -2,8 +2,12 @@
 - hosts: localhost
   connection: local
   pre_tasks:
-  - name: "Add master mapping in hosts file"
-    lineinfile: dest=/etc/hosts regexp='.*{{ slurm_front_end_ip }}.*$' line="{{ slurm_front_end_ip }} slurmserver slurmserver.localdomain" state=present
+  - name: "Add private ip master mapping in hosts file"
+    lineinfile: dest=/etc/hosts regexp='.*slurmserver.localdomain.*$' line="{{ slurm_front_end_ip }} slurmserver slurmserver.localdomain" state=present
+    when: not wn_hybrid_cluster or IM_NODE_PUBLIC_IP is undefined or IM_NODE_PUBLIC_IP != IM_NODE_PRIVATE_IP
+  - name: "Add public ip master mapping in hosts file"
+    lineinfile: dest=/etc/hosts regexp='.*slurmserver.localdomain.*$' line="{{ slurm_public_front_end_ip }} slurmserver slurmserver.localdomain" state=present
+    when: wn_hybrid_cluster and IM_NODE_PUBLIC_IP is defined and IM_NODE_PUBLIC_IP == IM_NODE_PRIVATE_IP
   roles:
   - role: indigo-dc.openvpn
     openvpn_type_of_node: 'wn'

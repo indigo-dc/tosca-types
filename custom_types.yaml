@@ -116,6 +116,11 @@ capability_types:
         description: The optional name to register with DNS
         type: string
         required: false
+      private_ip:
+        description: Flag used to specify that this endpoint will require also a private IP although it is a public one.
+        type: boolean
+        required: false
+        default: true
     attributes:
       credential:
         type: list
@@ -618,6 +623,10 @@ node_types:
         description: Flag to specify that this WorkerNode will work in a hybrid environment
         default: false
         required: false
+      public_front_end_ip:
+        type: string
+        description: Public IP of the Front-End node
+        required: false
     capabilities:
         wn:
           type: tosca.capabilities.Scalable
@@ -657,6 +666,7 @@ node_types:
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            slurm_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
 
   tosca.nodes.indigo.LRMS.FrontEnd:
     derived_from: tosca.nodes.SoftwareComponent
