@@ -1114,23 +1114,18 @@ node_types:
       spark_cores_max: 
         type: integer
         required: false
-        default: ''
       spark_executor_cores: 
         type: integer
         required: false
-        default: ''
       spark_executor_mem:
         type: scalar-unit.size
         required: false
-        default: ''
       spark_driver_mem: 
         type: scalar-unit.size
         required: false
-        default: ''
       spark_driver_cores: 
         type: integer
         required: false
-        default: ''
     artifacts:
       spark_mesos_role:
         file: indigo-dc.spark-mesos
