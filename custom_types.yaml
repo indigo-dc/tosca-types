@@ -259,7 +259,7 @@ node_types:
       zabbix_server:
         type: string
         required: no
-        default: indigo-paas.cloud.ba.infn.it
+        default: orchestrator.cloud.cnaf.infn.it
       zabbix_server_port:
         type: PortDef
         required: no
