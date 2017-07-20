@@ -829,12 +829,12 @@ node_types:
         default: 1024
     artifacts:
       dariahrepo_role:
-        file: maricaantonacci.dariahrepo
+        file: indigo-dc.dariahrepo
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/maricaantonacci/tosca-types/master/artifacts/mesos/dariahrepo-setup.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-dariah/artifacts/mesos/dariahrepo-setup.yml
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             dariahrepo_app_cache_cpus: { get_property: [ SELF, cache_cpus ] }
