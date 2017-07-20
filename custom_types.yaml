@@ -771,16 +771,86 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      cache_cpus:
+        type: float
+        required: no
+        default: 1.0
+      cache_mem:
+        type: integer
+        required: no
+        default: 1024
+      db_cpus:
+        type: float
+        required: no
+        default: 1.0
+      db_mem:
+        type: integer
+        required: no
+        default: 1024
+      es_cpus:
+        type: float
+        required: no
+        default: 1.0
+      es_mem:
+        type: integer
+        required: no
+        default: 1024
+      mq_cpus:
+        type: float
+        required: no
+        default: 1.0
+      mq_mem:
+        type: integer
+        required: no
+        default: 1024
+      statsd_cpus:
+        type: float
+        required: no
+        default: 1.0
+      statsd_mem:
+        type: integer
+        required: no
+        default: 1024
+      web_cpus:
+        type: float
+        required: no
+        default: 1.0
+      web_mem:
+        type: integer
+        required: no
+        default: 1024
+      worker_cpus:
+        type: float
+        required: no
+        default: 1.0
+      worker_mem:
+        type: integer
+        required: no
+        default: 1024
     artifacts:
       dariahrepo_role:
-        file: indigo-dc.dariahrepo
+        file: maricaantonacci.dariahrepo
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/dariahrepo-setup.yml
+          implementation: https://raw.githubusercontent.com/maricaantonacci/tosca-types/master/artifacts/mesos/dariahrepo-setup.yml
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
+            dariahrepo_app_cache_cpus: { get_property: [ SELF, cache_cpus ] }
+            dariahrepo_app_cache_mem: { get_property: [ SELF, cache_mem ] }
+            dariahrepo_app_db_cpus: { get_property: [ SELF, db_cpus ] }
+            dariahrepo_app_db_mem: { get_property: [ SELF, db_mem ] }
+            dariahrepo_app_es_cpus: { get_property: [ SELF, es_cpus ] }
+            dariahrepo_app_es_mem: { get_property: [ SELF, es_mem ] }
+            dariahrepo_app_mq_cpus: { get_property: [ SELF, mq_cpus ] }
+            dariahrepo_app_mq_mem: { get_property: [ SELF, mq_mem ] }
+            dariahrepo_app_statsd_cpus: { get_property: [ SELF, statsd_cpus ] }
+            dariahrepo_app_statsd_mem: { get_property: [ SELF, statsd_mem ] }
+            dariahrepo_app_web_cpus: { get_property: [ SELF, web_cpus ] }
+            dariahrepo_app_web_mem: { get_property: [ SELF, web_mem ] }
+            dariahrepo_app_worker_cpus: { get_property: [ SELF, worker_cpus ] }
+            dariahrepo_app_worker_mem: { get_property: [ SELF, worker_mem ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
@@ -817,6 +887,10 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      enable_chronos:
+        type: boolean
+        required: no
+        default: true
       chronos_enable_ssl:
         type: boolean
         required: no
@@ -827,7 +901,12 @@ node_types:
         default: admin
       chronos_password:
         type: string
-        required: yes
+        required: no
+        default: admin
+      enable_nfs_share:
+        type: boolean
+        required: no
+        default: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -847,18 +926,24 @@ node_types:
       chronos_agent_role:
         file: indigo-dc.chronos
         type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-dariah/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
             marathon_enable_ssl: { get_property: [ SELF, marathon_enable_ssl ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
+            enable_chronos: { get_property: [ SELF, enable_chronos ] }
             chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
             chronos_user: { get_property: [ SELF, chronos_username ] }
             chronos_pass: { get_property: [ SELF, chronos_password ] }
+            enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            wn_ips: { get_property: [ SELF, wn_ips ] }
 
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
@@ -947,6 +1032,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      enable_nfs_share:
+        type: boolean
+        required: no
+        default: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -957,13 +1046,17 @@ node_types:
       mesos_agent_role:
         file: indigo-dc.mesos
         type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-dariah/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
-
+            enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
