@@ -1,5 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  pre_tasks:
+    - set_fact: spark_mesos_executor_memory="{{ spark_mesos_executor_mem | regex_replace(' +(.*)B', '\\1') | lower() }}" 
+    - set_fact: spark_mesos_driver_memory="{{ spark_mesos_driver_mem | regex_replace(' +(.*)B', '\\1') | lower() }}"
   roles:
     - role: indigo-dc.spark-mesos
