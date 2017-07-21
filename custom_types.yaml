@@ -1213,25 +1213,25 @@ node_types:
         required: false
         default: 'Test'
       spark_cores_max: 
-        type: string
+        type: integer
         required: false
-        default: ''
+        default: '-1'
       spark_executor_cores: 
-        type: string
+        type: integer
         required: false
-        default: ''
+        default: '-1'
       spark_executor_mem:
-        type: string
+        type: scalar-unit.size
         required: false
-        default: ''
+        default: '0 GB'
       spark_driver_mem: 
-        type: string
+        type: scalar-unit.size
         required: false
-        default: ''
+        default: '0 GB'
       spark_driver_cores: 
-        type: string
+        type: integer
         required: false
-        default: ''
+        default: '-1'
     artifacts:
       spark_mesos_role:
         file: indigo-dc.spark-mesos
