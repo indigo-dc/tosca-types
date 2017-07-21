@@ -71,7 +71,7 @@ topology_template:
       type: integer
       description: The number of cores to use on each executor.
       required: false
-      default: ''
+      default: '1'
 
     spark_executor_mem:
       type: scalar-unit.size
