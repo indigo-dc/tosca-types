@@ -304,6 +304,11 @@ node_types:
         description: path to install the galaxy tool
         default: /home/galaxy/galaxy
         required: false
+      export_dir:
+        type: string
+        description: path to store galaxy data
+        default: /export
+        required: false
       version:
         type: string
         description: galaxy version to install
@@ -339,6 +344,7 @@ node_types:
             galaxy_version: { get_property: [ SELF, version ] }
             galaxy_instance_description: { get_property: [ SELF, instance_description ] }
             galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
+            export_dir: { get_property: [ SELF, export_dir ] }
 
   tosca.nodes.indigo.GalaxyPortalAndStorage:
     derived_from: tosca.nodes.indigo.GalaxyPortal
@@ -390,7 +396,8 @@ node_types:
             galaxy_version: { get_property: [ SELF, version ] }
             galaxy_instance_description: { get_property: [ SELF, instance_description ] }
             galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
-            
+            export_dir: { get_property: [ SELF, export_dir ] }
+ 
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
     requirements:
@@ -492,6 +499,11 @@ node_types:
         description: CernVM-FS proxy port
         default: 80
         required: false
+      refdata_dir:
+        type: string
+        description: path to store galaxy reference data
+        default: /refdata
+        required: false
     requirements:
       - host:
           capability: tosca.capabilities.Container
@@ -523,6 +535,7 @@ node_types:
             refdata_cvmfs_key_file: { get_property: [ SELF, refdata_cvmfs_key_file ] }
             refdata_cvmfs_proxy_url: { get_property: [ SELF, refdata_cvmfs_proxy_url ] }
             refdata_cvmfs_proxy_port: { get_property: [ SELF, refdata_cvmfs_proxy_port ] }
+            refdata_dir: { get_property: [ SELF, refdata_dir ] }
 
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent
