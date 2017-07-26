@@ -116,6 +116,11 @@ capability_types:
         description: The optional name to register with DNS
         type: string
         required: false
+      private_ip:
+        description: Flag used to specify that this endpoint will require also a private IP although it is a public one.
+        type: boolean
+        required: false
+        default: true
     attributes:
       credential:
         type: list
@@ -593,6 +598,11 @@ node_types:
           user: admin
           token: password
         required: false
+      hybrid:
+        type: boolean
+        description: Flag to specify that this ElasticCluster will work in a hybrid environment
+        default: false
+        required: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.clues
@@ -630,6 +640,15 @@ node_types:
         type: string
         description: IP of the Front-End node
         required: true
+      hybrid:
+        type: boolean
+        description: Flag to specify that this WorkerNode will work in a hybrid environment
+        default: false
+        required: false
+      public_front_end_ip:
+        type: string
+        description: Public IP of the Front-End node
+        required: false
     capabilities:
         wn:
           type: tosca.capabilities.Scalable
@@ -648,6 +667,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_wn_install.yml
           inputs:
             torque_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.LRMS.WorkerNode.Slurm:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -658,12 +678,17 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/hybrid/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            slurm_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
 
   tosca.nodes.indigo.LRMS.FrontEnd:
     derived_from: tosca.nodes.SoftwareComponent
@@ -675,6 +700,11 @@ node_types:
         description: List of IPs of the WNs
         required: false
         default: []
+      hybrid:
+        type: boolean
+        description: Flag to specify that this FrontEnd will work in a hybrid environment
+        default: false
+        required: false
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS
@@ -695,6 +725,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_fe_install.yml
           inputs:
             torque_wn_ips: { get_property: [ SELF, wn_ips ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Slurm:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -705,16 +736,20 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Slurm
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/hybrid/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_ips: { get_property: [ SELF, wn_ips ] }
             front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Local:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -1178,7 +1213,6 @@ node_types:
           node: tosca.nodes.indigo.Compute
           relationship: tosca.relationships.HostedOn
 
-
   tosca.nodes.indigo.SparkMesos:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -1275,7 +1309,6 @@ node_types:
           relationship: tosca.relationships.HostedOn
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
-
 
   tosca.nodes.indigo.OneDataStorage:
     derived_from: tosca.nodes.BlockStorage
@@ -1504,3 +1537,4 @@ node_types:
         required: no
         type: string
         description: Specify the VO of the user
+
