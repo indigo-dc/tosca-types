@@ -1,13 +1,20 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    docker_bridge_ip: "172.0.17.1"
+  
   roles:
     - role: indigo-dc.consul
       consul_mode: "agent"
-      docker_bridge_ip: "172.0.17.1"
       consul_servers: "{{ mesos_masters_list_ips }}"
 
     - role: indigo-dc.mesos
       mesos_install_mode: "slave"
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       mesos_masters_list: "{{ mesos_masters_list_ips }}"
+
+    - role: indigo-dc.nfs
+      nfs_mode: 'client'
+      nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ front_end_ip }}", opts: "nolock" }]
+      when: "enable_nfs_share == true"

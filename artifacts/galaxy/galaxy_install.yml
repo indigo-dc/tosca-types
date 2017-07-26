@@ -6,4 +6,3 @@
       GALAXY_VERSION: "{{ galaxy_version }}"
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
       GALAXY_ADMIN_API_KEY: "{{ galaxy_admin_api_key }}"
-      export_dir: /home/galaxy
