@@ -649,6 +649,7 @@ node_types:
         type: string
         description: Public IP of the Front-End node
         required: false
+        default: ''
     capabilities:
         wn:
           type: tosca.capabilities.Scalable
