@@ -17,6 +17,11 @@ topology_template:
       type: string
       description: ram memory required for the instance
       default: 1 GB
+    storage_size:
+      type: string
+      description: storage memory required for the instance
+      default: 10 GB      
+
     admin_email:
       type: string
       description: email of the admin user
@@ -41,6 +46,11 @@ topology_template:
       type: string
       description: galaxy instance ssh public key
       default: your_ssh_public_key
+    export_dir:
+      type: string
+      description: path to store galaxy data
+      default: /export
+
     galaxy_storage_type:
       type: string
       description: Storage type (Iaas Block Storage, Onedaata, Filesystem encryption)
@@ -57,14 +67,20 @@ topology_template:
       type: string
       description: Onedata space
       default: "galaxy"
+
     flavor:
       type: string
       description: Galaxy flavor for tools installation
       default: "galaxy-no-tools"
+
     reference_data:
       type: boolean
       description: Install Reference data
       default: true
+    refdata_dir:
+      type: string
+      description: path to store galaxy reference data
+      default: /refdata
     refdata_repository_name:
       type: string
       description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
@@ -117,6 +133,7 @@ topology_template:
         version: { get_input: version }
         instance_description: { get_input: instance_description }
         instance_key_pub: { get_input: instance_key_pub }
+        export_dir: { get_input: export_dir }
       requirements:
         - lrms: local_lrms
 
@@ -132,6 +149,7 @@ topology_template:
       type: tosca.nodes.indigo.GalaxyReferenceData
       properties:
         reference_data: { get_input: reference_data }
+        refdata_dir: { get_input: refdata_dir }
         flavor: { get_input: flavor }
         refdata_repository_name: { get_input: refdata_repository_name }
         refdata_provider_type: { get_input: refdata_provider_type }
@@ -162,6 +180,9 @@ topology_template:
               http_port:
                 protocol: tcp
                 source: 80
+              ftp_port:
+                protocol: tcp
+                source: 21
         # Host container properties
         host:
          properties:
@@ -183,13 +204,13 @@ topology_template:
             relationship:
               type: tosca.relationships.AttachesTo
               properties:
-                location: /export
+                location: { get_input: export_dir }
                 device: hdb
 
     my_block_storage:
       type: tosca.nodes.BlockStorage
       properties:
-        size: 10 GB
+        size: { get_input: storage_size }
 
   outputs:
     galaxy_url:
