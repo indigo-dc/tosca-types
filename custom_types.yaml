@@ -402,6 +402,60 @@ node_types:
             galaxy_instance_description: { get_property: [ SELF, instance_description ] }
             galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
             export_dir: { get_property: [ SELF, export_dir ] }
+
+  tosca.nodes.indigo.GalaxyPortalFastConfig:
+    derived_from: tosca.nodes.indigo.GalaxyPortalAndStorage
+    properties:
+      flavor:
+        type: string
+        description: name of the Galaxy flavor
+        required: true
+        default: galaxy-no-tools
+      os_storage:
+        type: string
+        description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
+        default: "IaaS"
+        required: true
+      token:
+        type: string
+        description: Access token for onedata space
+        default: "not_a_token"
+        required: false
+      provider:
+        type: string
+        description: default OneProvider
+        default: "not_a_provider_url"
+        required: false
+      space:
+        type: string
+        description: Onedata space
+        default: "galaxy"
+        required: false
+    artifacts:
+      galaxy_os_role:
+        file: indigo-dc.galaxycloud-os
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role:
+        file: indigo-dc.galaxycloud-fastconfig
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro-galaxy-tools/artifacts/galaxy/galaxy_fastconfig.yml
+          inputs:
+            os_storage: { get_property: [ SELF, os_storage ] }
+            userdata_token: { get_property: [ SELF, token ] }
+            userdata_oneprovider: { get_property: [ SELF, provider ] }
+            userdata_space: { get_property: [ SELF, space ] }
+            galaxy_install_path: { get_property: [ SELF, install_path ] }
+            galaxy_user: { get_property: [ SELF, user ] }
+            galaxy_admin: { get_property: [ SELF, admin_email ] }
+            galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
+            galaxy_lrms: { get_property: [ SELF, lrms, type ] }
+            galaxy_version: { get_property: [ SELF, version ] }
+            galaxy_instance_description: { get_property: [ SELF, instance_description ] }
+            galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
+            export_dir: { get_property: [ SELF, export_dir ] }
  
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
