@@ -494,6 +494,9 @@ node_types:
       galaxy_role:
         file: indigo-dc.galaxy-tools,master
         type: tosca.artifacts.AnsibleGalaxy.role
+      tooldeps_role:
+        file: indigo-dc.galaxycloud-tooldeps
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
