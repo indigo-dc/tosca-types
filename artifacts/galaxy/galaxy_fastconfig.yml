@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.galaxycloud-os
+      GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
+      tool_deps_path: '/home/galaxy/tool_deps' # fixed due to galaxy image configuration
+
+    - role: indigo-dc.galaxycloud-fastconfig
+      GALAXY_VERSION: "{{ galaxy_version }}"
+      GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
+      GALAXY_ADMIN_API_KEY: "{{ galaxy_admin_api_key }}"
+      tool_deps_path: '/home/galaxy/tool_deps' # fixed due to galaxy image configuration
+      conda_prefix: '/home/galaxy/galaxy/tool_deps/_conda' # fixed due to galaxy image configuration
+      enable_storage_advanced_options: true # true only with indigo-dc.galaxycloud-os

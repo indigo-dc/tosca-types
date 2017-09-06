@@ -19,3 +19,4 @@
       galaxy_tools_api_key: "{{ galaxy_admin_api_key }}"
   roles:
     - { role: indigo-dc.galaxy-tools, when: galaxy_flavor != 'galaxy-no-tools' }
+    - { role: indigo-dc.galaxycloud-tooldeps, galaxy_instance_url: 'http://{{ instance_public_ip }}/galaxy/' }
