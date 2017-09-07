@@ -137,14 +137,6 @@ topology_template:
       requirements:
         - lrms: local_lrms
 
-    galaxy_tools:
-      type: tosca.nodes.indigo.GalaxyShedTool
-      properties:
-        flavor: { get_input: flavor }
-        admin_api_key: { get_input: admin_api_key }
-      requirements:
-        - host: galaxy
-
     galaxy_refdata:
       type: tosca.nodes.indigo.GalaxyReferenceData
       properties:
@@ -162,7 +154,6 @@ topology_template:
         refdata_cvmfs_proxy_port: { get_input: refdata_cvmfs_proxy_port }
       requirements:
         - host: galaxy
-        - dependency: galaxy_tools
 
     # type to describe a Galaxy not using any LRMS but using the local system
     local_lrms:
@@ -191,10 +182,7 @@ topology_template:
         # Guest Operating System properties
         os:
           properties:
-            type: linux 
-            distribution: centos
-            version: 7.2
-            image: indigodatacloudapps/galaxy
+            image: { concat: ['centos_', get_input: flavor, '_vmi'] } # centos_galaxy-no-tools_vmi
       requirements:
         # contextually this can only be a relationship type
         - local_storage:
