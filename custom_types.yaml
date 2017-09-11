@@ -1354,8 +1354,8 @@ node_types:
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             zookeeper_peers: { get_property: [ SELF, zookeeper_peers ] }
-            spark_mesos_hdfs_uri: { get_property: [ SELF, spark_hdfs_uri ] }
-            spark_mesos_swift_auth_url: { get_property: [ SELF, spark_swift_auth_url ] }
+            spark_hdfs_uri: { get_property: [ SELF, spark_hdfs_uri ] }
+            spark_swift_auth_url: { get_property: [ SELF, spark_swift_auth_url ] }
             spark_mesos_swift_http_port: { get_property: [ SELF, spark_swift_http_port ] }
             spark_mesos_swift_region: { get_property: [ SELF, spark_swift_region  ] }
             spark_mesos_swift_tenant: { get_property: [ SELF, spark_swift_tenant ] }
