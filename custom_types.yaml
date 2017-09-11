@@ -356,7 +356,7 @@ node_types:
     properties:
       os_storage:
         type: string
-        description: Storage type (Iaas Block Storage (default), Onedaata, Filesystem encryption)
+        description: Storage type (Iaas Block Storage (default), Onedata, Filesystem encryption)
         default: "IaaS"
         required: true
       token:
@@ -375,6 +375,9 @@ node_types:
         default: "galaxy"
         required: false
     artifacts:
+      indigorepo_role:
+        file: indigo-dc.galaxycloud-indigorepo
+        type: tosca.artifacts.AnsibleGalaxy.role
       oneclient_role:
         file: indigo-dc.oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
