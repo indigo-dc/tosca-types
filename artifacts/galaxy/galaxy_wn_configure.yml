@@ -18,4 +18,4 @@
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
 
   roles:
-    - { role: indigo-dc.galaxycloud-tooldeps, check_galaxy: false, galaxy_instance_url: '{{ hostvars[groups['lrms_server'][0]]['ansible_default_ipv4.address'] }}' }
+    - { role: indigo-dc.galaxycloud-tooldeps, check_galaxy: false, galaxy_instance_url: "http://{{ hostvars[groups['lrms_server'][0]]['ansible_default_ipv4.address'] }}/galaxy/" }
