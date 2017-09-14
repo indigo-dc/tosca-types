@@ -239,6 +239,8 @@ topology_template:
 
     galaxy_wn:
       type: tosca.nodes.indigo.GalaxyWN
+      properties:
+        front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
       requirements:
         - host: lrms_wn
 
