@@ -478,7 +478,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro-galaxy-tools/artifacts/galaxy/galaxy_wn_configure.yml
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
