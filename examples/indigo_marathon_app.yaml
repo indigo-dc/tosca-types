@@ -9,20 +9,50 @@ description: >
 
 topology_template:
 
+  inputs:
+
+    cpus:
+      type: float
+      description: Amount of CPUs for this service
+      required: yes
+      default: 1.0
+    
+    mem:
+      type: scalar-unit.size
+      description: Amount of Memory for this service
+      required: yes 
+      default: 1 GB
+  
+    docker_image:
+      type: string
+      description: Docker image to be used to run the container application
+      required: yes
+      default: ""
+
+    port:
+      type: integer
+      description: service port (exposed by the docker container) 
+      required: yes
+      default: 8080
+
+    data_path:
+      type: string
+      description: container path for persistent data
+      required: no
+      default: "/data"
+
   node_templates:
 
-    marathon_app:
+    marathon-app:
       type: tosca.nodes.indigo.Container.Application.Docker.Marathon
       properties:
-        command: echo "hola"
-        uris: ['http://algo.para.bajar.com', 'http://otro.para.bajar.com']
-        environment_variables:
-          SOME_ENV_VAR: some_env_value 
+        # environment_variables: 
+        uris: []
         labels:
-          SOME_KEY: some_value
+          HAPROXY_GROUP: external
       artifacts:
         image:
-          file: mysql
+          file: { get_input: docker_image}
           type: tosca.artifacts.Deployment.Image.Container.Docker
       requirements:
         - host: docker_runtime
@@ -32,13 +62,13 @@ topology_template:
       capabilities:
         host:
           properties:
-            num_cpus: 0.5
-            mem_size: 512 MB
+            num_cpus: { get_input: cpus}
+            mem_size: { get_input: mem}
             publish_ports:
                - protocol: tcp
-                 target: 80
-                 source: 80
-               - protocol: tcp
-                 target: 22
-                 source: 22
-            volumes: ['mysql:/var/lib/mysql:rw:dvi:rexray']
+                 source: { get_input: port}
+            volumes: [ { concat: [ 'marathon:', get_input: data_path, ':rw:dvdi:rexray'] } ]
+
+  outputs:
+    endpoint: 
+      value:  { concat: [ { get_attribute : [ marathon-app, load_balancer_ips, 0 ] }, ':', { get_attribute : [ docker_runtime, host, publish_ports, 0, target ] } ] }
