@@ -558,7 +558,7 @@ node_types:
         type: string
         description: Reference data CernVM-FS repository name
         default: 'not_a_cvmfs_repository_name'
-        requred: false
+        required: false
       refdata_cvmfs_key_file:
         type: string
         description: CernVM-FS public key
@@ -852,11 +852,26 @@ node_types:
         type: map
         entry_schema:
           type: string
+      constraints:
+        required: no
+        type: list
+        entry_schema:
+          type: list
+          entry_schema:
+            type: string
       labels:
         required: no
         type: map
         entry_schema:
           type: string
+      priviliged:
+        required: no
+        type: boolean
+        default: false
+      force_pull_image:
+        required: no
+        type: boolean
+        default: false
 
 
   tosca.nodes.indigo.Container.Application.Docker.Chronos:
@@ -871,6 +886,18 @@ node_types:
       retries:
         required: no
         type: integer
+      epsilon:
+        required: no
+        type: string
+        default: PT10S
+      priviliged:
+        required: no
+        type: boolean
+        default: true
+      force_pull_image:
+        required: no
+        type: boolean
+        default: true
     capabilities:
       parent_job:
         type: tosca.capabilities.indigo.Container.Application.Docker.Chronos
@@ -979,6 +1006,15 @@ node_types:
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
+    attributes:
+      load_balancer_ips:
+        type: list
+        entry_schema: string
+    properties:
+      force_pull_image:
+        required: no
+        type: boolean
+        default: true
 
 
   tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
