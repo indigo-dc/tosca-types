@@ -91,10 +91,10 @@ topology_template:
                 source: 5050
               marathon_port:
                 protocol: tcp
-                source: 8080
+                source: 8443
               chronos_port:
                 protocol: tcp
-                source: 4400
+                source: 4443
         scalable:
           properties:
             count: 1
@@ -147,9 +147,9 @@ topology_template:
     mesos_master_ips:
       value: { get_attribute: [ mesos_master_server, public_address ] }
     marathon_endpoint: 
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8080' ] }
+      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
     chronos_endpoint: 
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4400' ] }
+      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4443' ] }
 
       
       
