@@ -4,7 +4,8 @@
   pre_tasks:
     - name: Get refdata-list
       get_url:
-        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refata_cvmfs_key_file }}'
+        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
         dest: '/tmp'
+      when: refdata_provider_type == 'cvmfs'
   roles:
     - role: indigo-dc.galaxycloud-refdata

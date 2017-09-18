@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  pre_tasks:
+    - set_fact: spark_mesos_executor_memory="{{ spark_mesos_executor_mem | regex_replace(' +(.*)B', '\\1') | lower() }}" 
+    - set_fact: spark_mesos_driver_memory="{{ spark_mesos_driver_mem | regex_replace(' +(.*)B', '\\1') | lower() }}"
+    - set_fact: spark_mesos_hdfs_uri="{{ (spark_hdfs_uri == 'None' ) | ternary('', spark_hdfs_uri)  }}"
+    - set_fact: spark_mesos_swift_auth_url="{{ (spark_swift_auth_url == 'None' ) | ternary('', spark_swift_auth_url) }}"
+  roles:
+    - role: indigo-dc.spark-mesos
