@@ -35,6 +35,11 @@ topology_template:
       description: Amount of Memory for the WNs
       default: 1 GB
       required: yes
+    hybrid:
+      type: boolean
+      description: Flag to specify that this cluster will work in an hybrid environment
+      default: false
+      required: false
 
     admin_email:
       type: string
@@ -56,6 +61,10 @@ topology_template:
       type: string
       description: galaxy instance ssh public key
       default: your_ssh_public_key
+    export_dir:
+      type: string
+      description: path to store galaxy data
+      default: /home/galaxy
 
   node_templates:
 
@@ -66,6 +75,7 @@ topology_template:
         iam_access_token: iam_access_token
         iam_clues_client_id: iam_clues_client_id
         iam_clues_client_secret: iam_clues_client_secret
+        hybrid: { get_input: hybrid }
       requirements:
         - lrms: lrms_front_end
         - wn: wn_node
@@ -85,6 +95,7 @@ topology_template:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
       properties:
         wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+        hybrid: { get_input: hybrid }
       requirements:
         - host: lrms_server
 
@@ -111,6 +122,8 @@ topology_template:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
       properties:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
+        hybrid: { get_input: hybrid }
       capabilities:
         wn:
           properties:
@@ -122,7 +135,8 @@ topology_template:
     galaxy_wn:
       type: tosca.nodes.indigo.GalaxyWN
       properties:
-        front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
+        export_dir: { get_input: export_dir }
+        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
       requirements:
         - host: lrms_wn
 
