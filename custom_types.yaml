@@ -470,6 +470,11 @@ node_types:
         type: string
         description: IP of the Front-End node
         required: true
+      export_dir:
+        type: string
+        description: path to store galaxy data
+        default: /export
+        required: true
     requirements:
       - host:
           capability: tosca.capabilities.Container
@@ -481,6 +486,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure.yml
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            export_dir: { get_property: [ SELF, export_dir ] }
 
   tosca.nodes.indigo.GalaxyShedTool:
     derived_from: tosca.nodes.WebApplication
