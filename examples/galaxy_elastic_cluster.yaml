@@ -64,7 +64,7 @@ topology_template:
     export_dir:
       type: string
       description: path to store galaxy data
-      default: /home/galaxy
+      default: /home/export
 
   node_templates:
 
