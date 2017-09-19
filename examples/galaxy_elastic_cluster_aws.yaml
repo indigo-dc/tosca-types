@@ -40,6 +40,11 @@ topology_template:
       default: 1 GB
       required: yes
 
+    export_dir:
+      type: string
+      description: path to store galaxy data
+      default: /home/export
+
     access_key:
       type: string
       default: AKXX
@@ -115,6 +120,7 @@ topology_template:
       type: tosca.nodes.indigo.GalaxyWN
       properties:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        export_dir: { get_input: export_dir }
       requirements:
         - host: lrms_wn
 
