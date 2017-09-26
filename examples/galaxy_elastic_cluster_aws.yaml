@@ -43,7 +43,7 @@ topology_template:
     export_dir:
       type: string
       description: path to store galaxy data
-      default: /home/export
+      default: /export
 
     access_key:
       type: string

@@ -68,7 +68,7 @@ topology_template:
     export_dir:
       type: string
       description: path to store galaxy data
-      default: /home/export
+      default: /export
 
     flavor:
       type: string
@@ -82,7 +82,7 @@ topology_template:
     refdata_dir:
       type: string
       description: path to store galaxy reference data
-      default: /home/refdata
+      default: /refdata
     refdata_repository_name:
       type: string
       description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
