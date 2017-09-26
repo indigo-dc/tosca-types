@@ -240,7 +240,7 @@ topology_template:
     galaxy_wn:
       type: tosca.nodes.indigo.GalaxyWN
       properties:
-        export_dir: { get_input: export_dir }
+        export_dir: { get_input: export_dir }
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
       requirements:
         - host: lrms_wn
