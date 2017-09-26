@@ -232,7 +232,7 @@ topology_template:
       capabilities:
         wn:
           properties:
-            max_instances: { get_input: wn_num }
+            max_instances: { get_inpu/: wn_num }
             min_instances: 0
       requirements:
         - host: lrms_wn
@@ -244,7 +244,7 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         galaxy_flavor: { get_input: flavor }
         galaxy_version: { get_input: version }
-        get_refdata: { get_input: reference_data }
+        reference_data: { get_input: reference_data }
         refdata_cvmfs_server_url: { get_input: refdata_cvmfs_server_url }
         refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
         refdata_cvmfs_key_file: { get_input: refdata_cvmfs_key_file }
