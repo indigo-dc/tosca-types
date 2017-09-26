@@ -68,7 +68,7 @@ topology_template:
     export_dir:
       type: string
       description: path to store galaxy data
-      default: /export
+      default: /home/export
 
     flavor:
       type: string
@@ -82,7 +82,7 @@ topology_template:
     refdata_dir:
       type: string
       description: path to store galaxy reference data
-      default: /refdata
+      default: /home/refdata
     refdata_repository_name:
       type: string
       description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
@@ -156,7 +156,7 @@ topology_template:
         - host: galaxy_portal
 
     galaxy_refdata:
-      type: tosca.nodes.indigo.GalaxyWnCvmfsReferenceData
+      type: tosca.nodes.indigo.GalaxyReferenceData
       properties:
         reference_data: { get_input: reference_data }
         refdata_dir: { get_input: refdata_dir }
@@ -232,7 +232,7 @@ topology_template:
       capabilities:
         wn:
           properties:
-            max_instances: { get_inpu/: wn_num }
+            max_instances: { get_input: wn_num }
             min_instances: 0
       requirements:
         - host: lrms_wn
