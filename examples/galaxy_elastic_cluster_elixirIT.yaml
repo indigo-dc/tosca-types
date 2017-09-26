@@ -158,7 +158,7 @@ topology_template:
     galaxy_refdata:
       type: tosca.nodes.indigo.GalaxyWnCvmfsReferenceData
       properties:
-        get_refdata: { get_input: reference_data }
+        reference_data: { get_input: reference_data }
         refdata_dir: { get_input: refdata_dir }
         flavor: { get_input: flavor }
         refdata_repository_name: { get_input: refdata_repository_name }
