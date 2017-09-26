@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro/custom_types.yaml
 
 description: >
   TOSCA test for launching a Virtual Elastic Cluster. It will launch
@@ -156,9 +156,9 @@ topology_template:
         - host: galaxy_portal
 
     galaxy_refdata:
-      type: tosca.nodes.indigo.GalaxyReferenceData
+      type: tosca.nodes.indigo.GalaxyWnCvmfsReferenceData
       properties:
-        reference_data: { get_input: reference_data }
+        get_refdata: { get_input: reference_data }
         refdata_dir: { get_input: refdata_dir }
         flavor: { get_input: flavor }
         refdata_repository_name: { get_input: refdata_repository_name }
@@ -238,10 +238,19 @@ topology_template:
         - host: lrms_wn
 
     galaxy_wn:
-      type: tosca.nodes.indigo.GalaxyWN
+      type: tosca.nodes.indigo.GalaxyWnCvmfsReferenceData
       properties:
         export_dir: { get_input: export_dir }
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        galaxy_flavor: { get_input: flavor }
+        galaxy_version: { get_input: version }
+        get_refdata: { get_input: reference_data }
+        refdata_cvmfs_server_url: { get_input: refdata_cvmfs_server_url }
+        refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
+        refdata_cvmfs_key_file: { get_input: refdata_cvmfs_key_file }
+        refdata_cvmfs_proxy_url: { get_input: refdata_cvmfs_proxy_url }
+        refdata_cvmfs_proxy_port: { get_input: refdata_cvmfs_proxy_port }
+        refdata_dir: { get_input: refdata_dir }
       requirements:
         - host: lrms_wn
 
