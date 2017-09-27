@@ -1,6 +1,11 @@
 ---
 - hosts: localhost
   connection: local
+  pre_tasks:
+    - name: Get the cvmfs public key on node
+      get_url:
+        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
+        dest: '/tmp'
   tasks:
     - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
     - include_vars: /tmp/galaxywn.yml
@@ -18,6 +23,17 @@
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
 
   roles:
+    - role: indigo-dc.galaxycloud-tooldeps
+      type_of_node: wn
+      GALAXY_VERSION: '{{ galaxy_version }}'
+    - role: indigo-dc.cvmfs-client
+      server_url: '{{ refdata_cvmfs_server_url }}'
+      repository_name: '{{ refdata_cvmfs_repository_name }}'
+      cvmfs_public_key: '{{ refdata_cvmfs_key_file }}'
+      proxy_url: '{{ refdata_cvmfs_proxy_url }}'
+      proxy_port: '{{ refdata_cvmfs_proxy_port }}'
+      cvmfs_mountpoint: '{{ refdata_dir }}'
+      when: get_refdata|bool
     - role: indigo-dc.nfs
       nfs_mode: 'client'
       nfs_client_imports: [{ local: "{{export_dir}}", remote: "{{export_dir}}", server_host: "{{ galaxy_front_end_ip }}" }]
