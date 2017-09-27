@@ -1022,6 +1022,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      cache_image:
+        type: string
+        required: no
+        default: 'redis'
       db_cpus:
         type: float
         required: no
@@ -1030,6 +1034,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      db_image:
+        type: string
+        required: no
+        default: 'postgres'
       es_cpus:
         type: float
         required: no
@@ -1038,6 +1046,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      es_image:
+        type: string
+        required: no
+        default: 'indigodatacloudapps/dariah-repository:elasticsearch'
       mq_cpus:
         type: float
         required: no
@@ -1046,6 +1058,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      mq_image:
+        type: string
+        required: no
+        default: 'rabbitmq:3-management'
       statsd_cpus:
         type: float
         required: no
@@ -1054,6 +1070,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      statsd_image:
+        type: string
+        required: no
+        default: 'indigodatacloudapps/dariah-repository:statsd'
       web_cpus:
         type: float
         required: no
@@ -1062,6 +1082,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      web_image:
+        type: string
+        required: no
+        default: 'indigodatacloudapps/dariah-repository:web'
       worker_cpus:
         type: float
         required: no
@@ -1070,6 +1094,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      worker_image:
+        type: string
+        required: no
+        default: 'indigodatacloudapps/dariah-repository:web'
     artifacts:
       dariahrepo_role:
         file: indigo-dc.dariahrepo
@@ -1082,18 +1110,25 @@ node_types:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             dariahrepo_app_cache_cpus: { get_property: [ SELF, cache_cpus ] }
             dariahrepo_app_cache_mem: { get_property: [ SELF, cache_mem ] }
+            dariahrepo_app_cache_image: { get_property: [ SELF, cache_image ] }
             dariahrepo_app_db_cpus: { get_property: [ SELF, db_cpus ] }
             dariahrepo_app_db_mem: { get_property: [ SELF, db_mem ] }
+            dariahrepo_app_db_image: { get_property: [ SELF, db_image ] }
             dariahrepo_app_es_cpus: { get_property: [ SELF, es_cpus ] }
             dariahrepo_app_es_mem: { get_property: [ SELF, es_mem ] }
+            dariahrepo_app_es_image: { get_property: [ SELF, es_image ] }
             dariahrepo_app_mq_cpus: { get_property: [ SELF, mq_cpus ] }
             dariahrepo_app_mq_mem: { get_property: [ SELF, mq_mem ] }
+            dariahrepo_app_mq_image: { get_property: [ SELF, mq_image ] }
             dariahrepo_app_statsd_cpus: { get_property: [ SELF, statsd_cpus ] }
             dariahrepo_app_statsd_mem: { get_property: [ SELF, statsd_mem ] }
+            dariahrepo_app_statsd_image: { get_property: [ SELF, statsd_image ] }
             dariahrepo_app_web_cpus: { get_property: [ SELF, web_cpus ] }
             dariahrepo_app_web_mem: { get_property: [ SELF, web_mem ] }
+            dariahrepo_app_web_image: { get_property: [ SELF, web_image ] }
             dariahrepo_app_worker_cpus: { get_property: [ SELF, worker_cpus ] }
             dariahrepo_app_worker_mem: { get_property: [ SELF, worker_mem ] }
+            dariahrepo_app_worker_image: { get_property: [ SELF, worker_image ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
