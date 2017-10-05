@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+     vnode_prefix: vnode-
   roles:
     - role: indigo-dc.galaxycloud-os
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
