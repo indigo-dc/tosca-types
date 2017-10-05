@@ -11,3 +11,4 @@
     - role: indigo-dc.nfs
       nfs_mode: 'server'
       nfs_exports: [{path: "{{export_dir}}", export: "{{ vnode_prefix }}*.localdomain(rw,async,no_root_squash,no_subtree_check,insecure)"}]
+      when: galaxy_lrms != "local"
