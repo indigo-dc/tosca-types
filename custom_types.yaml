@@ -333,6 +333,9 @@ node_types:
           node: tosca.nodes.indigo.LRMS.FrontEnd
           relationship: tosca.relationships.HostedOn
     artifacts:
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
         file: indigo-dc.galaxycloud
         type: tosca.artifacts.AnsibleGalaxy.role
@@ -375,6 +378,9 @@ node_types:
         default: "galaxy"
         required: false
     artifacts:
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
       indigorepo_role:
         file: indigo-dc.galaxycloud-indigorepo
         type: tosca.artifacts.AnsibleGalaxy.role
