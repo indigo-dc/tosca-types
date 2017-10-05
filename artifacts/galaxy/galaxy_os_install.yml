@@ -10,3 +10,7 @@
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
       GALAXY_ADMIN_API_KEY: "{{ galaxy_admin_api_key }}"
       enable_storage_advanced_options: true # true only with indigo-dc.galaxycloud-os
+
+    - role: indigo-dc.nfs
+      nfs_mode: 'server'
+      nfs_exports: [{path: "{{export_dir}}", export: "{{ vnode_prefix }}*.localdomain(rw,async,no_root_squash,no_subtree_check,insecure)"}]
