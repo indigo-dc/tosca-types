@@ -47,7 +47,7 @@ topology_template:
 
     galaxy_storage_type:
       type: string
-      description: Storage type (Iaas Block Storage, Onedaata, Filesystem encryption)
+      description: Storage type (Iaas Block Storage, Onedata, Filesystem encryption)
       default: "IaaS"
     userdata_provider:
       type: string
