@@ -116,6 +116,8 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
         hybrid: { get_input: hybrid }
+      requirements:
+        - host: lrms_wn
 
     galaxy_wn:
       type: tosca.nodes.indigo.GalaxyWN
@@ -138,8 +140,6 @@ topology_template:
         os:
           properties:
             image: linux-ubuntu-16.04-vmi
-      requirements:
-        - dependency: galaxy_portal
 
   outputs:
     galaxy_url:
