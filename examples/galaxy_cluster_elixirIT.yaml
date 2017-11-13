@@ -33,6 +33,10 @@ topology_template:
       description: Amount of Memory for the WNs
       default: 1 GB
       required: yes
+    storage_size:
+      type: string
+      description: storage memory required for the instance
+      default: 10 GB
     hybrid:
       type: boolean
       description: Flag to specify that this cluster will work in an hybrid environment
@@ -64,6 +68,56 @@ topology_template:
       description: path to store galaxy data
       default: /export
 
+    flavor:
+      type: string
+      description: Galaxy flavor for tools installation
+      default: "galaxy-no-tools"
+
+    reference_data:
+      type: boolean
+      description: Install Reference data
+      default: true
+    refdata_dir:
+      type: string
+      description: path to store galaxy reference data
+      default: /refdata
+    refdata_repository_name:
+      type: string
+      description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
+      default: 'elixir-italy.galaxy.refdata'
+    refdata_provider_type:
+      type: string
+      description: Select Reference data provider type (Onedata, CernVM-FS or download)
+      default: 'onedata'
+    refdata_provider:
+      type: string
+      description: Oneprovider for reference data
+      default: 'not_a_provider'
+    refdata_token:
+      type: string
+      description: Access token for reference data
+      default: 'not_a_token'
+    refdata_cvmfs_server_url:
+      type: string
+      description: CernVM-FS server, replica or stratum-zero
+      default: 'server_url'
+    refdata_cvmfs_repository_name:
+      type: string
+      description: Reference data CernVM-FS repository name
+      default: 'not_a_cvmfs_repository_name'
+    refdata_cvmfs_key_file:
+      type: string
+      description: CernVM-FS public key
+      default: 'not_a_key'
+    refdata_cvmfs_proxy_url:
+      type: string
+      description: CernVM-FS proxy url
+      default: 'DIRECT'
+    refdata_cvmfs_proxy_port:
+      type: integer
+      description: CernVM-FS proxy port
+      default: 80
+
   node_templates:
 
     galaxy_portal:
@@ -77,6 +131,34 @@ topology_template:
         export_dir: { get_input: export_dir }
       requirements:
         - lrms: lrms_front_end
+
+    galaxy_tools:
+      type: tosca.nodes.indigo.GalaxyShedTool
+      properties:
+        flavor: { get_input: flavor }
+        admin_api_key: { get_input: admin_api_key }
+        version: { get_input: version }
+      requirements:
+        - host: galaxy_portal
+
+    galaxy_refdata:
+      type: tosca.nodes.indigo.GalaxyReferenceData
+      properties:
+        reference_data: { get_input: reference_data }
+        refdata_dir: { get_input: refdata_dir }
+        flavor: { get_input: flavor }
+        refdata_repository_name: { get_input: refdata_repository_name }
+        refdata_provider_type: { get_input: refdata_provider_type }
+        refdata_provider: { get_input: refdata_provider }
+        refdata_token: { get_input: refdata_token }
+        refdata_cvmfs_server_url: { get_input: refdata_cvmfs_server_url }
+        refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
+        refdata_cvmfs_key_file: { get_input: refdata_cvmfs_key_file }
+        refdata_cvmfs_proxy_url: { get_input: refdata_cvmfs_proxy_url }
+        refdata_cvmfs_proxy_port: { get_input: refdata_cvmfs_proxy_port }
+      requirements:
+        - host: galaxy_portal
+        - dependency: galaxy_tools
 
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
@@ -107,10 +189,22 @@ topology_template:
         os:
           properties:
             image: linux-ubuntu-16.04-vmi
-            #type: linux
-            #distribution: centos
-            #version: 7.2
-            #image: indigodatacloudapps/galaxy
+      requirements:
+        # contextually this can only be a relationship type
+        - local_storage:
+            # capability is provided by Compute Node Type
+            node: my_block_storage
+            capability: tosca.capabilities.Attachment
+            relationship:
+              type: tosca.relationships.AttachesTo
+              properties:
+                location: { get_input: export_dir }
+                device: hdb
+
+    my_block_storage:
+      type: tosca.nodes.BlockStorage
+      properties:
+        size: { get_input: storage_size }
 
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
@@ -122,13 +216,22 @@ topology_template:
         - host: lrms_wn
 
     galaxy_wn:
-      type: tosca.nodes.indigo.GalaxyWN
+      type: tosca.nodes.indigo.GalaxyWnCvmfsReferenceData
       properties:
         export_dir: { get_input: export_dir }
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        flavor: { get_input: flavor }
+        version: { get_input: version }
+        reference_data: { get_input: reference_data }
+        refdata_cvmfs_server_url: { get_input: refdata_cvmfs_server_url }
+        refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
+        refdata_cvmfs_key_file: { get_input: refdata_cvmfs_key_file }
+        refdata_cvmfs_proxy_url: { get_input: refdata_cvmfs_proxy_url }
+        refdata_cvmfs_proxy_port: { get_input: refdata_cvmfs_proxy_port }
+        refdata_dir: { get_input: refdata_dir }
       requirements:
         - host: lrms_wn
-#        - dependency: galaxy_portal
+        - dependency: galaxy_portal
 
     lrms_wn:
       type: tosca.nodes.indigo.Compute
@@ -143,10 +246,6 @@ topology_template:
         os:
           properties:
             image: linux-ubuntu-16.04-vmi
-            #type: linux
-            #distribution: centos
-            #version: 7.2
-            #image: indigodatacloudapps/galaxy
 
   outputs:
     galaxy_url:
