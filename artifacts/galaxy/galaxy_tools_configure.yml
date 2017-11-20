@@ -1,22 +1,6 @@
 ---
 - hosts: localhost
   connection: local
-  gather_facts: False
-  pre_tasks:
-    - name: Wait Galaxy is up
-      uri: url="http://{{ instance_public_ip }}/galaxy/"
-      register: result
-      until: result.status == 200
-      retries: 30
-      delay: 10
-      when: galaxy_flavor != 'galaxy-no-tools'
-    - name: Get tool-list
-      get_url: url="https://raw.githubusercontent.com/indigo-dc/Galaxy-flavors-recipes/master/galaxy-flavors/{{ galaxy_flavor }}-tool-list.yml" dest="/tmp/"
-      when: galaxy_flavor != 'galaxy-no-tools'
-  vars:
-      galaxy_tools_tool_list_files: [ "/tmp/{{ galaxy_flavor }}-tool-list.yml" ]
-      galaxy_tools_galaxy_instance_url: "http://{{ instance_public_ip }}/galaxy/"
-      galaxy_tools_api_key: "{{ galaxy_admin_api_key }}"
   roles:
     - { role: indigo-dc.galaxy-tools, when: galaxy_flavor != 'galaxy-no-tools' }
     - { role: indigo-dc.galaxycloud-tooldeps, galaxy_instance_url: 'http://{{ instance_public_ip }}/galaxy/', GALAXY_VERSION: '{{ galaxy_version }}' }
