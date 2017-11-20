@@ -128,7 +128,7 @@ topology_template:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
       requirements:
         - host: lrms_wn
-#        - dependency: galaxy_portal
+        - dependency: galaxy_portal
 
     lrms_wn:
       type: tosca.nodes.indigo.Compute
