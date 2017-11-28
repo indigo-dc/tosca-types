@@ -1242,6 +1242,7 @@ node_types:
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             enable_chronos: { get_property: [ SELF, enable_chronos ] }
+            enable_marathon: { get_property: [ SELF, enable_marathon ] }
             chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
             chronos_user: { get_property: [ SELF, chronos_username ] }
             chronos_pass: { get_property: [ SELF, chronos_password ] }
