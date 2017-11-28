@@ -1177,7 +1177,8 @@ node_types:
         default: admin
       marathon_password:
         type: string
-        required: yes
+        required: no
+        default: 'admin'
       enable_chronos:
         type: boolean
         required: no
