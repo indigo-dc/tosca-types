@@ -33,6 +33,7 @@
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       marathon_username: "{{ marathon_user }}"
       marathon_password: "{{ marathon_pass }}"
+      when: "enable_marathon == true"
    
     - role: indigo-dc.chronos
       zookeeper_peers: "{{ mesos_masters_list_ips }}"

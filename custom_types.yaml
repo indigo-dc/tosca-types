@@ -1182,6 +1182,10 @@ node_types:
         type: boolean
         required: no
         default: true
+      enable_marathon:
+        type: boolean
+        required: no
+        default: true
       chronos_enable_ssl:
         type: boolean
         required: no
