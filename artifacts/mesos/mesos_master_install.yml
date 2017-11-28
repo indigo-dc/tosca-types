@@ -19,7 +19,7 @@
     - role: indigo-dc.consul
       consul_mode: "server"
       consul_servers: "{{ mesos_masters_list_ips }}"
-      when: service_discovery == 'consul'
+      when: service_discovery == "consul"
 
     - role: indigo-dc.zookeeper
       zookeeper_host_list: "{{ mesos_masters_list_ips }}"
