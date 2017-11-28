@@ -1198,6 +1198,10 @@ node_types:
         type: boolean
         required: no
         default: false
+      service_discovery: 
+        type: string
+        required: no
+        default: 'consul'
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -1223,7 +1227,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-optional-consul/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
             mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
@@ -1338,6 +1342,10 @@ node_types:
         type: boolean
         required: no
         default: false
+      service_discovery:
+        type: string
+        required: no
+        default: 'consul'
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -1354,7 +1362,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-optional-consul/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
