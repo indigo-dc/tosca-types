@@ -1565,6 +1565,7 @@ node_types:
             spark_mesos_executor_mem: { get_property: [ SELF, spark_executor_mem ] }
             spark_mesos_driver_mem: { get_property: [ SELF, spark_driver_mem ] }
             spark_mesos_driver_cores: { get_property: [ SELF, spark_driver_cores ] }
+            spark_mesos_deploy_app: { get_property: [SELF, spark_mesos_deploy_app] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
