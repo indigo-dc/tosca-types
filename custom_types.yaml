@@ -391,7 +391,7 @@ node_types:
         file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud
+        file: indigo-dc.galaxycloud,devel
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -587,7 +587,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxycloud-tools
+        file: indigo-dc.galaxycloud-tools,devel
         type: tosca.artifacts.AnsibleGalaxy.role
       tooldeps_role:
         file: indigo-dc.galaxycloud-tooldeps
