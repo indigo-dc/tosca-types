@@ -391,7 +391,7 @@ node_types:
         file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud,devel
+        file: indigo-dc.galaxycloud
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -428,12 +428,12 @@ node_types:
         file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role-fastconfig:
-        file: indigo-dc.galaxycloud-fastconfig,devel
+        file: indigo-dc.galaxycloud-fastconfig
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro/artifacts/galaxy/galaxy_fastconfig.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_fastconfig.yml
           inputs:
             os_storage: { get_property: [ SELF, os_storage ] }
             userdata_token: { get_property: [ SELF, token ] }
@@ -587,7 +587,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxycloud-tools,devel
+        file: indigo-dc.galaxycloud-tools
         type: tosca.artifacts.AnsibleGalaxy.role
       tooldeps_role:
         file: indigo-dc.galaxycloud-tooldeps
