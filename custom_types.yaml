@@ -330,7 +330,7 @@ node_types:
       flavor:
         type: string
         description: name of the Galaxy flavor
-        required: true
+        required: false
         default: galaxy-no-tools
     requirements:
       - lrms:
