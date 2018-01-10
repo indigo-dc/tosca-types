@@ -327,6 +327,11 @@ node_types:
         type: string
         description: galaxy instance ssh public key
         default: your_ssh_public_key
+      flavor:
+        type: string
+        description: name of the Galaxy flavor
+        required: true
+        default: galaxy-no-tools
     requirements:
       - lrms:
           capability: tosca.capabilities.indigo.LRMS
@@ -353,7 +358,7 @@ node_types:
             galaxy_instance_description: { get_property: [ SELF, instance_description ] }
             galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
             export_dir: { get_property: [ SELF, export_dir ] }
-
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
   tosca.nodes.indigo.GalaxyPortalAndStorage:
     derived_from: tosca.nodes.indigo.GalaxyPortal
     properties:
