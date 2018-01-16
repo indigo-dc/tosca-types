@@ -336,6 +336,7 @@ node_types:
         type: boolean
         description: Install Reference data
         default: true
+        required: false
     requirements:
       - lrms:
           capability: tosca.capabilities.indigo.LRMS
@@ -599,6 +600,7 @@ node_types:
         type: boolean
         description: Install Reference data
         default: true
+        required: false
     requirements:
       - host:
           capability: tosca.capabilities.Container
