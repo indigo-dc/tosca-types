@@ -52,7 +52,7 @@ capability_types:
         type: string
         required: true
         constraints:
-        - valid_values: [ local, torque, slurm, sge, condor, mesos ]
+        - valid_values: [ local, torque, slurm, sge, condor, mesos, kubernetes ]
 
   tosca.capabilities.indigo.LRMS.Torque:
     derived_from: tosca.capabilities.indigo.LRMS
@@ -73,6 +73,16 @@ capability_types:
         default: slurm
         constraints:
           - equal: slurm
+
+  tosca.capabilities.indigo.LRMS.Kubernetes:
+    derived_from: tosca.capabilities.indigo.LRMS
+    properties:
+      type:
+        type: string
+        required: true
+        default: kubernetes
+        constraints:
+          - equal: kubernetes
 
   tosca.capabilities.indigo.LRMS.Local:
     derived_from: tosca.capabilities.indigo.LRMS
@@ -1831,3 +1841,55 @@ node_types:
         type: string
         description: Specify the VO of the user
 
+  tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    artifacts:
+      kube_role:
+        file: grycap.kubernetes
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/kubenetes/kube_wn_install.yml
+          inputs:
+            kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+
+  tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    properties:
+      admin_username:
+        required: no
+        type: string
+        default: kubeuser
+      admin_token:
+        required: no
+        type: some_insecure_token
+    artifacts:
+      kube_role:
+        file: grycap.kubernetes
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+        lrms:
+          type: tosca.capabilities.indigo.LRMS.Kubernetes
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/kubenetes/kube_fe_install.yml
+          inputs:
+            kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kube_admin_username:  { get_property: [ SELF, admin_username] }
+            kube_admin_token:  { get_property: [ SELF, admin_token] }

@@ -1,0 +1,26 @@
+---
+- hosts: localhost
+  connection: local
+  pre_tasks:
+  - name: "Add private ip master mapping in hosts file"
+    lineinfile: dest=/etc/hosts regexp='.*kubeserver.localdomain.*$' line="{{ slurm_front_end_ip }} kubeserver kubeserver.localdomain" state=present
+    when: not wn_hybrid_cluster or IM_NODE_PUBLIC_IP is undefined or IM_NODE_PUBLIC_IP != IM_NODE_PRIVATE_IP
+  - name: "Add public ip master mapping in hosts file"
+    lineinfile: dest=/etc/hosts regexp='.*kubeserver.localdomain.*$' line="{{ slurm_public_front_end_ip }} kubeserver kubeserver.localdomain" state=present
+    when: wn_hybrid_cluster and IM_NODE_PUBLIC_IP is defined and IM_NODE_PUBLIC_IP == IM_NODE_PRIVATE_IP
+  roles:
+  - role: indigo-dc.openvpn
+    openvpn_type_of_node: 'wn'
+    openvpn_frontname: 'kubeserver'
+    when: wn_hybrid_cluster
+  - role: indigo-dc.nfs
+    nfs_mode: 'client'
+    nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "10.8.0.1" }]
+    when: wn_hybrid_cluster
+  - role: indigo-dc.nfs
+    nfs_mode: 'client'
+    nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "{{ slurm_front_end_ip }}" }]
+    when: not wn_hybrid_cluster
+  - role: 'grycap.kubernetes'
+    kube_type_of_node: 'wn'
+    kube_server: '{{kube_front_end_ip}}'
