@@ -48,9 +48,8 @@ topology_template:
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
       properties:
-        kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
-        kube_admin_username:  { get_input: admin_username }
-        kube_admin_token: { get_input: admin_token }
+        admin_username:  { get_input: admin_username }
+        admin_token: { get_input: admin_token }
       requirements:
         - host: lrms_server
 
@@ -79,7 +78,7 @@ topology_template:
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes
       properties:
-        kube_front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
       requirements:
         - host: lrms_wn
 
