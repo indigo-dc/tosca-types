@@ -4,12 +4,6 @@
   vars:
      vnode_prefix: vnode-
   pre_tasks:
-  - name: "Add nodes mapping in hosts file"
-    lineinfile: dest=/etc/hosts regexp='.*{{ item.1 }}.*$' line="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain" state=present
-    with_indexed_items: '{{ wn_ips }}'
-  - name: "Add master mapping in hosts file"
-    lineinfile: dest=/etc/hosts regexp='.*{{ front_end_ip }}.*$' line="{{ front_end_ip }} kubeserver kubeserver.localdomain" state=present
-
   - name: Create dir for the NFS PV
     file: path=/pv state=directory mode=755
   - name: Create auth file dir
