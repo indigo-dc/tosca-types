@@ -1,6 +1,108 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
+metadata:
+  template_name: indigo-types
+  template_version: 1.0.0
+  template_author: indigo
+
+imports:
+  - tosca-normative-types:1.0.0-ALIEN14
+
+description: The INDIGO Custom types
+
+data_types:
+
+  tosca.datatypes.Root:
+    description: >
+      The TOSCA root Data Type all other TOSCA base Data Types derive from
+
+  tosca.datatypes.network.PortDef:
+    derived_from: tosca.datatypes.Root
+    type: integer
+    constraints:
+      - in_range: [ 1, 65535 ]
+
+  tosca.datatypes.network.PortSpec:
+    derived_from: tosca.datatypes.Root
+    properties:
+      protocol:
+        type: string
+        required: true
+        default: tcp
+        constraints:
+          - valid_values: [ udp, tcp, igmp ]
+      target:
+        type: tosca.datatypes.network.PortDef
+        required: false
+      target_range:
+        type: range
+        required: false
+        constraints:
+          - in_range: [ 1, 65535 ]
+      source:
+        type: tosca.datatypes.network.PortDef
+        required: false
+      source_range:
+        type: range
+        required: false
+        constraints:
+          - in_range: [ 1, 65535 ]
+
 capability_types:
+
+  tosca.capabilities.Container.Docker:
+    derived_from: tosca.capabilities.Container
+    properties:
+      version:
+        type: list
+        required: false
+        entry_schema:
+          type: version
+        description: >
+          The Docker version capability.
+      publish_all:
+        type: boolean
+        default: false
+        required: false
+        description: >
+          Indicates that all ports (ranges) listed in the dockerfile
+          using the EXPOSE keyword be published.
+      publish_ports:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+        required: false
+        description: >
+          List of ports mappings from source (Docker container)
+          to target (host) ports to publish.
+      expose_ports:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+        required: false
+        description: >
+          List of ports mappings from source (Docker container) to expose
+          to other Docker containers (not accessible outside host).
+      volumes:
+        type: list
+        entry_schema:
+          type: string
+        required: false
+        description: >
+          The dockerfile VOLUME command which is used to enable access
+          from the Docker container to a directory on the host machine.
+      host_id:
+        type: string
+        required: false
+        description: >
+            The optional identifier of an existing host resource
+            that should be used to run this container on.
+      volume_id:
+        type: string
+        required: false
+        description: >
+          The optional identifier of an existing storage volume (resource)
+          that should be used to create the container's mount point(s) on.
 
   tosca.capabilities.indigo.OperatingSystem:
     derived_from: tosca.capabilities.OperatingSystem
@@ -266,7 +368,7 @@ node_types:
         required: no
         default: orchestrator.cloud.cnaf.infn.it
       zabbix_server_port:
-        type: PortDef
+        type: integer
         required: no
         default: 10051
       zabbix_server_metadata:
@@ -945,6 +1047,12 @@ node_types:
       scalable:
         type: tosca.capabilities.Scalable
 
+  tosca.nodes.Container.Application.Docker:
+    derived_from: tosca.nodes.Container.Application
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container.Docker
+
   tosca.nodes.indigo.Container.Application.Docker:
     derived_from: tosca.nodes.Container.Application.Docker
     properties:
@@ -1175,9 +1283,11 @@ node_types:
       # Set the current data of the mesos server
       # but it can also specified in the TOSCA document
       mesos_masters_list:
-        type: string
+        type: list
+        entry_schema:
+          type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: ['127.0.0.1']
       mesos_authenticate_http:
         type: boolean
         required: no
@@ -1314,6 +1424,8 @@ node_types:
       master_ips:
         required: yes
         type: list
+        entry_schema:
+          type: string
       onedatatoken:
         type: string
         required: no
@@ -1780,54 +1892,3 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
           inputs:
             ophidia_server_ip: { get_property: [ SELF, server_ip ] }
-
-  tosca.nodes.indigo.Batch.Job:
-    derived_from: tosca.nodes.Root
-    properties:
-      executable:
-        required: yes
-        type: string
-        description: Name of the executable file
-      arguments:
-        required: no
-        type: string
-        description: Arguments for the job executable
-      environment:
-        type: map
-        entry_schema:
-          type: string
-        description: A map of string representing environment settings
-
-# https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
-  tosca.nodes.indigo.Grid.Job:
-    derived_from: tosca.nodes.indigo.Batch.Job
-    properties:
-      ce_urls:
-        required: yes
-        type: list
-        entry_schema:
-          type: string
-        description: A list of CREAM CE identifiers to launch the job
-      stdoutput:
-        required: no
-        description: Name of the file to get the standard output stream of the user application
-        type: string
-      stderror:
-        required: no
-        type: string
-        description: Name of the file to get the standard error stream of the user application
-      outputsandbox:
-        type: list
-        entry_schema:
-          type: string
-        description: A list of output sandbox files
-      inputsandbox:
-        type: list
-        entry_schema:
-          type: string
-        description: A list of input sandbox files (URL of files located in gridFTP servers)
-      virtualorganisation:
-        required: no
-        type: string
-        description: Specify the VO of the user
-
