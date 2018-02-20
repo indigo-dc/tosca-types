@@ -12,6 +12,60 @@ description: The INDIGO Custom types
 
 capability_types:
 
+  tosca.capabilities.Container.Docker:
+    derived_from: tosca.capabilities.Container
+    properties:
+      version:
+        type: list
+        required: false
+        entry_schema:
+          type: version
+        description: >
+          The Docker version capability.
+      publish_all:
+        type: boolean
+        default: false
+        required: false
+        description: >
+          Indicates that all ports (ranges) listed in the dockerfile
+          using the EXPOSE keyword be published.
+      publish_ports:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+        required: false
+        description: >
+          List of ports mappings from source (Docker container)
+          to target (host) ports to publish.
+      expose_ports:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+        required: false
+        description: >
+          List of ports mappings from source (Docker container) to expose
+          to other Docker containers (not accessible outside host).
+      volumes:
+        type: list
+        entry_schema:
+          type: string
+        required: false
+        description: >
+          The dockerfile VOLUME command which is used to enable access
+          from the Docker container to a directory on the host machine.
+      host_id:
+        type: string
+        required: false
+        description: >
+            The optional identifier of an existing host resource
+            that should be used to run this container on.
+      volume_id:
+        type: string
+        required: false
+        description: >
+          The optional identifier of an existing storage volume (resource)
+          that should be used to create the container's mount point(s) on.
+
   tosca.capabilities.indigo.OperatingSystem:
     derived_from: tosca.capabilities.OperatingSystem
     properties:
@@ -276,7 +330,7 @@ node_types:
         required: no
         default: orchestrator.cloud.cnaf.infn.it
       zabbix_server_port:
-        type: PortDef
+        type: integer
         required: no
         default: 10051
       zabbix_server_metadata:
@@ -1185,7 +1239,9 @@ node_types:
       # Set the current data of the mesos server
       # but it can also specified in the TOSCA document
       mesos_masters_list:
-        type: string
+        type: list
+        entry_schema:
+          type: string
         required: no
         default: { get_attribute: [ HOST, public_address ] }
       mesos_authenticate_http:
@@ -1324,6 +1380,8 @@ node_types:
       master_ips:
         required: yes
         type: list
+        entry_schema:
+          type: string
       onedatatoken:
         type: string
         required: no
