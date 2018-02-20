@@ -1050,7 +1050,7 @@ node_types:
           capability: tosca.capabilities.Container.Docker
 
   tosca.nodes.indigo.Container.Application.Docker:
-    derived_from:   
+    derived_from: tosca.nodes.Container.Application.Docker
     properties:
       command:
         required: no
@@ -1283,7 +1283,7 @@ node_types:
         entry_schema:
           type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: ['127.0.0.1']
       mesos_authenticate_http:
         type: boolean
         required: no
