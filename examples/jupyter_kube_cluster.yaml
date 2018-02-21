@@ -106,8 +106,8 @@ topology_template:
             #version: 16.04
 
   outputs:
-    galaxy_url:
-      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], '/galaxy' ] }
+    jupyterhub_url:
+      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':8000' ] }
     cluster_ip:
       value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
