@@ -1909,6 +1909,10 @@ node_types:
         default: local
         constraints:
         - valid_values: [ local, dummy ]
+    artifacts:
+      kube_role:
+        file: indigo-dc.jupyterhub
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
