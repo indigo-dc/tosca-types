@@ -46,7 +46,9 @@ topology_template:
   node_templates:
 
     jupyterhub:
-      type: tosca.nodes.indigo.JupyterHubKube
+      type: tosca.nodes.indigo.JupyterHub
+      properties:
+        spawner: kubernetes
       requirements:
         - host: lrms_server
         - dependency: lrms_front_end

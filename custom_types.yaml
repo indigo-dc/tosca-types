@@ -1894,9 +1894,25 @@ node_types:
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
 
-  tosca.nodes.indigo.JupyterHubKube:
+  tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      spawner:
+        required: no
+        type: string
+        default: local
+        constraints:
+        - valid_values: [ local, kubernetes ]
+      authenticator:
+        required: no
+        type: string
+        default: local
+        constraints:
+        - valid_values: [ local, dummy ]
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/kube/artifacts/jupyter/jupyter_kubespawner_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/kube/artifacts/jupyter/jupyterhub_install.yml
+          inputs:
+            jupyterhub_spawner: { get_property: [ SELF, spawner ] }
+            jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
