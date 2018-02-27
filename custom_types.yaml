@@ -9,7 +9,7 @@ imports:
   - tosca-normative-types:1.0.0-ALIEN14
   - extra-normative-types:1.0.0
 
-description: Normative types node not defined in A4C tosca-normative-types
+description: INDIGO Custom Types
 
 capability_types:
 
