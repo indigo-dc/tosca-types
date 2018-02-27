@@ -1,0 +1,109 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+metadata:
+  template_name: extra-normative-types
+  template_version: 1.0.0
+  template_author: indigo
+
+imports:
+  - tosca-normative-types:1.0.0-ALIEN14
+
+description: The INDIGO Custom types
+
+data_types:
+
+  # These types can be added inthe normative types
+  tosca.datatypes.network.PortDef:
+    derived_from: integer
+    constraints:
+      - in_range: [ 1, 65535 ]
+
+  tosca.datatypes.network.PortSpec:
+    derived_from: tosca.datatypes.Root
+    properties:
+      protocol:
+        type: string
+        required: true
+        default: tcp
+        constraints:
+          - valid_values: [ udp, tcp, igmp ]
+      target:
+        type: tosca.datatypes.network.PortDef
+        required: false
+      target_range:
+        type: range
+        required: false
+        constraints:
+          - in_range: [ 1, 65535 ]
+      source:
+        type: tosca.datatypes.network.PortDef
+        required: false
+      source_range:
+        type: range
+        required: false
+        constraints:
+          - in_range: [ 1, 65535 ]
+
+capability_types:
+
+  tosca.capabilities.Container.Docker:
+    derived_from: tosca.capabilities.Container
+    properties:
+      version:
+        type: list
+        required: false
+        entry_schema:
+          type: version
+        description: >
+          The Docker version capability.
+      publish_all:
+        type: boolean
+        default: false
+        required: false
+        description: >
+          Indicates that all ports (ranges) listed in the dockerfile
+          using the EXPOSE keyword be published.
+      publish_ports:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+        required: false
+        description: >
+          List of ports mappings from source (Docker container)
+          to target (host) ports to publish.
+      expose_ports:
+        type: list
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+        required: false
+        description: >
+          List of ports mappings from source (Docker container) to expose
+          to other Docker containers (not accessible outside host).
+      volumes:
+        type: list
+        entry_schema:
+          type: string
+        required: false
+        description: >
+          The dockerfile VOLUME command which is used to enable access
+          from the Docker container to a directory on the host machine.
+      host_id:
+        type: string
+        required: false
+        description: >
+            The optional identifier of an existing host resource
+            that should be used to run this container on.
+      volume_id:
+        type: string
+        required: false
+        description: >
+          The optional identifier of an existing storage volume (resource)
+          that should be used to create the container's mount point(s) on.
+
+node_types:
+
+  tosca.nodes.Container.Application.Docker:
+    derived_from: tosca.nodes.Container.Application
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container.Docker
