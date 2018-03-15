@@ -276,7 +276,7 @@ node_types:
         required: no
         default: orchestrator.cloud.cnaf.infn.it
       zabbix_server_port:
-        type: PortDef
+        type: tosca.datatypes.network.PortDef
         required: no
         default: 10051
       zabbix_server_metadata:
@@ -1185,9 +1185,11 @@ node_types:
       # Set the current data of the mesos server
       # but it can also specified in the TOSCA document
       mesos_masters_list:
-        type: string
+        type: list
+        entry_schema:
+          type: string
         required: no
-        default: { get_attribute: [ HOST, public_address ] }
+        default: ['127.0.0.1']
       mesos_authenticate_http:
         type: boolean
         required: no
@@ -1336,6 +1338,8 @@ node_types:
       master_ips:
         required: yes
         type: list
+        entry_schema:
+          type: string
       onedatatoken:
         type: string
         required: no

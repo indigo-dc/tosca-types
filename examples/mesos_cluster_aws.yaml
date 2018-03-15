@@ -69,6 +69,7 @@ topology_template:
     mesos_master:
       type: tosca.nodes.indigo.MesosMaster
       properties:
+        mesos_masters_list: { get_attribute: [ HOST, public_address ] }
         marathon_password: { get_input: marathon_password }
         chronos_password: { get_input: chronos_password }
       requirements:
