@@ -60,10 +60,8 @@ topology_template:
           properties:
             dns_name: kubeserver
             network_name: PUBLIC
-            ports:
-              https_port:
-                protocol: tcp
-                source: 6443
+            port: 6443
+            protocol: tcp
         host:
           properties:
             num_cpus: { get_input: fe_cpus }
