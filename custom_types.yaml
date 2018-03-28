@@ -244,6 +244,8 @@ node_types:
 
   tosca.nodes.indigo.Compute:
     derived_from: tosca.nodes.indigo.MonitoredCompute
+    metadata:
+      icon: /images/compute.png
     attributes:
       private_address:
         type: list
@@ -1863,6 +1865,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/kubernetes.png
     artifacts:
       kube_role:
         file: grycap.kubernetes
@@ -1883,6 +1887,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/kubernetes.png
     properties:
       admin_username:
         required: no
@@ -1916,6 +1922,8 @@ node_types:
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/jupyterhub.png
     properties:
       spawner:
         required: no
