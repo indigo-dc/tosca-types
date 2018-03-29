@@ -1699,9 +1699,9 @@ node_types:
         constraints:
         - valid_values: [ disvis, powerfit ]
     artifacts:
-      galaxy_role:
-        file: indigo-dc.disvis-powerfit
-        type: tosca.artifacts.AnsibleGalaxy.role
+      - galaxy_role:
+          file: indigo-dc.disvis-powerfit
+          type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
@@ -1896,7 +1896,8 @@ node_types:
         default: kubeuser
       admin_token:
         required: no
-        type: some_insecure_token
+        type: string
+        default: some_insecure_token
     artifacts:
       kube_role:
         file: grycap.kubernetes
