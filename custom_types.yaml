@@ -286,7 +286,7 @@ node_types:
         required: no
         default: orchestrator.cloud.cnaf.infn.it
       zabbix_server_port:
-        type: tosca.datatypes.network.PortDef
+        type: integer
         required: no
         default: 10051
       zabbix_server_metadata:
