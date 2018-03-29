@@ -1866,7 +1866,7 @@ node_types:
   tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     metadata:
-      icon: /images/kubernetes.png
+      icon: /images/kubernetesWN.png
     artifacts:
       kube_role:
         file: grycap.kubernetes
@@ -1888,7 +1888,7 @@ node_types:
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
     metadata:
-      icon: /images/kubernetes.png
+      icon: /images/kubernetesFE.png
     properties:
       admin_username:
         required: no
