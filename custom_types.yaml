@@ -1547,7 +1547,7 @@ node_types:
         file: indigo-dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
-        file: indigo-dc.marathon-lb.git,deep-dev
+        file: indigo-dc.marathon-lb,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
