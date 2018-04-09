@@ -1237,6 +1237,10 @@ node_types:
         type: boolean
         required: no
         default: false
+      enable_gpu_support:
+        type: boolean
+        required: no
+        default: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -1277,6 +1281,9 @@ node_types:
             chronos_pass: { get_property: [ SELF, chronos_password ] }
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            marathon_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }  
             wn_ips: { get_property: [ SELF, wn_ips ] }
 
   tosca.nodes.indigo.MesosMaster:
@@ -1408,6 +1415,10 @@ node_types:
         type: boolean
         required: no
         default: true
+      enable_gpu_support:
+        type: boolean
+        required: no
+        default: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -1429,6 +1440,7 @@ node_types:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
+            mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
   tosca.nodes.indigo.MesosSlave:
