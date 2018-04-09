@@ -29,17 +29,17 @@
     - role: indigo-dc.zookeeper
       zookeeper_host_list: "{{ mesos_masters_list_ips }}"
 
-    - role: ansible-role-mesos
+    - role: indigo-dc.mesos
       mesos_install_mode: "master"
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       mesos_masters_list: "{{ mesos_masters_list_ips }}"
 
-    - role: ansible-role-marathon
+    - role: indigo-dc.marathon
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       marathon_username: "{{ marathon_user }}"
       marathon_password: "{{ marathon_pass }}"
    
-    - role: ansible-role-chronos
+    - role: indigo-dc.chronos
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       chronos_username: "{{ chronos_user }}"
       chronos_password: "{{ chronos_pass }}"
