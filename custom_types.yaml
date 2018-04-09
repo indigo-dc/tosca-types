@@ -1229,6 +1229,10 @@ node_types:
         type: string
         required: no
         default: admin
+      enable_consul_sd:
+        type: boolean
+        required: no
+        default: true
       enable_nfs_share:
         type: boolean
         required: no
@@ -1271,6 +1275,7 @@ node_types:
             chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
             chronos_user: { get_property: [ SELF, chronos_username ] }
             chronos_pass: { get_property: [ SELF, chronos_password ] }
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
 
@@ -1399,6 +1404,10 @@ node_types:
         type: boolean
         required: no
         default: false
+      enable_consul_sd:
+        type: boolean
+        required: no
+        default: true
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -1419,6 +1428,7 @@ node_types:
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
   tosca.nodes.indigo.MesosSlave:
@@ -1512,6 +1522,10 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      enable_consul_sd: 
+        type: boolean
+        required: false
+        default: true
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker
@@ -1527,6 +1541,7 @@ node_types:
         create:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_lb_install.yml
           inputs:
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             consul_server_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }

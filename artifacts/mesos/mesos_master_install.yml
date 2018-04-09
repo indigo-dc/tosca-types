@@ -10,6 +10,12 @@
 #      lineinfile: dest=/etc/hosts regexp='.*{{ item.1 }}.*$' line="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain" state=present
 #      with_indexed_items: '{{ wn_ips }}'
 
+  pre_tasks:
+    - name: Set service_discovery variable
+      set_fact:
+        service_discovery: "none"
+      when: enable_consul_sd == false
+
   roles:
     - role: indigo-dc.nfs
       nfs_mode: 'server'
@@ -19,6 +25,7 @@
     - role: indigo-dc.consul
       consul_mode: "server"
       consul_servers: "{{ mesos_masters_list_ips }}"
+      when: (enable_consul_sd == true)
 
     - role: indigo-dc.zookeeper
       zookeeper_host_list: "{{ mesos_masters_list_ips }}"

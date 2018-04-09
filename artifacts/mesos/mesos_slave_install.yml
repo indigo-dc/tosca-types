@@ -8,6 +8,7 @@
     - role: indigo-dc.consul
       consul_mode: "agent"
       consul_servers: "{{ mesos_masters_list_ips }}"
+      when: (enable_consul_sd == true )
 
     - role: indigo-dc.mesos
       mesos_install_mode: "slave"
