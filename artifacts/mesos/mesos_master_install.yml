@@ -11,8 +11,7 @@
 #      with_indexed_items: '{{ wn_ips }}'
 
   pre_tasks:
-    - name: Set service_discovery variable
-      set_fact:
+    - set_fact:
         service_discovery: "none"
       when: enable_consul_sd == false
 

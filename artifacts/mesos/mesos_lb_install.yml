@@ -4,7 +4,9 @@
   vars:
     docker_bridge_ip: "172.0.17.1"
   pre_tasks:
-    - set_fact: marathon_lb_marathon_url="localhost"
+    - set_fact: 
+        marathon_lb_marathon_url: "localhost"
+        marathon_lb_service_discovery: "none" 
       when: (enable_consul_sd == false)
   roles:
     - role: indigo-dc.consul
