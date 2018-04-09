@@ -10,7 +10,7 @@
       consul_servers: "{{ mesos_masters_list_ips }}"
       when: (enable_consul_sd == true )
 
-    - role: indigo-dc.mesos
+    - role: ansible-role-mesos
       mesos_install_mode: "slave"
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       mesos_masters_list: "{{ mesos_masters_list_ips }}"
