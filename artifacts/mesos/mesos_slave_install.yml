@@ -5,6 +5,8 @@
     docker_bridge_ip: "172.0.17.1"
   
   roles:
+    - role: indigo-dc.docker
+
     - role: indigo-dc.consul
       consul_mode: "agent"
       consul_servers: "{{ mesos_masters_list_ips }}"
