@@ -1555,7 +1555,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/mesos_lb_install.yml
           inputs:
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
-            consul_server_ips: { get_property: [ SELF, master_ips ] }
+            master_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
     requirements:
