@@ -5,7 +5,7 @@
     docker_bridge_ip: "172.0.17.1"
   pre_tasks:
     - set_fact: 
-        marathon_lb_marathon_url: "localhost"
+        marathon_lb_marathon_url: "https://{{ master_ips[0]  }}:8443"
         marathon_lb_service_discovery: "none" 
       when: (enable_consul_sd == false)
   roles:
@@ -13,7 +13,7 @@
 
     - role: indigo-dc.consul
       consul_mode: "agent"
-      consul_servers: "{{ consul_server_ips }}"
+      consul_servers: "{{ master_ips }}"
       when: (enable_consul_sd == true)
 
     - role: indigo-dc.marathon-lb
