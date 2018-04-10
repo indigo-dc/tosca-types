@@ -50,18 +50,18 @@ topology_template:
       properties:
         spawner: kubernetes
       requirements:
-        - host: lrms_server
-        - dependency: lrms_front_end
+        - host: compute_fe
+        - dependency: kube_fe
 
-    lrms_front_end:
+    kube_fe:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
       properties:
         admin_username:  { get_input: admin_username }
         admin_token: { get_input: admin_token }
       requirements:
-        - host: lrms_server
+        - host: compute_fe
 
-    lrms_server:
+    compute_fe:
       type: tosca.nodes.indigo.Compute
       capabilities:
         endpoint:
@@ -81,14 +81,15 @@ topology_template:
             #distribution: ubuntu
             #version: 16.04
 
-    wn_node:
+    kube_wn:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes
       properties:
-        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        front_end_ip: { get_attribute: [ compute_fe, private_address, 0 ] }
       requirements:
-        - host: lrms_wn
+        - host: compute_wn
+        - dependency: kube_fe
 
-    lrms_wn:
+    compute_wn:
       type: tosca.nodes.indigo.Compute
       capabilities:
         scalable:
@@ -107,8 +108,8 @@ topology_template:
 
   outputs:
     jupyterhub_url:
-      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':8000' ] }
+      value: { concat: [ 'http://', get_attribute: [ compute_fe, public_address, 0 ], ':8000' ] }
     cluster_ip:
-      value: { get_attribute: [ lrms_server, public_address, 0 ] }
+      value: { get_attribute: [ compute_fe, public_address, 0 ] }
     cluster_creds:
-      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
+      value: { get_attribute: [ compute_fe, endpoint, credential, 0 ] }
