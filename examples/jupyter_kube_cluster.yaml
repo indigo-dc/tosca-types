@@ -68,7 +68,7 @@ topology_template:
           properties:
             dns_name: kubeserver
             network_name: PUBLIC
-            port: 6443
+            port: 8000
             protocol: tcp
         host:
           properties:
