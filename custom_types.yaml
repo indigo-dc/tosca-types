@@ -1890,7 +1890,8 @@ node_types:
         default: kubeuser
       admin_token:
         required: no
-        type: some_insecure_token
+        type: string
+        value: some_insecure_token
     artifacts:
       kube_role:
         file: grycap.kubernetes
