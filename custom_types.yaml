@@ -1168,6 +1168,10 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      marathon_username:
+        type: string
+        default: admin
+        required: no
       marathon_protocol:
         type: string
         required: no
@@ -1196,6 +1200,10 @@ node_types:
         type: integer
         required: no
         default: 1024
+      tensorflow_port:
+        type: integer
+        required: no
+        default: 10001
       tensorflow_password:
         type: string
         required: yes
@@ -1204,6 +1212,7 @@ node_types:
         create:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/start_tensorflow.yml
           inputs:
+            marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }      
             marathon_protocol: { get_property: [ SELF, marathon_protocol ] }
             marathon_host:  { get_property: [ SELF, marathon_host ] }
@@ -1213,6 +1222,7 @@ node_types:
             marathon_tensorflow_gpus: { get_property: [ SELF, tensorflow_gpus ] }
             marathon_tensorflow_mem: { get_property: [ SELF, tensorflow_mem ] }
             marathon_tensorflow_password: { get_property: [ SELF, tensorflow_password ] }
+            marathon_tensorflow_port: { get_property: [ SELF, tensorflow_port ] }
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
