@@ -1,0 +1,34 @@
+---
+hosts: localhost
+  connection: local
+  tasks:
+  - name: Get template
+    get_url:
+    url: https://gist.githubusercontent.com/maricaantonacci/008bfa65f8e73c0fb5e80aae79d4638e/raw/924a0031283ff43d8fd5a620b36c5d7c8736014c/tensorflow-app.json.j2
+    dest: /tmp/tensorflow-app.json.j2
+
+  - name     : fetch template from remote host
+    run_once : true
+    fetch    :
+      src             : /tmp/tensorflow-app.json.j2
+      dest            : /tmp/template.json.j2
+      flat            : yes
+      fail_on_missing : yes
+
+  - name: Start tensorflow app
+    run_once: true
+    uri: 
+       url: "{{marathon_protocol}}://{{marathon_host}}:{{marathon_port}}/v2/apps/tensorflow"
+       user: "{{marathon_username}}"
+       password: "{{marathon_password}}"
+       validate_certs: "no"
+       method: PUT
+       HEADER_Content-Type: "application/json"
+       body: "{{ lookup('template', '/tmp/template.json.j2') }}"
+       body_format: json
+    register: result
+    until: result.status == 200
+    retries: 10
+    delay: 20
+    changed_when: false
+

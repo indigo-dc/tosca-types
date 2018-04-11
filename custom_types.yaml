@@ -1161,6 +1161,59 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
+
+  tosca.nodes.indigo.TensorflowOnMesos:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_password:
+        type: string
+        required: yes
+      marathon_protocol:
+        type: string
+        required: no
+        default: https
+      marathon_host:
+        type: string
+        required: no
+        default: localhost
+      marathon_port:
+        required: no
+        type: integer
+        default: 8443      
+      tensorflow_image: 
+        required: no
+        type: string
+        default: 'tensorflow/tensorflow:latest-gpu'
+      tensorflow_cpus:
+        type: float
+        required: no
+        default: 1.0
+      tensorflow_gpus:
+        type: integer
+        required: no
+        default: 1.0
+      tensorflow_mem:
+        type: integer
+        required: no
+        default: 1024
+      tensorflow_password:
+        type: string
+        required: yes
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/start_tensorflow.yml
+          inputs:
+            marathon_password: { get_property: [ SELF, marathon_password ] }      
+            marathon_protocol: { get_property: [ SELF, marathon_protocol ] }
+            marathon_host:  { get_property: [ SELF, marathon_host ] }
+            marathon_port: { get_property: [ SELF, marathon_port ] }
+            marathon_tensorflow_image: { get_property: [ SELF, tensorflow_image ] }
+            marathon_tensorflow_cpus: { get_property: [ SELF, tensorflow_cpus ] }
+            marathon_tensorflow_gpus: { get_property: [ SELF, tensorflow_gpus ] }
+            marathon_tensorflow_mem: { get_property: [ SELF, tensorflow_mem ] }
+            marathon_tensorflow_password: { get_property: [ SELF, tensorflow_password ] }
+
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
     attributes:
