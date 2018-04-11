@@ -4,8 +4,8 @@
   tasks:
   - name: Get template
     get_url:
-    url: https://gist.githubusercontent.com/maricaantonacci/008bfa65f8e73c0fb5e80aae79d4638e/raw/924a0031283ff43d8fd5a620b36c5d7c8736014c/tensorflow-app.json.j2
-    dest: /tmp/tensorflow-app.json.j2
+      url: https://gist.githubusercontent.com/maricaantonacci/008bfa65f8e73c0fb5e80aae79d4638e/raw/924a0031283ff43d8fd5a620b36c5d7c8736014c/tensorflow-app.json.j2
+      dest: /tmp/tensorflow-app.json.j2
 
   - name     : fetch template from remote host
     run_once : true
