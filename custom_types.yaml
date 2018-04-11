@@ -1195,7 +1195,7 @@ node_types:
       tensorflow_gpus:
         type: integer
         required: no
-        default: 1.0
+        default: 1
       tensorflow_mem:
         type: integer
         required: no
