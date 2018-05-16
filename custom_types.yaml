@@ -1340,12 +1340,6 @@ node_types:
         type: list
         entry_schema:
           type: string
-      onedatatoken:
-        type: string
-        required: no
-      onedatacache:
-        type: string
-        required: no
     artifacts:
       cms_config_role:
         file: indigo-dc.cms_config
@@ -1364,8 +1358,6 @@ node_types:
             cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
             cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
             cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
-            cms_config_onedatacache: { get_property: [ SELF, onedatacache ] }
-            cms_config_onedatatoken: { get_property: [ SELF, onedatatoken ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
