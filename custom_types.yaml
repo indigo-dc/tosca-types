@@ -1340,9 +1340,15 @@ node_types:
         type: list
         entry_schema:
           type: string
+      oneclient_token: 
+        type: string
+        required: yes
+      oneprovider_name: 
+        type: string
+        required: yes
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo-dc.cms_config,oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1366,6 +1372,8 @@ node_types:
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
+            oneclient_token: { get_property: [ SELF, oneclient_token ] }
+            oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
@@ -1477,7 +1485,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo-dc.cms_config,oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
