@@ -1416,6 +1416,22 @@ node_types:
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
 
+  tosca.nodes.indigo.CmsOneclient:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      oneclient_pkg:
+        type: string
+        required: yes
+    artifacts:
+      oneclient_role:
+        file: indigo-dc.oneclient,dciangotdev
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/oneclient/artifacts/onedata/cms_oneclient.yml
+          inputs:
+            oneclient_pkg: { get_property: [ SELF, oneclient_pkg ] }
 
   tosca.nodes.indigo.CmsWnConfig:
     derived_from: tosca.nodes.SoftwareComponent
