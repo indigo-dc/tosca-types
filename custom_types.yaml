@@ -1491,7 +1491,8 @@ node_types:
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
             ams_config_cm_ip: { get_property: [ SELF, cm_ip ] }
-            htcondor_config_schedd_ip: { get_property: [ SELF, schedd_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
+            ams_use_local_squid: { get_input: ams_use_local_squid }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
             ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
             public_key_url: { get_property: [ SELF, public_key_url] }
