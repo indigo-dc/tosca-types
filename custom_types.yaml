@@ -536,6 +536,11 @@ node_types:
         description: Install Reference data
         default: true
         required: true
+      refdata_provider_type:
+        type: string
+        description: Select Reference data provider type (Onedata, CernVM-FS or download)
+        default: 'cvmfs'
+        required: false
       refdata_cvmfs_server_url:
         type: string
         description: CernVM-FS server, replica or stratum-zero
@@ -574,7 +579,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure_cvmfs.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro/artifacts/galaxy/galaxy_wn_configure_cvmfs.yml
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             export_dir: { get_property: [ SELF, export_dir ] }
@@ -656,7 +661,7 @@ node_types:
       refdata_provider_type:
         type: string
         description: Select Reference data provider type (Onedata, CernVM-FS or download)
-        default: 'onedata'
+        default: 'cvmfs'
         required: false
       refdata_provider:
         type: string
@@ -716,7 +721,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_redfata_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/mtangaro/artifacts/galaxy/galaxy_redfata_configure.yml
           inputs:
             get_refdata: { get_property: [ SELF, reference_data ] }
             galaxy_flavor: { get_property: [ SELF, flavor ] }
