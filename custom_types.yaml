@@ -1387,7 +1387,7 @@ node_types:
       config_mode:
         type: string
         required: yes
-      schedd_ip:
+      htcondor_config_schedd_ip:
         type: string
         required: yes
       master_ips:
@@ -1404,7 +1404,7 @@ node_types:
         start:
           inputs:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
-            htcondor_config_schedd_ip: { get_property: [ SELF, schedd_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             config_mode: { get_property: [ SELF, config_mode ] }
     requirements:
       - host:
@@ -1420,9 +1420,6 @@ node_types:
         type: string
         required: yes
       marathon_password:
-        type: string
-        required: yes
-      ams_config_cm_ip:
         type: string
         required: yes
       htcondor_config_schedd_ip:
@@ -1514,9 +1511,6 @@ node_types:
       marathon_password:
         type: string
         required: yes
-      ams_config_cm_ip:
-        type: string
-        required: yes
       htcondor_config_schedd_ip:
         type: string
         required: yes
@@ -1591,7 +1585,7 @@ node_types:
             ams_docker_ram_x_wn: { get_property: [ SELF, docker_ram_x_wn ] }
     requirements:
       - host:
-          capability: tosca.capabilities.indigo.MesosMaster
+          capability: tosca.capabilities.indigo.MesosSlave
           relationship: tosca.relationships.HostedOn
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
