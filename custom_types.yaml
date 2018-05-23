@@ -1387,12 +1387,20 @@ node_types:
       config_mode:
         type: string
         required: yes
+      schedd_ip:
+        type: string
+        required: yes
       htcondor_config_schedd_ip:
         type: string
         required: yes
       zookeeper_peers:
         type: string
         required: yes
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config
@@ -1469,6 +1477,15 @@ node_types:
         type: string
         required: yes
         default: "master"
+      ams_use_local_squid:
+        type: boolean
+        required: yes
+        default: false
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
     artifacts:
       cms_config_role:
         file: CloudPG.ams_config_test
@@ -1567,6 +1584,15 @@ node_types:
         type: string
         required: yes
         default: "master"
+      ams_use_local_squid:
+        type: boolean
+        required: yes
+        default: false
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
     artifacts:
       cms_config_role:
         file: CloudPG.ams_config_test
