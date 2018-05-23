@@ -1390,12 +1390,6 @@ node_types:
       schedd_ip:
         type: string
         required: yes
-      htcondor_config_schedd_ip:
-        type: string
-        required: yes
-      zookeeper_peers:
-        type: string
-        required: yes
       master_ips:
         required: yes
         type: list
@@ -1422,18 +1416,6 @@ node_types:
   tosca.nodes.indigo.AmsCondorMasterConfig:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      mesos_masters_list:
-        type: string
-        required: yes
-      consul_servers:
-        type: string
-        required: yes
-      zookeeper_host_list:
-        type: string
-        required: yes
-      zookeeper_peers:
-        type: string
-        required: yes
       marathon_username:
         type: string
         required: yes
@@ -1449,12 +1431,11 @@ node_types:
       ams_default_squid:
         type: string
         required: yes
+        default: cream-bdii.pg.infn.it
       ams_default_squid_port:
-        type: string
+        type: integer
         required: yes
-      public_key_url:
-        type: string
-        required: yes
+        default: 3128
       ams_number_of_wn_instances:
         type: integer
         required: yes
@@ -1507,12 +1488,10 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            ams_config_cm_ip: { get_property: [ SELF, cm_ip ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             ams_use_local_squid: { get_input: ams_use_local_squid }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
             ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
-            public_key_url: { get_property: [ SELF, public_key_url] }
             ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
             ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
             ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
@@ -1529,18 +1508,6 @@ node_types:
   tosca.nodes.indigo.AmsCondorWnConfig:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
-      mesos_masters_list:
-        type: string
-        required: yes
-      consul_servers:
-        type: string
-        required: yes
-      zookeeper_host_list:
-        type: string
-        required: yes
-      zookeeper_peers:
-        type: string
-        required: yes
       marathon_username:
         type: string
         required: yes
@@ -1556,12 +1523,11 @@ node_types:
       ams_default_squid:
         type: string
         required: yes
+        default: cream-bdii.pg.infn.it
       ams_default_squid_port:
-        type: string
+        type: integer
         required: yes
-      public_key_url:
-        type: string
-        required: yes
+        default: 3128
       ams_number_of_wn_instances:
         type: integer
         required: yes
@@ -1614,11 +1580,9 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            ams_config_cm_ip: { get_property: [ SELF, cm_ip ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, schedd_ip ] }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
             ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
-            public_key_url: { get_property: [ SELF, public_key_url] }
             ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
             ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
             ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
@@ -1706,12 +1670,11 @@ node_types:
       ams_default_squid:
         type: string
         required: yes
+        default: cream-bdii.pg.infn.it
       ams_default_squid_port:
-        type: string
+        type: integer
         required: yes
-      public_key_url:
-        type: string
-        required: yes
+        default: 3128
       ams_number_of_wn_instances:
         type: integer
         required: yes
@@ -1745,11 +1708,9 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            ams_config_cm_ip: { get_property: [ SELF, cm_ip ] }
             ams_config_schedd_ip: { get_property: [ SELF, schedd_ip ] }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
             ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
-            public_key_url: { get_property: [ SELF, public_key_url] }
             ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
             ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
             ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
