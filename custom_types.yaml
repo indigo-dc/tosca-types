@@ -1310,7 +1310,7 @@ node_types:
         #file: git+https://github.com/indigo-dc/ansible-role-docker.git,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul
+        file: indigo-dc.consul,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
         file: indigo-dc.zookeeper
@@ -1488,7 +1488,7 @@ node_types:
         file: indigo-dc.docker,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul
+        file: indigo-dc.consul,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
         file: indigo-dc.mesos,deep-dev
@@ -1607,7 +1607,7 @@ node_types:
         file: indigo-dc.docker,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul
+        file: indigo-dc.consul,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
         file: indigo-dc.marathon-lb,deep-dev
