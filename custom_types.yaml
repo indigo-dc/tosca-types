@@ -1467,7 +1467,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: 'https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/ams_master_config.yml'
+          implementation: 'https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/ams_master_config.yml'
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -1546,7 +1546,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: 'https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/ams_wn_config.yml'
+          implementation: 'https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/ams_wn_config.yml'
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
