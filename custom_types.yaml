@@ -1433,22 +1433,22 @@ node_types:
         type: integer
         required: yes
         default: 3128
-      ams_number_of_wn_instances:
+      number_of_wn_instances:
         type: integer
         required: yes
-      ams_number_of_slaves:
+      number_of_slaves:
         type: integer
         required: yes
-      ams_cpu_x_wn:
+      cpu_x_wn:
         type: float
         required: yes
-      ams_ram_x_wn:
+      ram_x_wn:
         type: float
         required: yes
-      ams_docker_cpu_x_wn:
+      docker_cpu_x_wn:
         type: float
         required: yes
-      ams_docker_ram_x_wn:
+      docker_ram_x_wn:
         type: float
         required: yes
       ams_config_node:
@@ -1522,22 +1522,22 @@ node_types:
         type: integer
         required: yes
         default: 3128
-      ams_number_of_wn_instances:
+      number_of_wn_instances:
         type: integer
         required: yes
-      ams_number_of_slaves:
+      number_of_slaves:
         type: integer
         required: yes
-      ams_cpu_x_wn:
+      cpu_x_wn:
         type: float
         required: yes
-      ams_ram_x_wn:
+      ram_x_wn:
         type: float
         required: yes
-      ams_docker_cpu_x_wn:
+      docker_cpu_x_wn:
         type: float
         required: yes
-      ams_docker_ram_x_wn:
+      docker_ram_x_wn:
         type: float
         required: yes
       ams_config_node:
@@ -1632,92 +1632,6 @@ node_types:
 
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
-
-
-  tosca.nodes.indigo.CmsWnConfig:
-    derived_from: tosca.nodes.SoftwareComponent
-    properties:
-      mesos_masters_list:
-        type: string
-        required: yes
-      consul_servers:
-        type: string
-        required: yes
-      zookeeper_host_list:
-        type: string
-        required: yes
-      zookeeper_peers:
-        type: string
-        required: yes
-      marathon_username:
-        type: string
-        required: yes
-      marathon_password:
-        type: string
-        required: yes
-      ams_config_cm_ip:
-        type: string
-        required: yes
-      ams_config_schedd_ip:
-        type: string
-        required: yes
-      ams_default_squid:
-        type: string
-        required: yes
-        default: cream-bdii.pg.infn.it
-      ams_default_squid_port:
-        type: integer
-        required: yes
-        default: 3128
-      ams_number_of_wn_instances:
-        type: integer
-        required: yes
-      ams_number_of_slaves:
-        type: integer
-        required: yes
-      ams_cpu_x_wn:
-        type: float
-        required: yes
-      ams_ram_x_wn:
-        type: float
-        required: yes
-      ams_docker_cpu_x_wn:
-        type: float
-        required: yes
-      ams_docker_ram_x_wn:
-        type: float
-        required: yes
-    artifacts:
-      cms_config_role:
-        file: CloudPG.ams_config_test
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_wn_configure.yml
-          inputs:
-            mesos_masters_list: { get_property: [ SELF, master_ips ] }
-            consul_servers: { get_property: [ SELF, master_ips ] }
-            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
-            zookeeper_peers: { get_property: [ SELF, master_ips ] }
-            marathon_username: { get_property: [ SELF, marathon_username ] }
-            marathon_password: { get_property: [ SELF, marathon_password ] }
-            ams_config_schedd_ip: { get_property: [ SELF, schedd_ip ] }
-            ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
-            ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
-            ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
-            ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
-            ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
-            ams_ram_x_wn: { get_property: [ SELF, ram_x_wn ] }
-            ams_docker_cpu_x_wn: { get_property: [ SELF, docker_cpu_x_wn ] }
-            ams_docker_ram_x_wn: { get_property: [ SELF, docker_ram_x_wn ] }
-    requirements:
-      - host:
-          capability: tosca.capabilities.indigo.MesosSlave
-          relationship: tosca.relationships.HostedOn
-          node: tosca.nodes.SoftwareComponent
-          occurrences: [1, 1]
-
 
   tosca.nodes.indigo.MesosLoadBalancer:
     derived_from: tosca.nodes.SoftwareComponent
