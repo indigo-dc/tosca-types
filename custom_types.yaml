@@ -1462,7 +1462,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: CloudPG.ams_config_test
+        file: indigo-dc.ams_config
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1472,7 +1472,7 @@ node_types:
             - hosts: localhost
               connection: local
               roles:
-                - role: indigo-dc.cms_config
+                - role: indigo-dc.ams_config
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -1546,7 +1546,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: CloudPG.ams_config_test
+        file: indigo-dc.ams_config
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1556,7 +1556,7 @@ node_types:
             - hosts: localhost
               connection: local
               roles:
-                - role: indigo-dc.cms_config
+                - role: indigo-dc.ams_config
                   ams_config_node: "wn"
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
