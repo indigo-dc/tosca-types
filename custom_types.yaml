@@ -1451,10 +1451,6 @@ node_types:
       docker_ram_x_wn:
         type: float
         required: yes
-      ams_config_node:
-        type: string
-        required: yes
-        default: "master"
       ams_use_local_squid:
         type: boolean
         required: yes
@@ -1465,7 +1461,7 @@ node_types:
         entry_schema:
           type: string
     artifacts:
-      cms_config_role:
+      ams_config_role:
         file: CloudPG.ams_config_test
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -1477,7 +1473,6 @@ node_types:
               connection: local
               roles:
                 - role: indigo-dc.cms_config
-                  cms_config_node: "master"
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -1540,10 +1535,6 @@ node_types:
       docker_ram_x_wn:
         type: float
         required: yes
-      ams_config_node:
-        type: string
-        required: yes
-        default: "master"
       ams_use_local_squid:
         type: boolean
         required: yes
@@ -1554,7 +1545,7 @@ node_types:
         entry_schema:
           type: string
     artifacts:
-      cms_config_role:
+      ams_config_role:
         file: CloudPG.ams_config_test
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -1566,7 +1557,7 @@ node_types:
               connection: local
               roles:
                 - role: indigo-dc.cms_config
-                  cms_config_node: "wn"
+                  ams_config_node: "wn"
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
