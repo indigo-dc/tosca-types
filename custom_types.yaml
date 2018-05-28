@@ -1402,6 +1402,7 @@ node_types:
     interfaces:
       Standard:
         start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/htcondor_master_config.yml
           inputs:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
