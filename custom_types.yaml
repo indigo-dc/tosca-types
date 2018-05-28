@@ -1395,6 +1395,11 @@ node_types:
         type: list
         entry_schema:
           type: string
+      lb_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config
@@ -1405,6 +1410,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/htcondor_master_config.yml
           inputs:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            lb_peers: { get_property: [ SELF, lb_ips ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             config_mode: { get_property: [ SELF, config_mode ] }
     requirements:
