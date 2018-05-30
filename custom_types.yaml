@@ -536,6 +536,11 @@ node_types:
         description: Install Reference data
         default: true
         required: true
+      refdata_provider_type:
+        type: string
+        description: Select Reference data provider type (Onedata, CernVM-FS or download)
+        default: 'cvmfs'
+        required: false
       refdata_cvmfs_server_url:
         type: string
         description: CernVM-FS server, replica or stratum-zero
@@ -656,7 +661,7 @@ node_types:
       refdata_provider_type:
         type: string
         description: Select Reference data provider type (Onedata, CernVM-FS or download)
-        default: 'onedata'
+        default: 'cvmfs'
         required: false
       refdata_provider:
         type: string
@@ -1340,12 +1345,6 @@ node_types:
         type: list
         entry_schema:
           type: string
-      onedatatoken:
-        type: string
-        required: no
-      onedatacache:
-        type: string
-        required: no
     artifacts:
       cms_config_role:
         file: indigo-dc.cms_config
@@ -1364,8 +1363,6 @@ node_types:
             cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
             cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
             cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
-            cms_config_onedatacache: { get_property: [ SELF, onedatacache ] }
-            cms_config_onedatatoken: { get_property: [ SELF, onedatatoken ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
@@ -1380,8 +1377,8 @@ node_types:
           relationship: tosca.relationships.HostedOn
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
-  
-  tosca.nodes.indigo.HTCondorServices:
+
+tosca.nodes.indigo.HTCondorServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       config_mode:
@@ -1577,7 +1574,6 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
-
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     capabilities:
@@ -1619,6 +1615,79 @@ node_types:
 
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
+
+
+  tosca.nodes.indigo.CmsWnConfig:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      cms_local_site:
+        type: string
+        required: yes
+      cms_stageoutsite:
+        type: string
+        required: yes
+      cms_stageoutserver:
+        type: string
+        required: yes
+      cms_stageoutprefix:
+        type: string
+        required: yes
+      cms_stageoutsite_fallback:
+        type: string
+        required: yes
+      cms_stageoutserver_fallback:
+        type: string
+        required: yes
+      cms_stageoutprefix_fallback:
+        type: string
+        required: yes
+      cms_input_path:
+        type: string
+        required: yes
+      cms_input_protocol:
+        type: string
+        required: yes
+      mysquid_host:
+        type: string
+        required: yes
+      proxycache_host:
+        type: string
+        required: yes
+      monitordb_ip:
+        type: string
+        required: no
+      elasticsearch_secret:
+        type: string
+        required: no
+    artifacts:
+      cms_config_role:
+        file: indigo-dc.cms_config
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_wn_configure.yml
+          inputs:
+            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
+            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
+            cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
+            cms_config_stageoutserver: { get_property: [ SELF, cms_stageoutserver ] }
+            cms_config_stageoutprefix: { get_property: [ SELF, cms_stageoutprefix ] }
+            cms_config_stageoutsite_fallback: { get_property: [ SELF, cms_stageoutsite_fallback ] }
+            cms_config_stageoutserver_fallback: { get_property: [ SELF, cms_stageoutserver_fallback ] }
+            cms_config_stageoutprefix_fallback: { get_property: [ SELF, cms_stageoutprefix_fallback ] }
+            cms_input_path: { get_property: [ SELF, cms_input_path ] }
+            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
+            cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
+            monitordb_ip: { get_property: [ SELF, monitordb_ip ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosSlave
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
 
   tosca.nodes.indigo.MesosLoadBalancer:
     derived_from: tosca.nodes.SoftwareComponent
@@ -1736,6 +1805,7 @@ node_types:
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             zookeeper_peers: { get_property: [ SELF, zookeeper_peers ] }
+            spark_mesos_deploy_app: { get_property: [ SELF, spark_mesos_deploy_app ] }
             spark_hdfs_uri: { get_property: [ SELF, spark_hdfs_uri ] }
             spark_swift_auth_url: { get_property: [ SELF, spark_swift_auth_url ] }
             spark_mesos_swift_http_port: { get_property: [ SELF, spark_swift_http_port ] }
@@ -2013,7 +2083,8 @@ node_types:
         default: kubeuser
       admin_token:
         required: no
-        type: some_insecure_token
+        type: string
+        value: some_insecure_token
     artifacts:
       kube_role:
         file: grycap.kubernetes
