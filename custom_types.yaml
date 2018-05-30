@@ -1378,7 +1378,7 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
-tosca.nodes.indigo.HTCondorServices:
+  tosca.nodes.indigo.HTCondorServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       config_mode:
