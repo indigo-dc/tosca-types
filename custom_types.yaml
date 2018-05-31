@@ -1463,6 +1463,16 @@ node_types:
         type: list
         entry_schema:
           type: string
+      ams_repo_server_url:
+        type: string
+      ams_repo_public_key_path:
+        type: string
+      ams_repo_http_proxy:
+        type: string
+      ams_repo_repository_name:
+        type: string
+      ams_repo_public_key:
+        type: string
     artifacts:
       ams_config_role:
         file: indigo-dc.ams_config
@@ -1488,6 +1498,11 @@ node_types:
             ams_ram_x_wn: { get_property: [ SELF, ram_x_wn ] }
             ams_docker_cpu_x_wn: { get_property: [ SELF, docker_cpu_x_wn ] }
             ams_docker_ram_x_wn: { get_property: [ SELF, docker_ram_x_wn ] }
+            ams_repo_server_url: { get_property: [ SELF, ams_repo_server_url ] }
+            ams_repo_public_key_path: { get_property: [ SELF, ams_repo_public_key_path ] }
+            ams_repo_http_proxy: { get_property: [ SELF, ams_repo_http_proxy ] }
+            ams_repo_repository_name: { get_property: [ SELF, ams_repo_repository_name ] }
+            ams_repo_public_key: { get_property: [ SELF, ams_repo_public_key ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
