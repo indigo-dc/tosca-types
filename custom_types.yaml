@@ -1557,7 +1557,7 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            htcondor_config_schedd_ip: { get_property: [ SELF, schedd_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
             ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
             ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
