@@ -1473,6 +1473,8 @@ node_types:
         type: string
       ams_repo_public_key:
         type: string
+      ams_repo_public_key_url:
+        type: string
     artifacts:
       ams_config_role:
         file: indigo-dc.ams_config
@@ -1503,6 +1505,7 @@ node_types:
             ams_repo_http_proxy: { get_property: [ SELF, ams_repo_http_proxy ] }
             ams_repo_repository_name: { get_property: [ SELF, ams_repo_repository_name ] }
             ams_repo_public_key: { get_property: [ SELF, ams_repo_public_key ] }
+            ams_repo_public_key_url: { get_property: [ SELF, ams_repo_public_key_url ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
@@ -1567,6 +1570,8 @@ node_types:
         type: string
       ams_repo_public_key:
         type: string
+      ams_repo_public_key_url:
+        type: string
     artifacts:
       ams_config_role:
         file: indigo-dc.ams_config
@@ -1596,6 +1601,7 @@ node_types:
             ams_repo_http_proxy: { get_property: [ SELF, ams_repo_http_proxy ] }
             ams_repo_repository_name: { get_property: [ SELF, ams_repo_repository_name ] }
             ams_repo_public_key: { get_property: [ SELF, ams_repo_public_key ] }
+            ams_repo_public_key_url: { get_property: [ SELF, ams_repo_public_key_url ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosSlave
