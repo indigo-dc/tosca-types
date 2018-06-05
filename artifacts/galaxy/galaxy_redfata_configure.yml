@@ -2,12 +2,17 @@
 - hosts: localhost
   connection: local
   pre_tasks:
-    - name: Get refdata-list
+    - name: Get reference data cvmfs key for on-the-fly configuration
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
         dest: '/tmp'
-      when: (refdata_provider_type == 'cvmfs') or (refdata_provider_type == 'cvmfs_preconfigured')
-    - name: Get refdata-list
+      when: refdata_provider_type == 'cvmfs'
+    - name: Get reference data cvmfs keu for preconfigured repository
+      get_url:
+        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_repository_name }}.pub'
+        dest: '/tmp'
+      when: refdata_provider_type == 'cvmfs_preconfigured'
+    - name: Get reference data cvmfs configuration for preconfigured erence data cvmfs configuration for preconfigured repositoryy
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_config_files/{{ refdata_cvmfs_repository_name }}.conf'
         dest: '/tmp'
