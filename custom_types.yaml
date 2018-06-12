@@ -1282,6 +1282,23 @@ node_types:
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
 
+  tosca.nodes.indigo.PrometheusServer:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifact:
+      prom_config_role:
+        file: cloudalchemy.prometheus
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/prometheus.yml
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
