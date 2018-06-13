@@ -1321,6 +1321,23 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
+  tosca.nodes.indigo.NodeExporter:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      prom_config_role:
+        file: cloudalchemy.node-exporter
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/prometheus/artifacts/mesos/nodeExporter.yaml
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosSlave
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
