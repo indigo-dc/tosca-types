@@ -1284,7 +1284,7 @@ node_types:
 
   tosca.nodes.indigo.PrometheusServer:
     derived_from: tosca.nodes.SoftwareComponent
-    artifact:
+    artifacts:
       prom_config_role:
         file: cloudalchemy.prometheus
         type: tosca.artifacts.AnsibleGalaxy.role
