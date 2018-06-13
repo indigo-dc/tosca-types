@@ -1291,7 +1291,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/prometheus/artifacts/mesos/prometheus.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/prometheus/artifacts/mesos/prometheus.yaml
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
