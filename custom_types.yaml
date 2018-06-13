@@ -1284,6 +1284,11 @@ node_types:
 
   tosca.nodes.indigo.PrometheusServer:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      prometheus_config_file:
+        type: string 
+        required: no
+        default: "/dev/null"
     artifacts:
       prom_config_role:
         file: cloudalchemy.prometheus
@@ -1292,6 +1297,23 @@ node_types:
       Standard:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/prometheus/artifacts/mesos/prometheus.yaml
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+  tosca.nodes.indigo.GrafanaServer:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      prom_config_role:
+        file: cloudalchemy.grafana
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/prometheus/artifacts/mesos/grafana.yaml
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
