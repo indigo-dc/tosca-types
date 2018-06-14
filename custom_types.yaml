@@ -1310,9 +1310,7 @@ node_types:
       grafana_security:
           type: map 
           required: no 
-          default: 
-            - admin_user: admin
-            - admin_password: admin
+          default: { admin_user: admin, admin_password: admin }
     artifacts:
       prom_config_role:
         file: cloudalchemy.grafana
