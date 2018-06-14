@@ -1309,7 +1309,7 @@ node_types:
     properties:
       grafana_security:
         type: yaml 
-        required: yes
+        required: no 
         default: 
             admin_user: admin
             admin_password: admin
