@@ -1308,11 +1308,14 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       grafana_security:
-        type: yaml 
-        required: no 
-        default: 
-            admin_user: admin
-            admin_password: admin
+          admin_user: 
+            type: string 
+            required: no 
+            default: admin
+          admin_password: 
+            type: string 
+            required: no 
+            default: admin
     artifacts:
       prom_config_role:
         file: cloudalchemy.grafana
