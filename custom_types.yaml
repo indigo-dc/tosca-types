@@ -1306,6 +1306,13 @@ node_types:
 
   tosca.nodes.indigo.GrafanaServer:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      grafana_security:
+        type: yaml 
+        required: yes
+        default: 
+            admin_user: admin
+            admin_password: admin
     artifacts:
       prom_config_role:
         file: cloudalchemy.grafana
