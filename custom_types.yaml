@@ -8,6 +8,12 @@ capability_types:
       gpu:
         type: boolean
         required: no
+      gpu_driver:
+        type: string
+        required: no
+      gpu_driver_min_version:
+        type: string
+        required: no
       image:
         type: string
         required: no
@@ -44,6 +50,12 @@ capability_types:
       instance_type:
         type: string
         required: no
+      num_gpus:
+        type: integer
+        required: false
+      gpu_type:
+        type: string
+        required: false  
 
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
