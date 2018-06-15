@@ -60,7 +60,7 @@ topology_template:
           properties:
             dns_name: kubeserver
             network_name: PUBLIC
-            port: 6443
+            port: 30443
             protocol: tcp
         host:
           properties:
@@ -99,8 +99,4 @@ topology_template:
 
   outputs:
     dashboard_url:
-      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':6443/ui' ] }
-    cluster_ip:
-      value: { get_attribute: [ lrms_server, public_address, 0 ] }
-    cluster_creds:
-      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
+      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
