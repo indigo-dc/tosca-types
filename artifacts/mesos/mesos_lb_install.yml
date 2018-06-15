@@ -7,6 +7,8 @@
     - role: indigo-dc.consul
       consul_mode: "agent"
       consul_servers: "{{ consul_server_ips }}"
+      consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
 
     - role: indigo-dc.marathon-lb
       marathon_lb_auth_creds: "{{marathon_username}}:{{marathon_password}}"
