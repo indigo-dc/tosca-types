@@ -648,6 +648,11 @@ node_types:
         description: Install Reference data
         default: true
         required: true
+      refdata_provider_type:
+        type: string
+        description: Select Reference data provider type (Onedata, CernVM-FS or download)
+        default: 'cvmfs'
+        required: false
       refdata_cvmfs_server_url:
         type: string
         description: CernVM-FS server, replica or stratum-zero
@@ -770,7 +775,7 @@ node_types:
       refdata_provider_type:
         type: string
         description: Select Reference data provider type (Onedata, CernVM-FS or download)
-        default: 'onedata'
+        default: 'cvmfs'
         required: false
       refdata_provider:
         type: string
@@ -1472,12 +1477,6 @@ node_types:
         type: list
         entry_schema:
           type: string
-      onedatatoken:
-        type: string
-        required: no
-      onedatacache:
-        type: string
-        required: no
     artifacts:
       - cms_config_role:
           file: indigo-dc.cms_config
@@ -1496,8 +1495,6 @@ node_types:
             cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
             cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
             cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
-            cms_config_onedatacache: { get_property: [ SELF, onedatacache ] }
-            cms_config_onedatatoken: { get_property: [ SELF, onedatatoken ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
@@ -1752,6 +1749,7 @@ node_types:
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             zookeeper_peers: { get_property: [ SELF, zookeeper_peers ] }
+            spark_mesos_deploy_app: { get_property: [ SELF, spark_mesos_deploy_app ] }
             spark_hdfs_uri: { get_property: [ SELF, spark_hdfs_uri ] }
             spark_swift_auth_url: { get_property: [ SELF, spark_swift_auth_url ] }
             spark_mesos_swift_http_port: { get_property: [ SELF, spark_swift_http_port ] }
