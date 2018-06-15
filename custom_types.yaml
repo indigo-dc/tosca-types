@@ -221,6 +221,14 @@ capability_types:
         type: boolean
         required: false
         default: true
+      ports:
+        type: map
+        description: The optional map of ports the Endpoint supports (if more than one).
+        required: false
+        constraints:
+          - min_length: 1
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
     attributes:
       credential:
         type: list
