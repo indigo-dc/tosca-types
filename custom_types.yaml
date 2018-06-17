@@ -1353,7 +1353,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo-dc.cms_config,spigadev
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1462,7 +1462,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo-dc.cms_config,spigadev
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
