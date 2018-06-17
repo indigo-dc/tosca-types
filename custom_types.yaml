@@ -1294,12 +1294,12 @@ node_types:
         default: "spiga/frontiersquidv1"
       cms_wn_image:
         type: string
-        default: "spiga/cmswn"
+        default: "cloudpg/dodas-cms:cern"
         required: no
       cms_proxycache_image:
         type: string
         required: no
-        default: "spiga/ttscache"
+        default: "cloudpg/ttscache"
       mysquid_host:
         type: string
         required: yes
@@ -1321,25 +1321,31 @@ node_types:
       marathon_username:
         type: string
         required: no
-        default: admin
+        default: 'admin'
       marathon_password:
         type: string
-        required: yes
+        required: no
+        default: 'admin'
       cms_proxycache_token_manager:
         type: string
-        required: yes
+        required: no
+        default: 'ZOOKEEPER'
       watts_endpoint:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
       iam_endpoint:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-iam.cloud.cnaf.infn.it/'
       iam_credential_endpoint:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it/api/v2/iam/credential'
       audience:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
       master_ips:
         required: yes
         type: list
@@ -1436,10 +1442,12 @@ node_types:
         required: yes
       cms_input_path:
         type: string
-        required: yes
+        required: no
+        default: 'my/path'
       cms_input_protocol:
         type: string
-        required: yes
+        required: no
+        default: 'xrootd'
       mysquid_host:
         type: string
         required: yes
