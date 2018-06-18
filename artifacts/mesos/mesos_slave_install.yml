@@ -8,6 +8,8 @@
     - role: indigo-dc.consul
       consul_mode: "agent"
       consul_servers: "{{ mesos_masters_list_ips }}"
+      consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
 
     - role: indigo-dc.mesos
       mesos_install_mode: "slave"
