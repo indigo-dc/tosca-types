@@ -114,4 +114,4 @@ topology_template:
     jupyterhub_url:
       value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':8000' ] }
     dashboard_url:
-      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
+      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
