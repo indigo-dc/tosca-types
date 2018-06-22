@@ -1300,6 +1300,10 @@ node_types:
         type: string
         required: no
         default: "cloudpg/ttscache"
+      cms_input_protocol:
+        type: string
+        required: no
+        default: 'xrootd'
       mysquid_host:
         type: string
         required: yes
