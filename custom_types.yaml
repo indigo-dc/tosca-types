@@ -1357,7 +1357,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config, dciangotdev
+        file: indigo-dc.cms_config,dciangotdev
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
