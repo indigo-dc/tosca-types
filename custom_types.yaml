@@ -751,7 +751,6 @@ node_types:
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
             instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
             galaxy_version: { get_property: [ SELF, version ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
 
   tosca.nodes.indigo.GalaxyReferenceData:
@@ -1294,6 +1293,69 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
+
+  tosca.nodes.indigo.TensorflowOnMesos:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_password:
+        type: string
+        required: yes
+      marathon_username:
+        type: string
+        default: admin
+        required: no
+      marathon_protocol:
+        type: string
+        required: no
+        default: https
+      marathon_host:
+        type: string
+        required: no
+        default: localhost
+      marathon_port:
+        required: no
+        type: integer
+        default: 8443      
+      tensorflow_image: 
+        required: no
+        type: string
+        default: 'tensorflow/tensorflow:latest-gpu'
+      tensorflow_cpus:
+        type: float
+        required: no
+        default: 1.0
+      tensorflow_gpus:
+        type: integer
+        required: no
+        default: 1
+      tensorflow_mem:
+        type: integer
+        required: no
+        default: 1024
+      tensorflow_port:
+        type: integer
+        required: no
+        default: 10001
+      tensorflow_password:
+        type: string
+        required: yes
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/start_tensorflow.yml
+          inputs:
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }      
+            marathon_protocol: { get_property: [ SELF, marathon_protocol ] }
+            marathon_host:  { get_property: [ SELF, marathon_host ] }
+            marathon_port: { get_property: [ SELF, marathon_port ] }
+            marathon_tensorflow_image: { get_property: [ SELF, tensorflow_image ] }
+            marathon_tensorflow_cpus: { get_property: [ SELF, tensorflow_cpus ] }
+            marathon_tensorflow_gpus: { get_property: [ SELF, tensorflow_gpus ] }
+            marathon_tensorflow_mem: { get_property: [ SELF, tensorflow_mem ] }
+            marathon_tensorflow_password: { get_property: [ SELF, tensorflow_password ] }
+            marathon_tensorflow_port: { get_property: [ SELF, tensorflow_port ] }
+
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
     attributes:
@@ -1364,28 +1426,37 @@ node_types:
         type: string
         required: no
         default: admin
+      enable_consul_sd:
+        type: boolean
+        required: no
+        default: true
       enable_nfs_share:
+        type: boolean
+        required: no
+        default: false
+      enable_gpu_support:
         type: boolean
         required: no
         default: false
     artifacts:
       - docker_agent_role:
-          file: indigo-dc.docker
+          file: indigo-dc.docker,deep-dev
+          #file: git+https://github.com/indigo-dc/ansible-role-docker.git,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - consul_agent_role:
-          file: indigo-dc.consul
+          file: indigo-dc.consul,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - zookeeper_agent_role:
           file: indigo-dc.zookeeper
           type: tosca.artifacts.AnsibleGalaxy.role
       - mesos_agent_role:
-          file: indigo-dc.mesos
+          file: indigo-dc.mesos,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - marathon_agent_role:
-          file: indigo-dc.marathon
+          file: indigo-dc.marathon,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - chronos_agent_role:
-          file: indigo-dc.chronos
+          file: indigo-dc.chronos,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - nfs_role:
           file: indigo-dc.nfs
@@ -1393,7 +1464,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
             mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
@@ -1406,7 +1477,11 @@ node_types:
             chronos_enable_ssl: { get_property: [ SELF, chronos_enable_ssl ] }
             chronos_user: { get_property: [ SELF, chronos_username ] }
             chronos_pass: { get_property: [ SELF, chronos_password ] }
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            marathon_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }  
             wn_ips: { get_property: [ SELF, wn_ips ] }
 
   tosca.nodes.indigo.MesosMaster:
@@ -1530,15 +1605,23 @@ node_types:
         type: boolean
         required: no
         default: false
+      enable_consul_sd:
+        type: boolean
+        required: no
+        default: true
+      enable_gpu_support:
+        type: boolean
+        required: no
+        default: false
     artifacts:
       - docker_agent_role:
-          file: indigo-dc.docker
+          file: indigo-dc.docker,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - consul_agent_role:
-          file: indigo-dc.consul
+          file: indigo-dc.consul,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - mesos_agent_role:
-          file: indigo-dc.mesos
+          file: indigo-dc.mesos,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - nfs_role:
           file: indigo-dc.nfs
@@ -1546,10 +1629,12 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
+            mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
   tosca.nodes.indigo.MesosSlave:
@@ -1646,22 +1731,27 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      enable_consul_sd: 
+        type: boolean
+        required: false
+        default: true
     artifacts:
       - docker_agent_role:
-          file: indigo-dc.docker
+          file: indigo-dc.docker,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - consul_agent_role:
-          file: indigo-dc.consul
+          file: indigo-dc.consul,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
       - marathon_lb_role:
-          file: indigo-dc.marathon-lb
+          file: indigo-dc.marathon-lb,deep-dev
           type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_lb_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/maricaantonacci-deep-dev/artifacts/mesos/mesos_lb_install.yml
           inputs:
-            consul_server_ips: { get_property: [ SELF, master_ips ] }
+            enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
+            master_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
     requirements:
