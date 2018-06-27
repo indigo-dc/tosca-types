@@ -1354,6 +1354,11 @@ node_types:
             ORIGIN_XRD_PORT: { get_property: [ SELF, ORIGIN_XRD_PORT ] }
             REDIR_HOST: { get_property: [ SELF, REDIR_HOST ] }
             REDIR_CMSD_PORT: { get_property: [ SELF, REDIR_CMSD_PORT ] }
+    requirements:
+      - host:
+          capability:  tosca.capabilities.Container
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
 
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
