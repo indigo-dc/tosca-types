@@ -1281,6 +1281,85 @@ node_types:
 
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
+ 
+ tosca.nodes.indigo.XCache_server:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      BLOCK_SIZE:
+        type: string
+        default: 512k 
+        description: size of the file block used by the cache
+        required: no
+      CACHE_LOG_LEVEL:
+        type: string
+        default: info 
+        description: server log level
+        required: no
+      CACHE_PATH:
+        type: string
+        default: /data/xrd 
+        description: folder for cached files
+        required: no
+      CACHE_RAM_GB: 
+        type: string
+        description: amount of RAM for caching in GB. Suggested ~50% of the total
+        required: yes
+      HI_WM: 
+        type: string
+        default: "0.9" 
+        description: higher watermark of cache used fs space
+        required: no
+      LOW_WM: 
+        type: string
+        defualt: "0.8" 
+        description: lower watermark of used fs space
+        required: no
+      N_PREFETCH: 
+        type: string
+        default: "0"
+        descriptio: number of blocks to be prefetched (0 means no prefetching)
+      ORIGIN_HOST: 
+        type: string
+        description: hostname or ip address of the origin server
+        required: yes
+      ORIGIN_XRD_PORT: 
+        type: string
+        default: "1094"
+        description: xrootd port to contact origin on
+      REDIR_HOST: 
+        type: string
+        description: hostname or ip adrr of the cache redirector
+        required: yes
+      REDIR_CMSD_PORT:
+        type: string
+        default: "1213"
+        description: cmsd port of the cache redirector
+    artifacts:
+      xcache_config_role:
+        file: dciangot.xcache
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/xcache/artifacts/xcache/xcache_server.yml
+          inputs:
+            BLOCK_SIZE:  { get_property: [ SELF, BLOCK_SIZE ] }
+            CACHE_LOG_LEVEL: { get_property: [ SELF, CACHE_LOG_LEVEL ] }
+            CACHE_PATH: { get_property: [ SELF, CACHE_PATH ] }
+            CACHE_RAM_GB: { get_property: [ SELF, CACHE_RAM_GB ] }
+            HI_WM: { get_property: [ SELF, HI_WM ] }
+            LOW_WM: { get_property: [ SELF, LOW_WM ] }
+            N_PREFETCH: { get_property: [ SELF, N_PREFETCH ] }
+            ORIGIN_HOST: { get_property: [ SELF, ORIGIN_HOST ] }
+            ORIGIN_XRD_PORT: { get_property: [ SELF, ORIGIN_XRD_PORT ] }
+            REDIR_HOST: { get_property: [ SELF, REDIR_HOST ] }
+            REDIR_CMSD_PORT: { get_property: [ SELF, REDIR_CMSD_PORT ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.OperatingSystem
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
 
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
