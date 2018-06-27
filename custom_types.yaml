@@ -1311,7 +1311,7 @@ node_types:
         required: no
       LOW_WM: 
         type: string
-        defualt: "0.8" 
+        default: "0.8" 
         description: lower watermark of used fs space
         required: no
       N_PREFETCH: 
