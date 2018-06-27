@@ -1282,7 +1282,7 @@ node_types:
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
  
- tosca.nodes.indigo.XCache_server:
+  tosca.nodes.indigo.XCacheServer:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       BLOCK_SIZE:
