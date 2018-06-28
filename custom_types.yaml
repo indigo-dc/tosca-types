@@ -1300,6 +1300,10 @@ node_types:
         type: string
         required: no
         default: "cloudpg/ttscache"
+      cms_input_protocol:
+        type: string
+        required: no
+        default: 'xrootd'
       mysquid_host:
         type: string
         required: yes
@@ -1369,6 +1373,7 @@ node_types:
             cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
             cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
             cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
+            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
