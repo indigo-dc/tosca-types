@@ -1497,7 +1497,7 @@ node_types:
             cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
             cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
             cms_config_stageoutprotocol: { get_property: [ SELF, cms_stageoutprotocol ] }
-            cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand
+            cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand ] }
             cms_config_phedexnode: { get_property: [ SELF, cms_phedexnode ] }
             cms_config_fallback_phedexnode: { get_property: [ SELF,fallback_phedexnode ] }
             cms_config_fallback_lfn_prefix: { get_property: [ SELF,fallback_lfn_prefix ] }
