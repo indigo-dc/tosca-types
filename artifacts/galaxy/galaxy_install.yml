@@ -3,6 +3,10 @@
   connection: local
   vars:
      vnode_prefix: vnode-
+  pre_tasks:
+    - set_fact:
+        galaxy_flavor: 'galaxy-no-tools'
+      when: galaxy_flavor == 'galaxy-minimal'
   roles:
     - role: indigo-dc.galaxycloud
       GALAXY_VERSION: "{{ galaxy_version }}"
