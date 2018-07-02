@@ -1309,12 +1309,16 @@ node_types:
         default: "spiga/frontiersquidv1"
       cms_wn_image:
         type: string
-        default: "spiga/cmswn"
+        default: "cloudpg/dodas-cms:cern"
         required: no
       cms_proxycache_image:
         type: string
         required: no
-        default: "spiga/ttscache"
+        default: "cloudpg/ttscache"
+      cms_input_protocol:
+        type: string
+        required: no
+        default: 'xrootd'
       mysquid_host:
         type: string
         required: yes
@@ -1336,25 +1340,31 @@ node_types:
       marathon_username:
         type: string
         required: no
-        default: admin
+        default: 'admin'
       marathon_password:
         type: string
-        required: yes
+        required: no
+        default: 'admin'
       cms_proxycache_token_manager:
         type: string
-        required: yes
+        required: no
+        default: 'ZOOKEEPER'
       watts_endpoint:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
       iam_endpoint:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-iam.cloud.cnaf.infn.it/'
       iam_credential_endpoint:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it/api/v2/iam/credential'
       audience:
         type: string
-        required: yes
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
       master_ips:
         required: yes
         type: list
@@ -1378,6 +1388,7 @@ node_types:
             cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
             cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
             cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
+            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             marathon_user: { get_property: [ SELF, marathon_username ] }
             marathon_pass: { get_property: [ SELF, marathon_password ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
@@ -1446,27 +1457,35 @@ node_types:
       cms_stageoutsite:
         type: string
         required: yes
-      cms_stageoutserver:
+      cms_stageoutprotocol:
         type: string
         required: yes
-      cms_stageoutprefix:
+      cms_phedexnode:
         type: string
         required: yes
-      cms_stageoutsite_fallback:
+      cms_stageoutcommand:
         type: string
         required: yes
-      cms_stageoutserver_fallback:
+      cms_fallback_phedexnode:
         type: string
-        required: yes
-      cms_stageoutprefix_fallback:
+        required: no
+        default: 'T2_IT_myt2'
+      cms_fallback_lfn_prefix:
         type: string
-        required: yes
+        required: no
+        default: 'srm://t2-srm-02.lnl.infn.it:8443/srm/managerv2?SFN=xxxxxxx'
+      cms_fallback_command:
+        type: string
+        required: no
+        default: 'gfal2'
       cms_input_path:
         type: string
-        required: yes
+        required: no
+        default: 'my/oneclient/path'
       cms_input_protocol:
         type: string
-        required: yes
+        required: no
+        default: 'xrootd'
       mysquid_host:
         type: string
         required: yes
@@ -1492,11 +1511,12 @@ node_types:
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
             cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
-            cms_config_stageoutserver: { get_property: [ SELF, cms_stageoutserver ] }
-            cms_config_stageoutprefix: { get_property: [ SELF, cms_stageoutprefix ] }
-            cms_config_stageoutsite_fallback: { get_property: [ SELF, cms_stageoutsite_fallback ] }
-            cms_config_stageoutserver_fallback: { get_property: [ SELF, cms_stageoutserver_fallback ] }
-            cms_config_stageoutprefix_fallback: { get_property: [ SELF, cms_stageoutprefix_fallback ] }
+            cms_config_stageoutprotocol: { get_property: [ SELF, cms_stageoutprotocol ] }
+            cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand ] }
+            cms_config_phedexnode: { get_property: [ SELF, cms_phedexnode ] }
+            cms_config_fallback_phedexnode: { get_property: [ SELF,fallback_phedexnode ] }
+            cms_config_fallback_lfn_prefix: { get_property: [ SELF,fallback_lfn_prefix ] }
+            cms_config_fallback_command  : { get_property: [ SELF,fallback_command ] }
             cms_input_path: { get_property: [ SELF, cms_input_path ] }
             cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
