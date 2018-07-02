@@ -5,13 +5,13 @@ capability_types:
   tosca.capabilities.indigo.OperatingSystem:
     derived_from: tosca.capabilities.OperatingSystem
     properties:
-      gpu:
+      gpu_driver:
         type: boolean
         required: no
-      gpu_driver:
-        type: string
+      cuda_support:
+        type: boolean
         required: no
-      gpu_driver_min_version:
+      cuda_min_version:
         type: string
         required: no
       image:
@@ -53,7 +53,10 @@ capability_types:
       num_gpus:
         type: integer
         required: false
-      gpu_type:
+      gpu_vendor:
+        type: string
+        required: false
+      gpu_model:
         type: string
         required: false  
 
