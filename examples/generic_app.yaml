@@ -24,7 +24,7 @@
           - host: ophidia_server 
         artifacts:
           galaxy_role:
-            file: indigo-dc.ophidia-all
+            file: indigo_dc.ophidia-all
             type: tosca.artifacts.AnsibleGalaxy.role
         interfaces:
           Standard:

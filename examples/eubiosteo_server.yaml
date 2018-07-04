@@ -165,7 +165,7 @@ topology_template:
 
       artifacts:
         docker_agent_role:
-          file: indigo-dc.docker
+          file: indigo_dc.docker
           type: tosca.artifacts.AnsibleGalaxy.role
         
       interfaces:
