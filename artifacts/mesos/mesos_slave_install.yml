@@ -5,18 +5,18 @@
     docker_bridge_ip: "172.0.17.1"
   
   roles:
-    - role: indigo-dc.consul
+    - role: indigo_dc.consul
       consul_mode: "agent"
       consul_servers: "{{ mesos_masters_list_ips }}"
       consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
       consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
 
-    - role: indigo-dc.mesos
+    - role: indigo_dc.mesos
       mesos_install_mode: "slave"
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       mesos_masters_list: "{{ mesos_masters_list_ips }}"
 
-    - role: indigo-dc.nfs
+    - role: indigo_dc.nfs
       nfs_mode: 'client'
       nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ front_end_ip }}", opts: "nolock" }]
       when: "enable_nfs_share == true"

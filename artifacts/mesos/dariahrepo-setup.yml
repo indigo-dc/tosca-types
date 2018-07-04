@@ -2,6 +2,6 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: indigo-dc.dariahrepo
+    - role: indigo_dc.dariahrepo
 
 

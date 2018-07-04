@@ -2,5 +2,5 @@
 - hosts: localhost
   connection: local
   roles:
-  - role: indigo-dc.clues
+  - role: indigo_dc.clues
     indigo_orchestrator_url: "{{ orchestrator_url }}"

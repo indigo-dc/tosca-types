@@ -7,4 +7,4 @@
     - set_fact: spark_mesos_hdfs_uri="{{ (spark_hdfs_uri == 'None' ) | ternary('', spark_hdfs_uri)  }}"
     - set_fact: spark_mesos_swift_auth_url="{{ (spark_swift_auth_url == 'None' ) | ternary('', spark_swift_auth_url) }}"
   roles:
-    - role: indigo-dc.spark-mesos
+    - role: indigo_dc.spark-mesos

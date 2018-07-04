@@ -33,11 +33,11 @@
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
 
   roles:
-    - role: indigo-dc.galaxycloud-tooldeps
+    - role: indigo_dc.galaxycloud-tooldeps
       type_of_node: wn
       GALAXY_VERSION: '{{ galaxy_version }}'
 
-    - role: indigo-dc.cvmfs-client
+    - role: indigo_dc.cvmfs-client
       server_url: '{{ refdata_cvmfs_server_url }}'
       repository_name: '{{ refdata_cvmfs_repository_name }}'
       cvmfs_public_key: '{{ refdata_cvmfs_key_file }}'
@@ -46,13 +46,13 @@
       cvmfs_mountpoint: '{{ refdata_dir }}'
       when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs')
 
-    - role: indigo-dc.cvmfs-client
+    - role: indigo_dc.cvmfs-client
       repository_name: '{{ refdata_cvmfs_repository_name }}'
       cvmfs_public_key: '{{ refdata_cvmfs_key_file }}'
       cvmfs_mountpoint: '{{ refdata_dir }}'
       cvmfs_preconfigured: true
       when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs_preconfigured')
 
-    - role: indigo-dc.nfs
+    - role: indigo_dc.nfs
       nfs_mode: 'client'
       nfs_client_imports: [{ local: "{{export_dir}}", remote: "{{export_dir}}", server_host: "{{ galaxy_front_end_ip }}" }]

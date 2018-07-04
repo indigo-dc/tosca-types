@@ -7,7 +7,7 @@
   - set_fact: hostname_prefix="{{ IM_INFRASTRUCTURE_ID }}."
     when: IM_INFRASTRUCTURE_ID is defined
   roles:
-  - role: indigo-dc.zabbix-agent
+  - role: indigo_dc.zabbix-agent
     zabbix_agent_server: "{{ zabbix_server }}"
     zabbix_agent_server_port: "{{ zabbix_server_port }}"
     zabbix_agent_metadata: "{{ zabbix_server_metadata }}"

@@ -6,5 +6,5 @@
         galaxy_flavor: 'galaxy-no-tools'
       when: galaxy_flavor == 'galaxy-minimal'
   roles:
-    - { role: indigo-dc.galaxycloud-tools, GALAXY_VERSION: '{{ galaxy_version }}', when: galaxy_flavor != 'galaxy-no-tools' }
-    - { role: indigo-dc.galaxycloud-tooldeps, galaxy_instance_url: 'http://{{ instance_public_ip }}/galaxy/', GALAXY_VERSION: '{{ galaxy_version }}', when: galaxy_flavor != 'galaxy-no-tools' }
+    - { role: indigo_dc.galaxycloud-tools, GALAXY_VERSION: '{{ galaxy_version }}', when: galaxy_flavor != 'galaxy-no-tools' }
+    - { role: indigo_dc.galaxycloud-tooldeps, galaxy_instance_url: 'http://{{ instance_public_ip }}/galaxy/', GALAXY_VERSION: '{{ galaxy_version }}', when: galaxy_flavor != 'galaxy-no-tools' }

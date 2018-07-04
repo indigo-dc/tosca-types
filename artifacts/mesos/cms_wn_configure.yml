@@ -2,5 +2,5 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: indigo-dc.cms_config
+    - role: indigo_dc.cms_config
       cms_config_node: "wn"

@@ -2,6 +2,6 @@
 - hosts: localhost
   connection: local
   roles:
-  - role: indigo-dc.hadoop
+  - role: indigo_dc.hadoop
     hadoop_master: '{{ hadoop_master_ip }}'
     hadoop_type_of_node: 'slave'

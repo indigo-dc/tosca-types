@@ -300,7 +300,7 @@ node_types:
         default: Linux      668c875e-9a39-4dc0-a710-17c41376c1e0
     artifacts:
       zabbix_agent_role:
-        file: indigo-dc.zabbix-agent
+        file: indigo_dc.zabbix-agent
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -369,10 +369,10 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud
+        file: indigo_dc.galaxycloud
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -416,19 +416,19 @@ node_types:
         required: false
     artifacts:
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       indigorepo_role:
-        file: indigo-dc.galaxycloud-indigorepo
+        file: indigo_dc.galaxycloud-indigorepo
         type: tosca.artifacts.AnsibleGalaxy.role
       oneclient_role:
-        file: indigo-dc.oneclient
+        file: indigo_dc.oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os
+        file: indigo_dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud
+        file: indigo_dc.galaxycloud
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -455,19 +455,19 @@ node_types:
     derived_from: tosca.nodes.indigo.GalaxyPortalAndStorage
     artifacts:
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       indigorepo_role:
-        file: indigo-dc.galaxycloud-indigorepo
+        file: indigo_dc.galaxycloud-indigorepo
         type: tosca.artifacts.AnsibleGalaxy.role
       oneclient_role:
-        file: indigo-dc.oneclient
+        file: indigo_dc.oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os
+        file: indigo_dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role-fastconfig:
-        file: indigo-dc.galaxycloud-fastconfig
+        file: indigo_dc.galaxycloud-fastconfig
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -638,10 +638,10 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: indigo-dc.galaxycloud-tools
+        file: indigo_dc.galaxycloud-tools
         type: tosca.artifacts.AnsibleGalaxy.role
       tooldeps_role:
-        file: indigo-dc.galaxycloud-tooldeps
+        file: indigo_dc.galaxycloud-tooldeps
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -725,13 +725,13 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       oneclient_role:
-        file: indigo-dc.oneclient
+        file: indigo_dc.oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
       cvmfs_role:
-        file: indigo-dc.cvmfs-client
+        file: indigo_dc.cvmfs-client
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud-refdata
+        file: indigo_dc.galaxycloud-refdata
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -814,7 +814,7 @@ node_types:
         required: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.clues
+        file: indigo_dc.clues
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -883,13 +883,13 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm
+        file: indigo_dc.slurm
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.openvpn
+        file: indigo_dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -941,13 +941,13 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm
+        file: indigo_dc.slurm
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.openvpn
+        file: indigo_dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -1145,7 +1145,7 @@ node_types:
         default: 'indigodatacloudapps/dariah-repository:web'
     artifacts:
       dariahrepo_role:
-        file: indigo-dc.dariahrepo
+        file: indigo_dc.dariahrepo
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1255,25 +1255,25 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker
+        file: indigo_dc.docker
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul
+        file: indigo_dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
-        file: indigo-dc.zookeeper
+        file: indigo_dc.zookeeper
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos
+        file: indigo_dc.mesos
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
-        file: indigo-dc.marathon
+        file: indigo_dc.marathon
         type: tosca.artifacts.AnsibleGalaxy.role
       chronos_agent_role:
-        file: indigo-dc.chronos
+        file: indigo_dc.chronos
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1372,7 +1372,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo_dc.cms_config
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1424,16 +1424,16 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker
+        file: indigo_dc.docker
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul
+        file: indigo_dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos
+        file: indigo_dc.mesos
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1500,7 +1500,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo_dc.cms_config
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1546,13 +1546,13 @@ node_types:
         required: yes
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker
+        file: indigo_dc.docker
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul
+        file: indigo_dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
-        file: indigo-dc.marathon-lb
+        file: indigo_dc.marathon-lb
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1636,7 +1636,7 @@ node_types:
         default: '-1'
     artifacts:
       spark_mesos_role:
-        file: indigo-dc.spark-mesos
+        file: indigo_dc.spark-mesos
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1694,7 +1694,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       hadoop_role:
-        file: indigo-dc.hadoop
+        file: indigo_dc.hadoop
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1711,7 +1711,7 @@ node_types:
         type: string
     artifacts:
       hadoop_role:
-        file: indigo-dc.hadoop
+        file: indigo_dc.hadoop
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1731,7 +1731,7 @@ node_types:
         - valid_values: [ disvis, powerfit ]
     artifacts:
       galaxy_role:
-        file: indigo-dc.disvis-powerfit
+        file: indigo_dc.disvis-powerfit
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1764,7 +1764,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       galaxy_role:
-        file: indigo-dc.eubiosteo
+        file: indigo_dc.eubiosteo
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1775,7 +1775,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       galaxy_role:
-        file: indigo-dc.ambertools
+        file: indigo_dc.ambertools
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1786,7 +1786,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       galaxy_role:
-        file: indigo-dc.kepler
+        file: indigo_dc.kepler
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1805,13 +1805,13 @@ node_types:
         default: []
     artifacts:
       ophidia_role:
-        file: indigo-dc.ophidia-cluster
+        file: indigo_dc.ophidia-cluster
         type: tosca.artifacts.AnsibleGalaxy.role
       slurm_role:
-        file: indigo-dc.slurm
+        file: indigo_dc.slurm
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1829,13 +1829,13 @@ node_types:
         required: true
     artifacts:
       ophidia_role:
-        file: indigo-dc.ophidia-cluster
+        file: indigo_dc.ophidia-cluster
         type: tosca.artifacts.AnsibleGalaxy.role
       slurm_role:
-        file: indigo-dc.slurm
+        file: indigo_dc.slurm
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1901,10 +1901,10 @@ node_types:
         file: grycap.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.openvpn
+        file: indigo_dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1930,10 +1930,10 @@ node_types:
         file: grycap.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo_dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.openvpn
+        file: indigo_dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -1965,7 +1965,7 @@ node_types:
         - valid_values: [ local, dummy ]
     artifacts:
       kube_role:
-        file: indigo-dc.jupyterhub
+        file: indigo_dc.jupyterhub
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

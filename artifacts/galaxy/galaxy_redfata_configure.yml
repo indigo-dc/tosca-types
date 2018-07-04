@@ -21,4 +21,4 @@
         dest: '/tmp'
       when: refdata_provider_type == 'cvmfs_preconfigured'
   roles:
-    - role: indigo-dc.galaxycloud-refdata
+    - role: indigo_dc.galaxycloud-refdata

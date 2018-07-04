@@ -2,5 +2,5 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: indigo-dc.disvis-powerfit
+    - role: indigo_dc.disvis-powerfit
       haddock_app: "{{ haddock_app_name }}"

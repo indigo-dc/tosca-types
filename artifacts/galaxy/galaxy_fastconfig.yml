@@ -8,16 +8,16 @@
         galaxy_flavor: 'galaxy-no-tools'
       when: galaxy_flavor == 'galaxy-minimal'
   roles:
-    - role: indigo-dc.galaxycloud-os
+    - role: indigo_dc.galaxycloud-os
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
 
-    - role: indigo-dc.galaxycloud-fastconfig
+    - role: indigo_dc.galaxycloud-fastconfig
       GALAXY_VERSION: "{{ galaxy_version }}"
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
       GALAXY_ADMIN_API_KEY: "{{ galaxy_admin_api_key }}"
-      enable_storage_advanced_options: true # true only with indigo-dc.galaxycloud-os
+      enable_storage_advanced_options: true # true only with indigo_dc.galaxycloud-os
 
-    - role: indigo-dc.nfs
+    - role: indigo_dc.nfs
       nfs_mode: 'server'
       nfs_exports: [{path: "{{export_dir}}", export: "{{ vnode_prefix }}*.localdomain(rw,async,no_root_squash,no_subtree_check,insecure)"}]
       when: galaxy_lrms != "local"

@@ -4,21 +4,21 @@
   vars:
     vnode_prefix: vnode-
   roles:
-    - role: indigo-dc.slurm
+    - role: indigo_dc.slurm
       slurm_type_of_node: 'wn'
       slurm_server_ip: '{{ ophidia_server_ip }}'
       slurm_wn_ips: "{{ groups['ophidiaio']|map('extract', hostvars,'ansible_default_ipv4')|list }}"
 
-    - role: indigo-dc.ophidia-cluster
+    - role: indigo_dc.ophidia-cluster
       node_type: 'io'
       deploy_type: 'install'
-    - role: indigo-dc.ophidia-cluster
+    - role: indigo_dc.ophidia-cluster
       node_type: 'io'
       deploy_type: 'configure'
       mysql_subnet: "{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask }}"
       slurm_nodes_name: "{{ vnode_prefix }}"
       server_ip: '{{ ophidia_server_ip }}'
 
-    - role: indigo-dc.nfs
+    - role: indigo_dc.nfs
       nfs_mode: 'client'
       nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ ophidia_server_ip }}" }]

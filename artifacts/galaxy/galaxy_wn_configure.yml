@@ -18,6 +18,6 @@
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
 
   roles:
-    - role: indigo-dc.nfs
+    - role: indigo_dc.nfs
       nfs_mode: 'client'
       nfs_client_imports: [{ local: "{{export_dir}}", remote: "{{export_dir}}", server_host: "{{ galaxy_front_end_ip }}" }]
