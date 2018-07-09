@@ -601,6 +601,7 @@ node_types:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_version: { get_property: [ SELF, version ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
+            refdata_provider_type: { get_property: [ SELF, refdata_provider_type ] }
             refdata_cvmfs_server_url: { get_property: [ SELF, refdata_cvmfs_server_url ] }
             refdata_cvmfs_repository_name: { get_property: [ SELF, refdata_cvmfs_repository_name ] }
             refdata_cvmfs_key_file: { get_property: [ SELF, refdata_cvmfs_key_file ] }
