@@ -1466,7 +1466,7 @@ node_types:
         required: yes
     artifacts:
       oneclient_role:
-        file: indigo-dc.oneclient,dciangotdev
+        file: indigo-dc.oneclient
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1541,9 +1541,9 @@ node_types:
             cms_config_stageoutprotocol: { get_property: [ SELF, cms_stageoutprotocol ] }
             cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand ] }
             cms_config_phedexnode: { get_property: [ SELF, cms_phedexnode ] }
-            cms_config_fallback_phedexnode: { get_property: [ SELF,fallback_phedexnode ] }
-            cms_config_fallback_lfn_prefix: { get_property: [ SELF,fallback_lfn_prefix ] }
-            cms_config_fallback_command  : { get_property: [ SELF,fallback_command ] }
+            cms_config_fallback_phedexnode: { get_property: [ SELF,cms_fallback_phedexnode ] }
+            cms_config_fallback_lfn_prefix: { get_property: [ SELF,cms_fallback_lfn_prefix ] }
+            cms_config_fallback_command: { get_property: [ SELF,cms_fallback_command ] }
             cms_input_path: { get_property: [ SELF, cms_input_path ] }
             cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
