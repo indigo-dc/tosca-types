@@ -1366,6 +1366,14 @@ node_types:
         type: string
         required: no
         default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      oneclient_token: 
+        type: string
+        required: no
+        default: 'dummy'
+      oneprovider_name: 
+        type: string
+        required: no
+        default: 'dummy'
       master_ips:
         required: yes
         type: list
@@ -1398,6 +1406,8 @@ node_types:
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
+            oneclient_token: { get_property: [ SELF, oneclient_token ] }
+            oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
@@ -1448,6 +1458,22 @@ node_types:
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
 
+  tosca.nodes.indigo.CmsOneclient:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      oneclient_pkg:
+        type: string
+        required: yes
+    artifacts:
+      oneclient_role:
+        file: indigo-dc.oneclient
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/oneclient/artifacts/onedata/cms_oneclient.yml
+          inputs:
+            oneclient_pkg: { get_property: [ SELF, oneclient_pkg ] }
 
   tosca.nodes.indigo.CmsWnConfig:
     derived_from: tosca.nodes.SoftwareComponent
@@ -1515,9 +1541,9 @@ node_types:
             cms_config_stageoutprotocol: { get_property: [ SELF, cms_stageoutprotocol ] }
             cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand ] }
             cms_config_phedexnode: { get_property: [ SELF, cms_phedexnode ] }
-            cms_config_fallback_phedexnode: { get_property: [ SELF,fallback_phedexnode ] }
-            cms_config_fallback_lfn_prefix: { get_property: [ SELF,fallback_lfn_prefix ] }
-            cms_config_fallback_command  : { get_property: [ SELF,fallback_command ] }
+            cms_config_fallback_phedexnode: { get_property: [ SELF,cms_fallback_phedexnode ] }
+            cms_config_fallback_lfn_prefix: { get_property: [ SELF,cms_fallback_lfn_prefix ] }
+            cms_config_fallback_command: { get_property: [ SELF,cms_fallback_command ] }
             cms_input_path: { get_property: [ SELF, cms_input_path ] }
             cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
