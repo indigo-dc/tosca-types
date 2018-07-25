@@ -1306,23 +1306,23 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-docker.git|indigo-dc.docker
         #file: git+https://github.com/indigo-dc/ansible-role-docker.git,deep-dev
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-consul.git|indigo-dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
         file: indigo-dc.zookeeper
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,deep-dev|indigo-dc.mesos
+        file: git+https://github.com/indigo-dc/ansible-role-mesos.git|indigo-dc.mesos
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
-        file: indigo-dc.marathon,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-marathon.git|indigo-dc.marathon
         type: tosca.artifacts.AnsibleGalaxy.role
       chronos_agent_role:
-        file: indigo-dc.chronos,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-chronos.git|indigo-dc.chronos
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1485,13 +1485,13 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-docker.git|indigo-dc.docker
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-consul.git|indigo-dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,deep-dev|indigo-dc.mesos
+        file: git+https://github.com/indigo-dc/ansible-role-mesos.git|indigo-dc.mesos
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1604,13 +1604,13 @@ node_types:
         default: true
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-docker.git|indigo-dc.docker
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-consul.git|indigo-dc.consul
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
-        file: git+https://github.com/indigo-dc/ansible-role-mesos.git,deep-dev
+        file: git+https://github.com/indigo-dc/ansible-role-marathon-lb|indigo-dc.marathon-lb
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
