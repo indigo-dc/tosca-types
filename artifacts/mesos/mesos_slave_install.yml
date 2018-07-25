@@ -2,7 +2,7 @@
 - hosts: localhost
   connection: local
   vars:
-    docker_bridge_ip: "172.0.17.1"
+    docker_bridge_ip_cidr: "172.0.17.1/24"
   
   roles:
     - role: indigo-dc.docker

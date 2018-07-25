@@ -2,7 +2,7 @@
 - hosts: localhost
   connection: local
   vars:
-    docker_bridge_ip: "172.0.17.1"
+    docker_bridge_ip_cidr: "172.0.17.1/24"
   pre_tasks:
     - set_fact: 
         marathon_lb_marathon_url: "https://{{ master_ips[0]  }}:8443"
