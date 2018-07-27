@@ -17,3 +17,4 @@
   - role: 'grycap.kubernetes'
     kube_type_of_node: 'wn'
     kube_server: '{{kube_front_end_ip}}'
+    kube_api_server: '{{ kube_front_end_ip }}'

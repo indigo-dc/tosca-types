@@ -2,10 +2,20 @@
 - hosts: localhost
   connection: local
   pre_tasks:
+    - set_fact:
+        galaxy_flavor: 'galaxy-no-tools'
+      when: galaxy_flavor == 'galaxy-minimal'
     - name: Get the cvmfs public key on node
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
+        dest: '/tmpi'
+      when: (refdata_provider_type == 'cvmfs') or (refdata_provider_type == 'cvmfs_preconfigured')
+    - name: Get refdata-list
+      get_url:
+        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_config_files/{{ refdata_cvmfs_repository_name }}.conf'
         dest: '/tmp'
+      when: refdata_provider_type == 'cvmfs_preconfigured'
+
   tasks:
     - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
     - include_vars: /tmp/galaxywn.yml
@@ -26,6 +36,7 @@
     - role: indigo-dc.galaxycloud-tooldeps
       type_of_node: wn
       GALAXY_VERSION: '{{ galaxy_version }}'
+
     - role: indigo-dc.cvmfs-client
       server_url: '{{ refdata_cvmfs_server_url }}'
       repository_name: '{{ refdata_cvmfs_repository_name }}'
@@ -33,7 +44,15 @@
       proxy_url: '{{ refdata_cvmfs_proxy_url }}'
       proxy_port: '{{ refdata_cvmfs_proxy_port }}'
       cvmfs_mountpoint: '{{ refdata_dir }}'
-      when: get_refdata|bool
+      when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs')
+
+    - role: indigo-dc.cvmfs-client
+      repository_name: '{{ refdata_cvmfs_repository_name }}'
+      cvmfs_public_key: '{{ refdata_cvmfs_key_file }}'
+      cvmfs_mountpoint: '{{ refdata_dir }}'
+      cvmfs_preconfigured: true
+      when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs_preconfigured')
+
     - role: indigo-dc.nfs
       nfs_mode: 'client'
       nfs_client_imports: [{ local: "{{export_dir}}", remote: "{{export_dir}}", server_host: "{{ galaxy_front_end_ip }}" }]

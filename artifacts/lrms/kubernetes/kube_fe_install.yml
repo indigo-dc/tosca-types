@@ -21,6 +21,7 @@
     nfs_exports: [{path: "/pv", export: "{{ vnode_prefix }}*.localdomain(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
   - role: grycap.kubernetes
     kube_server: '{{ kube_front_end_ip }}'
-    kube_apiserver_options: [{option: "--insecure-port", value: "8080"}, {option: "--token-auth-file", value: "/etc/kubernetes/pki/auth"}]
+    kube_api_server: '{{ kube_front_end_ip }}'
+    kube_apiserver_options: [{option: "--service-node-port-range", value: "8000-35000"}, {option: "--insecure-port", value: "8080"}, {option: "--token-auth-file", value: "/etc/kubernetes/pki/auth"}]
     kube_deploy_dashboard: true
     kube_install_helm: true

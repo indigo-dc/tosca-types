@@ -1,6 +1,10 @@
 ---
 - hosts: localhost
   connection: local
+  pre_tasks:
+    - set_fact:
+        galaxy_flavor: 'galaxy-no-tools'
+      when: galaxy_flavor == 'galaxy-minimal'
   tasks:
     - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
     - include_vars: /tmp/galaxywn.yml

@@ -69,9 +69,12 @@ topology_template:
             dns_name: kubeserver
             network_name: PUBLIC
             ports:
-              https_port:
+              jupyterhub_port:
                 protocol: tcp
-                source: 6443
+                source: 8000
+              dashboard_port:
+                protocol: tcp
+                source: 30443
         host:
           properties:
             num_cpus: { get_input: fe_cpus }
@@ -110,7 +113,5 @@ topology_template:
   outputs:
     jupyterhub_url:
       value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':8000' ] }
-    cluster_ip:
-      value: { get_attribute: [ lrms_server, public_address, 0 ] }
-    cluster_creds:
-      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
+    dashboard_url:
+      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
