@@ -2,13 +2,18 @@
 - hosts: localhost
   connection: local
   vars:
-    docker_bridge_ip: "172.0.17.1"
+    docker_bridge_ip_cidr: "172.0.17.1/24"
     vnode_prefix: vnode-
 
 #  pre_tasks:
 #    - name: "Add nodes mapping in hosts file"
 #      lineinfile: dest=/etc/hosts regexp='.*{{ item.1 }}.*$' line="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain" state=present
 #      with_indexed_items: '{{ wn_ips }}'
+
+  pre_tasks:
+    - set_fact:
+        service_discovery: "none"
+      when: enable_consul_sd == false
 
   roles:
     - role: indigo-dc.nfs
@@ -21,6 +26,7 @@
       consul_servers: "{{ mesos_masters_list_ips }}"
       consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
       consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      when: (enable_consul_sd == true)
 
     - role: indigo-dc.zookeeper
       zookeeper_host_list: "{{ mesos_masters_list_ips }}"

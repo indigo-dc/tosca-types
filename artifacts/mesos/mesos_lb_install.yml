@@ -2,13 +2,24 @@
 - hosts: localhost
   connection: local
   vars:
-    docker_bridge_ip: "172.0.17.1"
+    docker_bridge_ip_cidr: "172.0.17.1/24"
+  pre_tasks:
+    - set_fact: 
+        marathon_lb_marathon_url: "https://{{ master_ips[0]  }}:8443"
+        marathon_lb_service_discovery: "none" 
+      when: (enable_consul_sd == false)
   roles:
+    - role: indigo-dc.docker
+
     - role: indigo-dc.consul
       consul_mode: "agent"
-      consul_servers: "{{ consul_server_ips }}"
+      consul_servers: "{{ master_ips }}"
       consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
       consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      when: (enable_consul_sd == true)
 
     - role: indigo-dc.marathon-lb
       marathon_lb_auth_creds: "{{marathon_username}}:{{marathon_password}}"
+      marathon_lb_marathon_servers: "{{ master_ips }}"
+      marathon_lb_chronos_servers: "{{ master_ips }}"
+      marathon_lb_mesos_servers: "{{ master_ips }}"
