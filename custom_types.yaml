@@ -653,7 +653,6 @@ node_types:
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
             instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
             galaxy_version: { get_property: [ SELF, version ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
 
   tosca.nodes.indigo.GalaxyReferenceData:
