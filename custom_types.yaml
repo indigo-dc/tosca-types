@@ -1259,7 +1259,7 @@ node_types:
         file: indigo-dc.docker,2.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.docker,v2.0.2
+        file: indigo-dc.consul,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
         file: indigo-dc.zookeeper
@@ -1438,7 +1438,7 @@ node_types:
         file: indigo-dc.docker,2.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.docker,v2.0.2
+        file: indigo-dc.consul,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
         file: indigo-dc.mesos,2.0.3
@@ -1576,7 +1576,7 @@ node_types:
         file: indigo-dc.docker,2.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.docker,v2.0.2
+        file: indigo-dc.consul,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
         file: indigo-dc.marathon-lb,2.1.1
