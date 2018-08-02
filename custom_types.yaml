@@ -1265,7 +1265,7 @@ node_types:
         file: indigo-dc.zookeeper
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,1.0.0
+        file: indigo-dc.mesos,2.0.3
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
         file: indigo-dc.marathon,2.0.2
@@ -1441,7 +1441,7 @@ node_types:
         file: indigo-dc.docker,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,1.0.0
+        file: indigo-dc.mesos,2.0.3
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
