@@ -1256,7 +1256,7 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,2.0.0
+        file: indigo-dc.docker,1.0.1
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
         file: indigo-dc.consul,v2.0.2
@@ -1435,7 +1435,7 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,2.0.0
+        file: indigo-dc.docker,1.0.1
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
         file: indigo-dc.consul,v2.0.2
@@ -1573,7 +1573,7 @@ node_types:
         required: yes
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,2.0.0
+        file: indigo-dc.docker,1.0.1
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
         file: indigo-dc.consul,v2.0.2
