@@ -1256,10 +1256,10 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,1.0.1
+        file: indigo-dc.docker,2.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,2.0.2
+        file: indigo-dc.docker,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
         file: indigo-dc.zookeeper
@@ -1268,7 +1268,7 @@ node_types:
         file: indigo-dc.mesos,1.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
-        file: indigo-dc.marathon,1.0.0
+        file: indigo-dc.marathon,2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       chronos_agent_role:
         file: indigo-dc.chronos
@@ -1435,10 +1435,10 @@ node_types:
         default: false
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,1.0.1
+        file: indigo-dc.docker,2.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,2.0.2
+        file: indigo-dc.docker,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
         file: indigo-dc.mesos,1.0.0
@@ -1573,13 +1573,13 @@ node_types:
         required: yes
     artifacts:
       docker_agent_role:
-        file: indigo-dc.docker,1.0.1
+        file: indigo-dc.docker,2.0.0
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,2.0.2
+        file: indigo-dc.docker,v2.0.2
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
-        file: indigo-dc.marathon-lb,2.0.0-beta1
+        file: indigo-dc.marathon-lb,2.1.1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
