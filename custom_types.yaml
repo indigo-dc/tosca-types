@@ -1811,7 +1811,7 @@ node_types:
         file: indigo-dc.consul,v0.0.3-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
-        file: indigo-dc.marathon-lb,v0.0.3-dodas
+        file: indigo-dc.marathon-lb,v0.0.4-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
