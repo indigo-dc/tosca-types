@@ -1895,7 +1895,7 @@ node_types:
         default: '-1'
     artifacts:
       spark_mesos_role:
-        file: indigo-dc.spark-mesos
+        file: indigo-dc.spark-mesos,update_spark
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
