@@ -653,7 +653,6 @@ node_types:
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
             instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
             galaxy_version: { get_property: [ SELF, version ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
 
   tosca.nodes.indigo.GalaxyReferenceData:
@@ -1259,19 +1258,19 @@ node_types:
         file: indigo-dc.docker,v0.0.2-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,v0.0.3-dodas
+        file: indigo-dc.consul,v0.0.10-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       zookeeper_agent_role:
-        file: indigo-dc.zookeeper,v0.0.3-dodas
+        file: indigo-dc.zookeeper,v0.0.4-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,v0.0.2-dodas
+        file: indigo-dc.mesos,v0.0.6-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
-        file: indigo-dc.marathon,v0.0.2-dodas
+        file: indigo-dc.marathon,v0.0.3-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       chronos_agent_role:
-        file: indigo-dc.chronos,v0.0.3-dodas
+        file: indigo-dc.chronos,v0.0.4-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1671,10 +1670,10 @@ node_types:
         file: indigo-dc.docker,v0.0.2-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,v0.0.3-dodas
+        file: indigo-dc.consul,v0.0.10-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,v0.0.2-dodas
+        file: indigo-dc.mesos,v0.0.6-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1809,10 +1808,10 @@ node_types:
         file: indigo-dc.docker,v0.0.2-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       consul_agent_role:
-        file: indigo-dc.consul,v0.0.3-dodas
+        file: indigo-dc.consul,v0.0.10-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_lb_role:
-        file: indigo-dc.marathon-lb,v0.0.2-dodas
+        file: indigo-dc.marathon-lb,v0.0.7-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
