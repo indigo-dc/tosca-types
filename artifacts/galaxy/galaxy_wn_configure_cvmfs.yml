@@ -8,7 +8,7 @@
     - name: Get the cvmfs public key on node
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
-        dest: '/tmpi'
+        dest: '/tmp'
       when: (refdata_provider_type == 'cvmfs') or (refdata_provider_type == 'cvmfs_preconfigured')
     - name: Get refdata-list
       get_url:
