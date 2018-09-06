@@ -940,6 +940,12 @@ node_types:
 
   tosca.nodes.indigo.LRMS.FrontEnd.Slurm:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    properties:
+      wn_num:
+        type: Integer
+        description: Number of WNs
+        required: false
+        default: -1
     artifacts:
       slurm_role:
         file: indigo-dc.slurm
@@ -958,6 +964,7 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
+            wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
             front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
