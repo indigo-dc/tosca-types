@@ -942,7 +942,7 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
     properties:
       wn_num:
-        type: Integer
+        type: integer
         description: Number of WNs
         required: false
         default: -1
