@@ -168,6 +168,10 @@ artifact_types:
     derived_from: tosca.artifacts.Root
     description: Ansible Galaxy role to be deployed in the target node
 
+  tosca.artifacts.Deployment.Image.Container.Docker:
+    derived_from: tosca.artifacts.Deployment.Image
+    description: Docker Container Image
+
 relationship_types:
 
   tosca.relationships.indigo.Manages:
