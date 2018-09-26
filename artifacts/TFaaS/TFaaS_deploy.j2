@@ -46,8 +46,6 @@ spec:
         volumeMounts:
         - mountPath: /data/TFaaS/src/Go/models
           name: nfs
-        securityContext:
-          privileged: true
       volumes:
       - name: nfs
         hostPath: 
