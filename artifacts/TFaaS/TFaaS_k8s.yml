@@ -1,10 +1,15 @@
 ---
 - hosts: localhost
-  connection: local
+  vars:
+    master_ip: 160.44.198.123
   tasks:
-  - name: "Compile config template openFaaS"
+  - name: "get TFaaS template"
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/TFaaS/artifacts/TFaaS/TFaaS_deploy.j2
+      dest: /etc/TFaaS_deploy.j2
+  - name: "Compile config template TFaaS"
     template:
-      src: https://raw.githubusercontent.com/indigo-dc/tosca-types/TFaaS/artifacts/TFaaS/TFaaS_deploy.j2
+      src: /etc/TFaaS_deploy.j2
       dest: /etc/TFaaS_deploy.yml
-  - name: "Deploy openFaaS"
-    command: kubectl create TFaaS_deploy.yml
+  - name: "Deploy TFaaS"
+    command: kubectl create -f /etc/TFaaS_deploy.yml
