@@ -1385,6 +1385,18 @@ node_types:
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
 
+  tosca.nodes.indigo.TFaaS:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_ip:
+        required: yes
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/TFaaS/artifacts/TFaaS/TFaaS_k8s.yml
+          inputs:
+            master_ip: { get_property: [ SELF, master_ip ] }
+
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:

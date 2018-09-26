@@ -1,0 +1,120 @@
+Launch task: mesos_slave_conf_mesos-slave-server
+Call Ansible
+
+PLAY [allnowindows] ************************************************************
+
+PLAY [172.30.89.55_2] **********************************************************
+
+TASK [indigo-dc.docker : Fail if the OS is not supported] **********************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : Include distribution-specific variables] **************
+ok: [172.30.89.55_2] => (item=/etc/ansible/roles/indigo-dc.docker/vars/ubuntu.yml)
+
+TASK [indigo-dc.docker : [Ubuntu] Fail if release is not supported (ansible version < 2.5)] ***
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Ubuntu] Fail if release is not supported (ansible version >= 2.5)] ***
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Ubuntu] Add docker apt repo] *************************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Ubuntu] Import the Docker repository key] ************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Ubuntu] Force an apt cache refresh] ******************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Install base dependencies] *******************
+ok: [172.30.89.55_2] => (item=[u'python-dev', u'python-setuptools'])
+
+TASK [indigo-dc.docker : [Common] Install pip] *********************************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Set docker-py package to be installed] *******
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Set docker-py package to be installed] *******
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Install docker-py dependency] ****************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Install Docker CE package] *******************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Ensure docker-ce is enabled at boot time] ****
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : Make sure /etc/docker exists] *************************
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : Set docker configuration] *****************************
+skipping: [172.30.89.55_2] => (item={'key': u'dns-search', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'mtu', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'storage-driver', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'registry-mirror', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'dns', 'value': u''}) 
+ok: [172.30.89.55_2] => (item={'key': u'bip', 'value': u'172.0.17.1/24'})
+
+TASK [indigo-dc.docker : Create the conf file /etc/docker/daemon.json] *********
+ok: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [EL] Fail if distro is not supported nor tested (ansible version < 2.5)] ***
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [EL] Fail if distro is not supported nor tested (ansible version >= 2.5)] ***
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [EL] Install required packages] ***********************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [EL] Add Docker yum repository] ***********************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Install base dependencies] *******************
+skipping: [172.30.89.55_2] => (item=[]) 
+
+TASK [indigo-dc.docker : [Common] Install pip] *********************************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Set docker-py package to be installed] *******
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Set docker-py package to be installed] *******
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Install docker-py dependency] ****************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Install Docker CE package] *******************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : [Common] Ensure docker-ce is enabled at boot time] ****
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : Make sure /etc/docker exists] *************************
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : Set docker configuration] *****************************
+skipping: [172.30.89.55_2] => (item={'key': u'dns-search', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'mtu', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'storage-driver', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'registry-mirror', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'dns', 'value': u''}) 
+skipping: [172.30.89.55_2] => (item={'key': u'bip', 'value': u'172.0.17.1/24'}) 
+
+TASK [indigo-dc.docker : Create the conf file /etc/docker/daemon.json] *********
+skipping: [172.30.89.55_2]
+
+TASK [indigo-dc.docker : Fail if the OS is not supported] **********************
+fatal: [172.30.89.55_2]: FAILED! => {"failed": true, "msg": "The conditional check '(enable_consul_sd == true )' failed. The error was: error while evaluating conditional ((enable_consul_sd == true )): 'enable_consul_sd' is undefined\n\nThe error appears to have been in '/etc/ansible/roles/indigo-dc.docker/tasks/main.yml': line 2, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n---\n- name: Fail if the OS is not supported\n  ^ here\n"}
+
+PLAY RECAP *********************************************************************
+172.30.89.55_2             : ok=13   changed=0    unreachable=0    failed=1   
+172.30.89.55_2             : ok=13   changed=0    unreachable=0    failed=1   
+
+ERROR executing playbook (1/1)
+ERROR executing task mesos_slave_conf_mesos-slave-server: (3/3)
+

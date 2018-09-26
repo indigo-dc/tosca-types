@@ -1,0 +1,51 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: tfaas-service
+spec:
+  selector:
+    app: tfaas
+  ports:
+  - protocol: TCP
+    name: tfaas
+    port: 8083
+    targetPort: 8083
+    nodePort: 48083
+  type: LoadBalancer
+  externalIPs:
+  - {{ master_ip }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tfaas-deployment
+  labels:
+    app: tfaas
+spec:
+  template:
+    metadata:
+      labels:
+        app: tfaas
+    spec:
+      containers:
+      - name: tfaas
+        imagePullPolicy: Always
+        image: veknet/tfaas
+        livenessProbe:
+          exec:
+            command:
+            - curl
+            - -f
+            - http://localhost:8083
+          initialDelaySeconds: 300
+          periodSeconds: 60
+        ports:
+        - containerPort: 8083
+        - containerPort: 8083
+
+  selector:
+    matchLabels:
+      app: tfaas
+
+  replicas: 2
+

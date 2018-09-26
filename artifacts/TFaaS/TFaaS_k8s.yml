@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: "Compile config template openFaaS"
+    template:
+      src: https://raw.githubusercontent.com/indigo-dc/tosca-types/TFaaS/artifacts/TFaaS/TFaaS_deploy.j2
+      dest: /etc/TFaaS_deploy.yml
+  - name: "Deploy openFaaS"
+    command: kubectl create TFaaS_deploy.yml
