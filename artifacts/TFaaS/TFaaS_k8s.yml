@@ -1,6 +1,9 @@
 ---
 - hosts: localhost
   tasks:
+  - name: wait 10 minutes for nodes to be configured
+    wait_for: timeout=600
+    delegate_to: localhost
   - name: "get TFaaS template"
     get_url:
       url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/TFaaS/TFaaS_deploy.j2
