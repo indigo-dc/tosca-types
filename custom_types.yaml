@@ -1393,7 +1393,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/TFaaS/artifacts/TFaaS/TFaaS_k8s.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/TFaaS/TFaaS_k8s.yml
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
 

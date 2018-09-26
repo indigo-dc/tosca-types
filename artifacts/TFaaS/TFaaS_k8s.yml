@@ -3,7 +3,7 @@
   tasks:
   - name: "get TFaaS template"
     get_url:
-      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/TFaaS/artifacts/TFaaS/TFaaS_deploy.j2
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/TFaaS/TFaaS_deploy.j2
       dest: /etc/TFaaS_deploy.j2
   - name: "Compile config template TFaaS"
     template:
