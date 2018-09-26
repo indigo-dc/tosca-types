@@ -1,7 +1,5 @@
 ---
 - hosts: localhost
-  vars:
-    master_ip: 160.44.198.123
   tasks:
   - name: "get TFaaS template"
     get_url:
