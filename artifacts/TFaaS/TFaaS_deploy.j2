@@ -14,6 +14,7 @@ spec:
   type: LoadBalancer
   externalIPs:
   - {{ master_ip }}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -42,6 +43,15 @@ spec:
         ports:
         - containerPort: 8083
         - containerPort: 8083
+        volumeMounts:
+        - mountPath: /data/TFaaS/src/Go/models
+          name: nfs
+        SecurityContext:
+          privileged: true
+      volumes:
+      - name: nfs
+        hostPath: 
+          path: /pv
 
   selector:
     matchLabels:
