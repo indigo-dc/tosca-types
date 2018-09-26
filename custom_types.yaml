@@ -1389,6 +1389,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       master_ip:
+        type: string
         required: yes
     interfaces:
       Standard:
