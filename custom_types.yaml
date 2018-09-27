@@ -14,6 +14,9 @@ capability_types:
       cuda_min_version:
         type: string
         required: no
+      cuDNN_version:
+        type: string
+        required: no
       image:
         type: string
         required: no
@@ -136,6 +139,9 @@ capability_types:
         required: false
         constraints:
           - greater_or_equal: 0.0
+      num_gpus:
+        type: integer
+        required: false
 
   tosca.capabilities.indigo.Endpoint:
     derived_from: tosca.capabilities.Endpoint
