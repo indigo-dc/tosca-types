@@ -10,7 +10,6 @@ spec:
     name: tfaas
     port: 8083
     targetPort: 8083
-    nodePort: 8083
   type: LoadBalancer
   externalIPs:
   - {{ master_ip }}
@@ -41,7 +40,6 @@ spec:
           initialDelaySeconds: 300
           periodSeconds: 60
         ports:
-        - containerPort: 8083
         - containerPort: 8083
         volumeMounts:
         - mountPath: /data/TFaaS/src/Go/models
