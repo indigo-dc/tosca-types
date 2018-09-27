@@ -47,6 +47,9 @@ capability_types:
   tosca.capabilities.indigo.Container:
     derived_from: tosca.capabilities.Container
     properties:
+      preemtible_instance:
+        type: boolean
+        required: no
       instance_type:
         type: string
         required: no
