@@ -1704,9 +1704,9 @@ node_types:
         type: string
         required: yes
     artifacts:
-      oneclient_role:
-        file: indigo-dc.oneclient
-        type: tosca.artifacts.AnsibleGalaxy.role
+      - oneclient_role:
+          file: indigo-dc.oneclient
+          type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
