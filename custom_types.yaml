@@ -131,9 +131,21 @@ capability_types:
   tosca.capabilities.indigo.Container:
     derived_from: tosca.capabilities.Container
     properties:
+      preemtible_instance:
+        type: boolean
+        required: no
       instance_type:
         type: string
         required: no
+      num_gpus:
+        type: integer
+        required: false
+      gpu_vendor:
+        type: string
+        required: false
+      gpu_model:
+        type: string
+        required: false  
 
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
@@ -208,6 +220,9 @@ capability_types:
         required: false
         constraints:
           - greater_or_equal: 0.0
+      num_gpus:
+        type: integer
+        required: false
 
   tosca.capabilities.indigo.Endpoint:
     derived_from: tosca.capabilities.Endpoint
