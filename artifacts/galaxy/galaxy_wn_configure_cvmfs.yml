@@ -16,7 +16,6 @@
         dest: '/tmp'
       when: refdata_provider_type == 'cvmfs_preconfigured'
 
-  tasks:
     - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
     - include_vars: /tmp/galaxywn.yml
     
