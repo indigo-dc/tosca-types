@@ -44,14 +44,18 @@
       proxy_url: '{{ refdata_cvmfs_proxy_url }}'
       proxy_port: '{{ refdata_cvmfs_proxy_port }}'
       cvmfs_mountpoint: '{{ refdata_dir }}'
-      when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs')
+      when:
+        - get_refdata|bool
+        - refdata_provider_type == 'cvmfs'
 
     - role: indigo-dc.cvmfs-client
       repository_name: '{{ refdata_cvmfs_repository_name }}'
       cvmfs_public_key: '{{ refdata_cvmfs_key_file }}'
       cvmfs_mountpoint: '{{ refdata_dir }}'
       cvmfs_preconfigured: true
-      when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs_preconfigured')
+      when:
+        - get_refdata|bool
+        - refdata_provider_type == 'cvmfs_preconfigured'
 
     - role: indigo-dc.nfs
       nfs_mode: 'client'
