@@ -827,8 +827,8 @@ node_types:
         required: false
       powermanager_plugin:
         type: string
-        description: Plugin that will manage the VMs (orchestrator or im)
-        default: orchestrator
+        description: Plugin that will manage the VMs (indigo_orchestrator or im)
+        default: indigo_orchestrator
         required: false
     artifacts:
       docker_agent_role:
