@@ -830,6 +830,11 @@ node_types:
         description: Plugin that will manage the VMs (indigo_orchestrator or im)
         default: indigo_orchestrator
         required: false
+      im_auth:
+        type: string
+        description: IM auth data
+        default: ""
+        required: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.clues
@@ -851,6 +856,7 @@ node_types:
             clues_chronos_credentials: { get_property: [ SELF, chronos_credentials] }
             clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
             clues_powermanager_plugin: { get_property: [ SELF, powermanager_plugin] }
+            im_auth_data: { get_property: [ SELF, im_auth] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable

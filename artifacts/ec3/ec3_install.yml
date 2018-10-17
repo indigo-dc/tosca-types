@@ -4,4 +4,3 @@
   roles:
   - role: indigo-dc.clues
     indigo_orchestrator_url: "{{ orchestrator_url }}"
-    clues_powermanager_class: cluesplugins."{{ clues_powermanager_plugin }}"
