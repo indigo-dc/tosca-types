@@ -2111,3 +2111,57 @@ node_types:
           inputs:
             jupyterhub_spawner: { get_property: [ SELF, spawner ] }
             jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
+            
+
+  tosca.nodes.indigo.OnedataSpace:
+    derived_from: tosca.nodes.Root
+    attributes:
+      selected_provider:
+        type: string
+    properties:
+      token:
+        required: no
+        type: string
+      space:
+        required: yes
+        type: string
+      oneproviders:
+        required: no
+        type: list
+        entry_schema:
+          type: string
+      onezone:
+        required: no
+        type: string
+      smartScheduling:
+        type: boolean
+        required: false
+        default: false
+
+  tosca.nodes.indigo.OnedataServiceSpace:
+    derived_from: tosca.nodes.Root
+    attributes:
+      space:
+        type: string
+      path:
+        type: string
+      selected_provider:
+        type: string
+      token:
+        type: string
+      onezone:
+        type: string
+    properties:
+      smartScheduling:
+        type: boolean
+        required: false
+        default: false
+
+  tosca.nodes.indigo.Dynafed:
+    derived_from: tosca.nodes.Root
+    properties:
+      files:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
