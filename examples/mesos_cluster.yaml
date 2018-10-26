@@ -9,16 +9,18 @@ topology_template:
 
   inputs:
 
+    mesos_password:
+      type: string
+      required: yes
+
     marathon_password:
       type: string
       description: Admin password for accessing Marathon HTTP service
-      default: 's3cret'
       required: yes
 
     chronos_password:    
       type: string
       description: Admin password for accessing Chronos HTTP service
-      default: 's3cret'
       required: yes
 
     slave_num:
@@ -57,7 +59,8 @@ topology_template:
     mesos_master:
       type: tosca.nodes.indigo.MesosMaster
       properties:
-        mesos_masters_list: { get_attribute: [ HOST, public_address ] }
+        mesos_masters_list: { get_attribute: [ HOST, private_address ] }
+        mesos_password: { get_input: mesos_password }
         marathon_password: { get_input: marathon_password }
         chronos_password: { get_input: chronos_password }
       requirements:
@@ -66,15 +69,15 @@ topology_template:
     mesos_slave:
       type: tosca.nodes.indigo.MesosSlave
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
-        front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
+        front_end_ip: { get_attribute: [ mesos_master_server, private_address, 0 ] }
       requirements:
         - host: mesos_slave_server
         
     mesos_load_balancer:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         marathon_password: { get_input: marathon_password }
       requirements:
         - host: mesos_lb_server        
@@ -105,7 +108,9 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            image: linux-ubuntu-14.04-vmi
+            type: linux
+            distribution: ubuntu
+            version: 16.04
 
     mesos_slave_server:
       type: tosca.nodes.indigo.Compute
@@ -119,7 +124,9 @@ topology_template:
             mem_size: { get_input: slave_mem }
         os:
           properties:
-            image: linux-ubuntu-14.04-vmi
+            type: linux
+            distribution: ubuntu
+            version: 16.04
             
     mesos_lb_server:
       type: tosca.nodes.indigo.Compute
@@ -140,17 +147,21 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            image: linux-ubuntu-14.04-vmi
+            type: linux
+            distribution: ubuntu
+            version: 16.04
 
   outputs:
     mesos_lb_ips:
       value: { get_attribute: [ mesos_lb_server, public_address ] }
     mesos_master_ips:
       value: { get_attribute: [ mesos_master_server, public_address ] }
+    mesos_endpoint:
+      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':5050' ] }
     marathon_endpoint: 
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
+      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
     chronos_endpoint: 
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4443' ] }
+      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4443' ] }
 
       
       
