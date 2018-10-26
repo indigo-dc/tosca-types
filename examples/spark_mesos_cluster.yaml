@@ -12,10 +12,24 @@ topology_template:
 
   inputs:
 
+    marathon_username:
+      type: string
+      description: Admin username for accessing Marathon HTTP service
+      default: "admin"
+
     marathon_password:
       type: string
       description: Admin password for accessing Marathon HTTP service
-      default: 's3cret'
+      required: yes
+    
+    mesos_username:
+      type: string
+      description: Admin username for accessing Mesos HTTP service
+      default: "admin"
+
+    mesos_password:
+      type: string
+      description: Admin password for accessing Mesos HTTP service
       required: yes
 
     slave_num:
@@ -47,7 +61,7 @@ topology_template:
       constraints:
       - valid_values: [ apache-zeppelin, spark-dispatcher ]
       required: false
-      default: 'apache-zeppelin'
+      default: 'spark-dispatcher'
 
     master_mem:
       type: scalar-unit.size
@@ -133,7 +147,7 @@ topology_template:
       type: tosca.nodes.indigo.SparkMesos
       properties:
         marathon_password: { get_input: marathon_password }
-        zookeeper_peers: { get_attribute: [ mesos_master_server, public_address ] }
+        zookeeper_peers: { get_attribute: [ mesos_master_server, private_address ] }
         spark_hdfs_uri: { get_input: hdfs_uri }
         spark_cores_max: { get_input: spark_cores_max }
         spark_executor_cores: { get_input: spark_executor_cores }
@@ -148,28 +162,34 @@ topology_template:
         spark_swift_provider: { get_input: spark_swift_provider }
       requirements:
         - host: mesos_master
+        - dependency: mesos_master
 
     mesos_master:
       type: tosca.nodes.indigo.MesosMaster
       properties:
-        mesos_masters_list: { get_attribute: [ HOST, public_address ] }
+        mesos_username: { get_input: mesos_username }
+        mesos_password: { get_input: mesos_password }
+        marathon_username: { get_input: marathon_username }
         marathon_password: { get_input: marathon_password }
-        chronos_password: 's3cret'
+        mesos_masters_list: { get_attribute: [ HOST, private_address ] }
+        chronos_username: 'admin'
+        chronos_password: { get_input: chronos_password }
       requirements:
         - host: mesos_master_server
 
     mesos_slave:
       type: tosca.nodes.indigo.MesosSlave
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
-        front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
+        front_end_ip: { get_attribute: [ mesos_master_server, private_address, 0 ] }
       requirements:
         - host: mesos_slave_server
         
     mesos_load_balancer:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
+        marathon_username: { get_input: marathon_username }
         marathon_password: { get_input: marathon_password }
       requirements:
         - host: mesos_lb_server        
@@ -211,14 +231,6 @@ topology_template:
         endpoint:
           properties:
             dns_name: mesosslave
-            network_name: PUBLIC
-            ports:
-              mesos_port:
-                protocol: tcp
-                source: 5051
-              spark_port:
-                protocol: tcp
-                source: 4040
         host:
           properties:
             num_cpus: { get_input: slave_cpus }
@@ -255,3 +267,6 @@ topology_template:
       value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
     mesos_master_ips:
       value: { get_attribute: [ mesos_master_server, public_address ] }
+
+    load_balancer_ips:
+      value: { get_attribute: [ mesos_lb_server, public_address ] }
