@@ -32,6 +32,12 @@ topology_template:
       description: Admin password for accessing Mesos HTTP service
       required: yes
 
+
+    chronos_password:
+      type: string
+      description: Admin password for accessing Chronos HTTP service
+      required: yes
+
     slave_num:
       type: integer
       description: Number of slave nodes in the cluster
