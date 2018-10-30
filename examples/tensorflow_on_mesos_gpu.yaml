@@ -12,12 +12,17 @@ topology_template:
     tensorflow_password:
       type: string
       description: Password for jupyter
-      default: 's3cret'
+      required: yes
 
     marathon_password:
       type: string
-      description: Password for marathon
-      default: 's3cret'
+      description: Password for marathon admin user
+      required: yes
+
+    mesos_password:
+      type: string
+      description: Password for mesos admin user
+      required: yes
 
   node_templates:
 
@@ -35,6 +40,7 @@ topology_template:
       type: tosca.nodes.indigo.MesosMaster
       properties:
         mesos_masters_list: { get_attribute: [ HOST, private_address ] }
+        mesos_password: { get_input: mesos_password }
         marathon_password: { get_input: marathon_password }
         enable_chronos: false
         enable_consul_sd: false
@@ -55,11 +61,12 @@ topology_template:
     mesos_load_balancer:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
-        master_ips: { get_attribute: [ HOST, private_address ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         marathon_password: { get_input: marathon_password }
         enable_consul_sd: false
       requirements:
-        - host: mesos_master_server        
+        - host: mesos_lb_server
+        - dependency: mesos_master        
 
     mesos_master_server:
       type: tosca.nodes.indigo.Compute
@@ -67,17 +74,6 @@ topology_template:
         endpoint:
           properties:
             dns_name: mesosserverpublic
-            network_name: PUBLIC
-            ports:
-              mesos_port:
-                protocol: tcp
-                source: 5050
-              marathon_port:
-                protocol: tcp
-                source: 8443
-              jupyter_port:
-                protocol: tcp
-                source: 10001
         scalable:
           properties:
             count: 1
@@ -99,15 +95,34 @@ topology_template:
           properties:
             #num_cpus: 
             #mem_size:
-            instance_type: g3.large 
-            instance_type: g4.xlarge 
+            instance_type: g5.large 
         os:
           properties:
             image: ubuntu-16.04-cuda9
-            
+        
+    mesos_lb_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              all_tcp:
+                protocol: tcp
+                source_range: [ 1, 65535 ]
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            num_cpus: 2
+            mem_size: 2 GB
+        os:
+          properties:
+            image: ubuntu-16.04    
 
   outputs:
     marathon_endpoint: 
-      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
+      value: { concat: [ 'https://', get_attribute: [ mesos_lb_server, public_address, 0 ], ':8443' ] }
     jupyter_endpoint: 
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':10001' ] }
+      value: { concat: [ 'http://', get_attribute: [ mesos_lb_server, public_address, 0 ], ':10001' ] }
