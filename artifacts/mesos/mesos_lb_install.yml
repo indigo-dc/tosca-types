@@ -9,8 +9,6 @@
         marathon_lb_service_discovery: "none" 
       when: (enable_consul_sd == false)
   roles:
-    - role: indigo-dc.docker
-
     - role: indigo-dc.consul
       consul_mode: "agent"
       consul_servers: "{{ master_ips }}"
