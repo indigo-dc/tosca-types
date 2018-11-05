@@ -38,6 +38,8 @@ topology_template:
       requirements:
         - central_point:
             node: indigovr_cp
+        - host:
+            node: server2
 
     server2:
       type: tosca.nodes.indigo.Compute
