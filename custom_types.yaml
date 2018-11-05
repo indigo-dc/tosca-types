@@ -2165,3 +2165,54 @@ node_types:
         type: list
         entry_schema:
           type: string
+
+  tosca.nodes.indigo.VR.CentralPoint:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      indigovr_role:
+        file: indigo-dc.indigovr
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+      central_point:
+        type: tosca.capabilities.Endpoint
+        valid_source_types: [tosca.nodes.indigo.VR.Client, tosca.nodes.indigo.VR.VRouter]
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/vrouter/artifacts/indigovr/central_point_install.yml
+
+  tosca.nodes.indigo.VR.Client:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      indigovr_role:
+        file: indigo-dc.indigovr
+        type: tosca.artifacts.AnsibleGalaxy.role
+    requirements:
+      - central_point:
+          capability: tosca.capabilities.Endpoint
+          node: tosca.nodes.indigo.VR.CentralPoint
+          relationship: tosca.relationships.DependsOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/vrouter/artifacts/indigovr/client_install.yml
+          inputs:
+            INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
+
+  tosca.nodes.indigo.VR.VRouter:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      indigovr_role:
+        file: indigo-dc.indigovr
+        type: tosca.artifacts.AnsibleGalaxy.role
+    requirements:
+      - central_point:
+          capability: tosca.capabilities.Endpoint
+          node: tosca.nodes.indigo.VR.CentralPoint
+          relationship: tosca.relationships.DependsOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/vrouter/artifacts/indigovr/vrouter_install.yml
+          inputs:
+            INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }

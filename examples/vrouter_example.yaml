@@ -1,0 +1,59 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  #- indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/vrouter/custom_types.yaml
+  - indigo_custom_types: file:///home/micafer/codigo/tosca-types/custom_types.yaml
+
+description: >
+  TOSCA test for launching a set of nodes connected with an Indigo Virtual Router
+
+topology_template:
+      
+  node_templates:
+ 
+    indigovr_cp:
+      type: tosca.nodes.indigo.VR.CentralPoint
+      requirements:
+        - host:
+            node: server1
+
+    server1:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+        host:
+         properties:
+           num_cpus: 1
+           mem_size: 1 GB
+        os:
+          properties:
+            type: linux 
+            distribution: ubuntu 
+            version: 16.04
+  
+    indigovr_client:
+      type: tosca.nodes.indigo.VR.Client
+      requirements:
+        - central_point:
+            node: indigovr_cp
+
+    server2:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        host:
+         properties:
+           num_cpus: 1
+           mem_size: 1 GB
+        os:
+         properties:
+           type: linux
+           distribution: ubuntu
+           version: 16.04
+
+  outputs:
+    server_ip:
+      value: { get_attribute: [ server1, public_address, 0 ] }
+    server_creds:
+      value: { get_attribute: [ server1, endpoint, credential, 0 ] }
