@@ -186,6 +186,14 @@ relationship_types:
   tosca.relationships.indigo.Manages:
     derived_from: tosca.relationships.Root
 
+  tosca.relationships.indigo.AttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    properties:
+      fs_type:
+        type: string
+        required: false
+        default:
+
 node_types:
 
   # Standard types defined in TOSCA with interfaces to install
