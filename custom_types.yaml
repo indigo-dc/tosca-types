@@ -2195,7 +2195,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/vrouter/artifacts/indigovr/client_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/vrouter/artifacts/indigovr/standalone_install.yml
           inputs:
             INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
 

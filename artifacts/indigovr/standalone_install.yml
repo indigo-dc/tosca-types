@@ -3,4 +3,4 @@
   connection: local
   roles:
   - role: indigo-dc.indigovr
-    INDIGOVR_NODE_TYPE: client
+    INDIGOVR_NODE_TYPE: standalone
