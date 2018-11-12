@@ -1419,12 +1419,24 @@ node_types:
   tosca.nodes.indigo.HTCondorServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      docker_image:
+        type: string
+        required: no
       config_mode:
         type: string
         required: yes
       htcondor_config_schedd_ip:
         type: string
         required: yes
+      htcondor_config_ccb_address:
+        type: string
+        required: no
+      htcondor_config_high_port:
+        type: string
+        required: no
+      htcondor_config_low_port:
+        type: string
+        required: no
       master_ips:
         required: yes
         type: list
@@ -1447,7 +1459,11 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             lb_peers: { get_property: [ SELF, lb_ips ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
+            ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
+            high_port: { get_property: [ SELF, htcondor_config_high_port ] }
+            low_port:  { get_property: [ SELF, htcondor_config_low_port ] }
             config_mode: { get_property: [ SELF, config_mode ] }
+            docker_image: { get_property: [ SELF, docker_image ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
