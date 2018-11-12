@@ -1430,6 +1430,9 @@ node_types:
       htcondor_config_schedd_ip:
         type: string
         required: yes
+      htcondor_config_ccb_ip:
+        type: string
+        required: yes
       htcondor_config_ccb_address:
         type: string
         required: no
@@ -1467,6 +1470,7 @@ node_types:
             low_port:  { get_property: [ SELF, htcondor_config_low_port ] }
             config_mode: { get_property: [ SELF, config_mode ] }
             htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
+            htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
