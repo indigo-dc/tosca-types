@@ -4,3 +4,5 @@
   roles:
   - role: indigo-dc.clues
     indigo_orchestrator_url: "{{ orchestrator_url }}"
+  - role: grycap.im
+    when: clues_powermanager_plugin == "im"
