@@ -776,6 +776,7 @@ node_types:
         type: string
         description: ID of the deployment of this elastic cluster in the orchestrator
         required: false
+        default: ''
       orchestrator_url:
         type: string
         description: URL of the orchestrator
