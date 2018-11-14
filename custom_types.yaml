@@ -837,8 +837,11 @@ node_types:
         default: ""
         required: false
     artifacts:
-      docker_agent_role:
+      clues_role:
         file: indigo-dc.clues,clues_powermanager_plugin
+        type: tosca.artifacts.AnsibleGalaxy.role
+      im_role:
+        file: grycap.im
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
