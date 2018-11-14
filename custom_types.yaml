@@ -64,7 +64,10 @@ capability_types:
         required: false
       gpu_model:
         type: string
-        required: false  
+        required: false
+      sgx:
+        type: boolean
+        required: no
 
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
