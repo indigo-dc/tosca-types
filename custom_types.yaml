@@ -831,6 +831,11 @@ node_types:
         description: Plugin that will manage the VMs (indigo_orchestrator or im)
         default: indigo_orchestrator
         required: false
+      infrastructure_id:
+        type: string
+        description: ID of the infrastructure of this elastic cluster in the im
+        required: false
+        default: ''
       im_auth:
         type: string
         description: IM auth data
@@ -861,6 +866,7 @@ node_types:
             clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
             clues_powermanager_plugin: { get_property: [ SELF, powermanager_plugin] }
             im_auth_data: { get_property: [ SELF, im_auth] }
+            im_infrastructure_id: { get_property: [ SELF, infrastructure_id] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
