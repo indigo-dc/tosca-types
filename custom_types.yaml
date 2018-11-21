@@ -64,7 +64,10 @@ capability_types:
         required: false
       gpu_model:
         type: string
-        required: false  
+        required: false
+      sgx:
+        type: boolean
+        required: no
 
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
@@ -185,6 +188,14 @@ relationship_types:
 
   tosca.relationships.indigo.Manages:
     derived_from: tosca.relationships.Root
+
+  tosca.relationships.indigo.AttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    properties:
+      fs_type:
+        type: string
+        required: false
+        default:
 
 node_types:
 
