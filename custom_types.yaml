@@ -787,6 +787,7 @@ node_types:
         type: string
         description: ID of the deployment of this elastic cluster in the orchestrator
         required: false
+        default: ''
       orchestrator_url:
         type: string
         description: URL of the orchestrator
@@ -836,14 +837,27 @@ node_types:
         description: Flag to specify that this ElasticCluster will work in a hybrid environment
         default: false
         required: false
+      powermanager_plugin:
+        type: string
+        description: Plugin that will manage the VMs (indigo_orchestrator or im)
+        default: indigo_orchestrator
+        required: false
+      im_auth:
+        type: string
+        description: IM auth data
+        default: ""
+        required: false
     artifacts:
-      docker_agent_role:
+      clues_role:
         file: indigo-dc.clues
+        type: tosca.artifacts.AnsibleGalaxy.role
+      im_role:
+        file: grycap.im
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/clues_powermanager_plugin/artifacts/ec3/ec3_install.yml
           inputs:
             clues_secret_token: { get_property: [ SELF, secret_token ] }
             clues_queue_system: { get_property: [ SELF, lrms, type ] }
@@ -856,6 +870,8 @@ node_types:
             clues_marathon_credentials: { get_property: [ SELF, marathon_credentials] }
             clues_chronos_credentials: { get_property: [ SELF, chronos_credentials] }
             clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
+            clues_powermanager_plugin: { get_property: [ SELF, powermanager_plugin] }
+            im_auth_data: { get_property: [ SELF, im_auth] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
