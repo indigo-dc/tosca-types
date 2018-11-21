@@ -849,7 +849,7 @@ node_types:
         required: false
     artifacts:
       clues_role:
-        file: indigo-dc.clues
+        file: indigo-dc.clues,clues_powermanager_plugin
         type: tosca.artifacts.AnsibleGalaxy.role
       im_role:
         file: grycap.im
@@ -872,6 +872,7 @@ node_types:
             clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
             clues_powermanager_plugin: { get_property: [ SELF, powermanager_plugin] }
             im_auth_data: { get_property: [ SELF, im_auth] }
+            clues_version: im_rest
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
