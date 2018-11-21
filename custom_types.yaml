@@ -838,7 +838,7 @@ node_types:
         required: false
     artifacts:
       clues_role:
-        file: indigo-dc.clues,clues_powermanager_plugin
+        file: indigo-dc.clues
         type: tosca.artifacts.AnsibleGalaxy.role
       im_role:
         file: grycap.im
