@@ -1520,7 +1520,7 @@ node_types:
             htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
             htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
             proxycache_host: { get_property: [ SELF, proxycache_host ] }
-            proxy_cache_manager: { get_property: [ SELF, cms_proxycache_token_manager ] }
+            proxy_cache_manager: { get_property: [ SELF, proxycache_token_manager ] }
             proxy_tts: { get_property: [ SELF, watts_endpoint ] }
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
