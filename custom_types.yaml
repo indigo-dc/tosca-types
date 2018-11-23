@@ -1452,6 +1452,9 @@ node_types:
         type: list
         entry_schema:
           type: string
+      proxycache_host:
+        required: yes
+        type: string
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config
@@ -1471,6 +1474,7 @@ node_types:
             config_mode: { get_property: [ SELF, config_mode ] }
             htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
             htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
+            proxycache_host: { get_property: [ SELF, proxycache_host ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
