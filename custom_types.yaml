@@ -1321,7 +1321,7 @@ node_types:
         default: 'xrootd'
       mysquid_host:
         type: string
-        required: yes
+        required: yes      p
       proxycache_host:
         type: string
         required: yes
@@ -1453,8 +1453,52 @@ node_types:
         entry_schema:
           type: string
       proxycache_host:
-        required: yes
         type: string
+        required: yes
+      iam_access_token:
+        type: string
+        description: INDIGO IAM access token
+        required: yes
+      iam_client_id:
+        type: string
+        description: INDIGO IAM client id
+        required: yes
+      iam_client_secret:
+        type: string
+        description: INDIGO IAM client secret
+        required: yes
+      marathon_username:
+        type: string
+        required: no
+        default: 'admin'
+      marathon_password:
+        type: string
+        required: no
+        default: 'admin'
+      proxycache_token_manager:
+        type: string
+        required: no
+        default: 'ZOOKEEPER'
+      watts_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      iam_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-iam.cloud.cnaf.infn.it/'
+      iam_credential_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it/api/v2/iam/credential'
+      audience:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      proxycache_image:
+        type: string
+        required: no
+        default: "cloudpg/ttscache"
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config
@@ -1466,6 +1510,7 @@ node_types:
           inputs:
             condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] } 
             lb_peers: { get_property: [ SELF, lb_ips ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
@@ -1475,6 +1520,16 @@ node_types:
             htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
             htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
             proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            proxy_cache_manager: { get_property: [ SELF, cms_proxycache_token_manager ] }
+            proxy_tts: { get_property: [ SELF, watts_endpoint ] }
+            proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
+            proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
+            proxy_audience: { get_property: [ SELF, audience ] }
+            config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            config_iam_token: { get_property: [ SELF, iam_access_token ] }
+            config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            config_proxycache_image: { get_property: [ SELF, proxycache_image ]}
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
