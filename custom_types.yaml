@@ -2192,3 +2192,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+
+  tosca.nodes.indigo.BlockStorage:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      type:
+        type: string
+        required: false
