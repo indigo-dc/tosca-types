@@ -1,0 +1,46 @@
+{
+    "id": "/proxy",
+    "cmd": null,
+    "cpus": 0.3,
+    "mem": 300,
+    "disk": 0,
+    "instances": 1,
+    "constraints": [
+        ["hostname", "UNIQUE"],
+        ["hostname", "LIKE", "{{redirector_ip}}"]
+    ],
+    "acceptedResourceRoles": [
+        "*"
+    ],
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+        "image": "cloudpg/xrootd-proxy:cms",
+        "network": "BRIDGE",
+        "portMappings": [
+          {
+            "containerPort": 1194,
+            "servicePort": 31194,
+            "protocol": "tcp",
+            "name": "tcp",
+            "labels": {}
+          }
+        ],
+        "privileged": true,
+        "parameters": [],
+        "forcePullImage": true
+        }
+    },
+    "env": {
+        "REDIR_XRD_PORT": "31094",
+        "REDIR_HOST": "{{redirector_ip}}"
+    },
+    "healthChecks": [],
+    "args": [
+        "--expose", "--health_port", "8082"
+    ],
+    "labels": {
+        "HAPROXY_GROUP": "external"
+      }
+}

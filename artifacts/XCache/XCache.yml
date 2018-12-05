@@ -1,15 +1,18 @@
 
 ---
-- name: Download marathon deployment 
-  get_url:
-    url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/marathon.yaml
-    dest: /etc/deployment.yaml
-  when: (orchestrator is undefined) or (orchestrator == "marathon")
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Download marathon deployment 
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/marathon.yaml
+      dest: /etc/deployment.yaml
+    when: (orchestrator is undefined) or (orchestrator == "marathon")
 
-- name: Download marathon deployment 
-  get_url:
-    url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/k8s.yaml
-    dest: /etc/deployment.yaml
-  when: (orchestrator == "k8s")
+  - name: Download marathon deployment 
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/k8s.yaml
+      dest: /etc/deployment.yaml
+    when: (orchestrator == "k8s")
 
-- include: deployment.yml
+  - include: deployment.yml

@@ -1,0 +1,50 @@
+{
+    "id": "/redirector",
+    "cmd": null,
+    "cpus": 1,
+    "mem": 1000,
+    "disk": 0,
+    "instances": 1,
+    "constraints": [
+        ["hostname", "UNIQUE"],
+        ["hostname", "LIKE", "{{redirector_ip}}"]
+    ],
+    "acceptedResourceRoles": [
+        "*"
+    ],
+    "container": {
+        "type": "DOCKER",
+        "volumes": [],
+        "docker": {
+        "image": "cloudpg/xrootd-proxy:cms",
+        "network": "HOST",
+        "portMappings": [],
+        "privileged": true,
+        "parameters": [],
+        "forcePullImage": true
+        }
+    },
+    "env": {
+        "CACHE_LOG_LEVEL": "debug",
+        "REDIR_CMSD_PORT": "31213",
+        "REDIR_XRD_PORT": "31094",
+        "REDIR_HOST": "0.0.0.0"
+    },
+    "healthChecks": [
+        {
+        "gracePeriodSeconds": 300,
+        "intervalSeconds": 60,
+        "timeoutSeconds": 20,
+        "maxConsecutiveFailures": 3,
+        "delaySeconds": 15,
+        "command": {
+            "value": "curl -f -X GET http://localhost:8081/check_health"
+        },
+        "protocol": "COMMAND"
+        }
+    ],
+    "args": [
+        "--redirector", "--health_port", "8081"
+    ]
+}
+  
