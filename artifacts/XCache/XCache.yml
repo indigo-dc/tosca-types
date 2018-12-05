@@ -10,6 +10,6 @@
   get_url:
     url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/k8s.yaml
     dest: /etc/deployment.yaml
-  when: (orchestrator is undefined) or (orchestrator == "marathon")
+  when: (orchestrator == "k8s")
 
 - include: deployment.yml
