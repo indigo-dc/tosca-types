@@ -1,0 +1,66 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Download redir template 
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/redirector.json
+      dest: /etc/redirector.json
+  - name: Download server template 
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/server.json
+      dest: /etc/server.json
+  - name: Download proxy template 
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/proxy.json
+      dest: /etc/proxy.json
+  - name: start xcache redirector
+    run_once: true
+    uri:
+      url: "{{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/v2/apps/xcacheredir"
+      user: "{{marathon_username}}"
+      password: "{{marathon_password}}"
+      validate_certs: "no"
+      method: PUT
+      HEADER_Content-Type: "application/json"
+      body: "{{ lookup('template', '/etc/redirector.json') }}"
+      body_format: json
+    register: result
+    until: result.status == 200
+    retries: 10
+    delay: 20
+    changed_when: false
+
+  - name: start xcache server
+    run_once: true
+    uri:
+      url: "{{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/v2/apps/xcacheserver"
+      user: "{{marathon_username}}"
+      password: "{{marathon_password}}"
+      validate_certs: "no"
+      method: PUT
+      HEADER_Content-Type: "application/json"
+      body: "{{ lookup('template', '/etc/server.json') }}"
+      body_format: json
+    register: result
+    until: result.status == 200
+    retries: 10
+    delay: 20
+    changed_when: false
+
+  - name: start xcache exposer
+    run_once: true
+    uri:
+      url: "{{marathon_protocol}}://marathon.service.consul:{{marathon_port}}/v2/apps/expose"
+      user: "{{marathon_username}}"
+      password: "{{marathon_password}}"
+      validate_certs: "no"
+      method: PUT
+      HEADER_Content-Type: "application/json"
+      body: "{{ lookup('template', '/etc/proxy.json') }}"
+      body_format: json
+    register: result
+    until: result.status == 200
+    retries: 10
+    delay: 20
+    changed_when: false

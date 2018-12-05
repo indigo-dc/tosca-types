@@ -2220,6 +2220,47 @@ node_types:
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
 
+  tosca.nodes.indigo.XCache:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_ip:
+        type: string
+        required: yes
+      orchestrator:
+        required: yes
+      redirector_ip:
+        type: string
+        required: yes
+      marathon_username:
+        type: string
+        required: no
+        default: 'Marathon-user'
+      marathon_password:
+        type: string
+        required: no
+        default: 'Marathon-passwd'
+      marathon_protocol:
+        type: string
+        required: no
+        default: 'http'
+      marathon_port:
+        type: integer
+        required: no
+        default: 8080
+      
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/XCache.yml
+          inputs:
+            master_ip: { get_property: [ SELF, master_ip ] }
+            orchestrator: { get_property: [ SELF, orchestrator ] }
+            redirector_ip: { get_property: [ SELF, redirector_ip ] }
+            marathon_protocol: { get_property: [ SELF, marathon_protocol ] }
+            marathon_port: { get_property: [ SELF, marathon_port ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
     properties:

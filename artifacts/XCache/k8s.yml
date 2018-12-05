@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  tasks:
+  - name: wait 10 minutes for nodes to be configured
+    wait_for: timeout=600
+    delegate_to: localhost
+  - name: "get XCache deployment template"
+    get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/k8s_deployment.j2
+      dest: /etc/k8s_deploy.j2
+  - name: "Compile config template XCache"
+    template:
+      src: /etc/k8s_deployment.j2
+      dest: /etc/XCache_deployment.yml
+  - name: "Deploy XCache"
+    command: kubectl create -f /etc/XCache_deployment.yml
