@@ -2225,13 +2225,15 @@ node_types:
     properties:
       master_ip:
         type: string
-        required: yes
+        required: no
+        default: 'ONLY NEEDED FOR MARATHON'
       orchestrator:
         type: string
         required: yes
       redirector_ip:
         type: string
-        required: yes
+        required: no
+        default: 'ONLY NEEDED FOR MARATHON'
       marathon_username:
         type: string
         required: no
