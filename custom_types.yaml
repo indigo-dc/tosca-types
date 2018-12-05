@@ -2227,6 +2227,7 @@ node_types:
         type: string
         required: yes
       orchestrator:
+        type: string
         required: yes
       redirector_ip:
         type: string
