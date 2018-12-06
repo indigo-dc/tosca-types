@@ -4,7 +4,7 @@
 - name: "get XCache deployment template"
   get_url:
     url: https://raw.githubusercontent.com/indigo-dc/tosca-types/dciangot/artifacts/XCache/k8s_deployment.j2
-    dest: /etc/k8s_deploy.j2
+    dest: /etc/k8s_deployment.j2
 - name: "Compile config template XCache"
   template:
     src: /etc/k8s_deployment.j2
