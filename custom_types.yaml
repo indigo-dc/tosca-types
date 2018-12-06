@@ -2250,7 +2250,10 @@ node_types:
         type: integer
         required: no
         default: 8080
-      
+    artifacts:
+      cms_config_role:
+        file: dciangot.xcache
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
