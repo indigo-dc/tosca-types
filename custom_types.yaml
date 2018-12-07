@@ -2156,6 +2156,10 @@ node_types:
   tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     artifacts:
+      kubelet_extra_args:
+        required: no
+        type: string
+        default: ''
       kube_role:
         file: grycap.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
@@ -2172,6 +2176,7 @@ node_types:
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args]}
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
