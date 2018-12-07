@@ -47,6 +47,9 @@ capability_types:
   tosca.capabilities.indigo.Container:
     derived_from: tosca.capabilities.Container
     properties:
+      preemtible_instance:
+        type: boolean
+        required: no
       instance_type:
         type: string
         required: no
@@ -1264,7 +1267,7 @@ node_types:
         file: indigo-dc.zookeeper,v1.0.0-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,v1.0.0-dodas
+        file: indigo-dc.mesos,v1.0.1-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
         file: indigo-dc.marathon,v1.0.0-dodas
@@ -1321,7 +1324,7 @@ node_types:
         default: 'xrootd'
       mysquid_host:
         type: string
-        required: yes      p
+        required: yes
       proxycache_host:
         type: string
         required: yes
@@ -1427,6 +1430,9 @@ node_types:
       htcondor_config_condor_host:
         type: string
         required: no
+      htcondor_config_schedd_ip_pub:
+        type: string
+        required: yes
       htcondor_config_schedd_ip:
         type: string
         required: yes
@@ -1501,17 +1507,20 @@ node_types:
         default: "cloudpg/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config
+        file: indigo-dc.htcondor_config,v0.0.22
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/htcondor_master_config.yml
           inputs:
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
             condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] } 
             lb_peers: { get_property: [ SELF, lb_ips ] }
+            htcondor_config_schedd_ip_pub: { get_property: [ SELF, htcondor_config_schedd_ip_pub ] }
             htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
             high_port: { get_property: [ SELF, htcondor_config_high_port ] }
@@ -1546,59 +1555,17 @@ node_types:
       marathon_password:
         type: string
         required: yes
-      htcondor_config_schedd_ip:
-        type: string
-        required: yes
       ams_default_squid:
         type: string
         required: yes
-        default: cream-bdii.pg.infn.it
-      ams_default_squid_port:
-        type: integer
-        required: yes
-        default: 3128
-      number_of_wn_instances:
-        type: integer
-        required: yes
-      number_of_slaves:
-        type: integer
-        required: yes
-      cpu_x_wn:
-        type: float
-        required: yes
-      ram_x_wn:
-        type: float
-        required: yes
-      docker_cpu_x_wn:
-        type: float
-        required: yes
-      docker_ram_x_wn:
-        type: float
-        required: yes
-      ams_use_local_squid:
-        type: boolean
-        required: yes
-        default: false
       master_ips:
         required: yes
         type: list
         entry_schema:
           type: string
-      ams_repo_server_url:
-        type: string
-      ams_repo_public_key_path:
-        type: string
-      ams_repo_http_proxy:
-        type: string
-      ams_repo_repository_name:
-        type: string
-      ams_repo_public_key:
-        type: string
-      ams_repo_public_key_url:
-        type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config
+        file: indigo-dc.ams_config,v0.0.29
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1611,22 +1578,73 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
-            ams_use_local_squid: { get_input: ams_use_local_squid }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
-            ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
-            ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
-            ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
-            ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
-            ams_ram_x_wn: { get_property: [ SELF, ram_x_wn ] }
-            ams_docker_cpu_x_wn: { get_property: [ SELF, docker_cpu_x_wn ] }
-            ams_docker_ram_x_wn: { get_property: [ SELF, docker_ram_x_wn ] }
-            ams_repo_server_url: { get_property: [ SELF, ams_repo_server_url ] }
-            ams_repo_public_key_path: { get_property: [ SELF, ams_repo_public_key_path ] }
-            ams_repo_http_proxy: { get_property: [ SELF, ams_repo_http_proxy ] }
-            ams_repo_repository_name: { get_property: [ SELF, ams_repo_repository_name ] }
-            ams_repo_public_key: { get_property: [ SELF, ams_repo_public_key ] }
-            ams_repo_public_key_url: { get_property: [ SELF, ams_repo_public_key_url ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+
+  tosca.nodes.indigo.AmsCondorExecuteConfig:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_username:
+        type: string
+        required: yes
+      marathon_password:
+        type: string
+        required: yes
+      htcondor_config_ccb_ip:
+        type: string
+        required: yes
+      htcondor_config_schedd_ip: 
+        type: string
+        required: yes
+      proxycache_host:
+        type: string
+        required: yes
+      config_proxycache_serviceport:
+        type: string
+        required: true
+        default: '8080'
+      htcondor_config_ccb_address:
+        type: string
+        required: no
+      htcondor_config_condor_host:
+        type: string
+        required: no
+      htcondor_config_condor_image:
+        type: string
+        required: no
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+    artifacts:
+      ams_config_role:
+        file: indigo-dc.ams_config,v0.0.29
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: 'https://gist.githubusercontent.com/spigad/b88ba1f79e74c8a65662a88d20b1fa70/raw/578d5752f78070fc7e6c68dbe9f883d9b769bfaa/condorwnartifact.yaml'
+          inputs:
+            mesos_masters_list: { get_property: [ SELF, master_ips ] }
+            consul_servers: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
+            zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
+            proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            config_proxycache_serviceport: { get_property: [ SELF, config_proxycache_serviceport ] }
+            ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
+            condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
+            htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
@@ -1643,17 +1661,9 @@ node_types:
       marathon_password:
         type: string
         required: yes
-      htcondor_config_schedd_ip:
-        type: string
-        required: yes
       ams_default_squid:
         type: string
         required: yes
-        default: cream-bdii.pg.infn.it
-      ams_default_squid_port:
-        type: integer
-        required: yes
-        default: 3128
       number_of_wn_instances:
         type: integer
         required: yes
@@ -1672,10 +1682,6 @@ node_types:
       docker_ram_x_wn:
         type: float
         required: yes
-      ams_use_local_squid:
-        type: boolean
-        required: yes
-        default: false
       master_ips:
         required: yes
         type: list
@@ -1685,8 +1691,6 @@ node_types:
         type: string
       ams_repo_public_key_path:
         type: string
-      ams_repo_http_proxy:
-        type: string
       ams_repo_repository_name:
         type: string
       ams_repo_public_key:
@@ -1695,7 +1699,7 @@ node_types:
         type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config
+        file: indigo-dc.ams_config,v0.0.29
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1708,9 +1712,7 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
-            ams_default_squid_port: { get_property: [ SELF, ams_default_squid_port ] }
             ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
             ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
             ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
@@ -1719,7 +1721,6 @@ node_types:
             ams_docker_ram_x_wn: { get_property: [ SELF, docker_ram_x_wn ] }
             ams_repo_server_url: { get_property: [ SELF, ams_repo_server_url ] }
             ams_repo_public_key_path: { get_property: [ SELF, ams_repo_public_key_path ] }
-            ams_repo_http_proxy: { get_property: [ SELF, ams_repo_http_proxy ] }
             ams_repo_repository_name: { get_property: [ SELF, ams_repo_repository_name ] }
             ams_repo_public_key: { get_property: [ SELF, ams_repo_public_key ] }
             ams_repo_public_key_url: { get_property: [ SELF, ams_repo_public_key_url ] }
@@ -1729,7 +1730,6 @@ node_types:
           relationship: tosca.relationships.HostedOn
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
-
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
@@ -1756,7 +1756,7 @@ node_types:
         file: indigo-dc.consul,v1.0.0-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,v1.0.0-dodas
+        file: indigo-dc.mesos,v1.0.1-dodas
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1820,6 +1820,10 @@ node_types:
         type: string
         required: no
         default: 'gfal2'
+      cms_xrd_readserver:
+        type: string
+        required: no
+        default: 'xrootd.ba.infn.it'
       cms_input_path:
         type: string
         required: no
@@ -1859,6 +1863,7 @@ node_types:
             cms_config_fallback_phedexnode: { get_property: [ SELF,cms_fallback_phedexnode ] }
             cms_config_fallback_lfn_prefix: { get_property: [ SELF,cms_fallback_lfn_prefix ] }
             cms_config_fallback_command: { get_property: [ SELF,cms_fallback_command ] }
+            cms_xrd_readserver: { get_property: [ SELF, cms_xrd_readserver ] }
             cms_input_path: { get_property: [ SELF, cms_input_path ] }
             cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
             cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
@@ -2316,3 +2321,10 @@ node_types:
           inputs:
             jupyterhub_spawner: { get_property: [ SELF, spawner ] }
             jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
+    
+  tosca.nodes.indigo.BlockStorage:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      type:
+        type: string
+        required: false
