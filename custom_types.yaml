@@ -2155,11 +2155,12 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
-    artifacts:
+    properties: 
       kubelet_extra_args:
         required: no
         type: string
         default: ''
+    artifacts:
       kube_role:
         file: grycap.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
