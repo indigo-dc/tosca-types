@@ -2231,8 +2231,7 @@ node_types:
     properties:
       master_ip:
         type: string
-        required: no
-        default: 'ONLY NEEDED FOR MARATHON'
+        required: yes
       orchestrator:
         type: string
         required: yes
