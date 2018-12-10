@@ -1329,6 +1329,10 @@ node_types:
         type: integer
         required: no
         default: 8080
+      server_image:
+        type: string
+        required: no
+        default: "cloudpg/xrootd-proxy:cms"
     artifacts:
       cms_config_role:
         file: indigo-dc.xcache
@@ -1345,6 +1349,7 @@ node_types:
             marathon_port: { get_property: [ SELF, marathon_port ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
+            server_image: { get_property: [ SELF, server_image ] }
 
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
