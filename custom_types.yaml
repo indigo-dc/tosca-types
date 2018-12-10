@@ -1358,12 +1358,12 @@ node_types:
         default: "spiga/frontiersquidv1"
       cms_wn_image:
         type: string
-        default: "cloudpg/dodas-cms:cern"
+        default: "dodasts/cms"
         required: no
       cms_proxycache_image:
         type: string
         required: no
-        default: "cloudpg/ttscache"
+        default: "dodasts/ttscache"
       cms_input_protocol:
         type: string
         required: no
@@ -1550,7 +1550,7 @@ node_types:
       proxycache_image:
         type: string
         required: no
-        default: "cloudpg/ttscache"
+        default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config,v1.0.0-dodas-pre1
