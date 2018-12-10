@@ -1383,7 +1383,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1507,12 +1507,12 @@ node_types:
         default: "cloudpg/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v0.0.22
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/htcondor_master_config.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/htcondor_master_config.yml
           inputs:
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
@@ -1565,12 +1565,12 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v0.0.29
+        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: 'https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/ams_master_config.yml'
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/ams_master_config.yml
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -1625,12 +1625,12 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v0.0.29
+        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: 'https://gist.githubusercontent.com/spigad/b88ba1f79e74c8a65662a88d20b1fa70/raw/578d5752f78070fc7e6c68dbe9f883d9b769bfaa/condorwnartifact.yaml'
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/ams_execute_config.yaml
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -1699,12 +1699,12 @@ node_types:
         type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v0.0.29
+        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: 'https://raw.githubusercontent.com/indigo-dc/tosca-types/ams_config/artifacts/mesos/ams_wn_config.yml'
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/ams_wn_config.yml
           inputs:
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -1846,7 +1846,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config
+        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
