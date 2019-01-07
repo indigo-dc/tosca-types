@@ -2172,7 +2172,7 @@ node_types:
         default: 1
     artifacts:
       spark_mesos_role:
-        file: indigo-dc.spark-mesos,v1.1.0-dodas
+        file: indigo-dc.spark-mesos,dodas-1.1.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2231,7 +2231,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       hadoop_role:
-        file: indigo-dc.hadoop,v1.1.0-dodas
+        file: indigo-dc.hadoop,dodas-1.1.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2248,7 +2248,7 @@ node_types:
         type: string
     artifacts:
       hadoop_role:
-        file: indigo-dc.hadoop,v1.1.0-dodas
+        file: indigo-dc.hadoop,dodas-1.1.0
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
