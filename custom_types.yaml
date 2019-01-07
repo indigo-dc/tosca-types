@@ -2166,6 +2166,10 @@ node_types:
         type: integer
         required: false
         default: '-1'
+      spark_slave_num: 
+        type: integer
+        required: true
+        default: 1
     artifacts:
       spark_mesos_role:
         file: indigo-dc.spark-mesos,v1.1.0-dodas
@@ -2191,6 +2195,7 @@ node_types:
             spark_mesos_executor_mem: { get_property: [ SELF, spark_executor_mem ] }
             spark_mesos_driver_mem: { get_property: [ SELF, spark_driver_mem ] }
             spark_mesos_driver_cores: { get_property: [ SELF, spark_driver_cores ] }
+            spark_mesos_slave_num: { get_property: [ SELF, spark_slave_num ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
