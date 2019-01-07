@@ -1,0 +1,42 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  TOSCA example for launching the generic_deepaas mesos job
+
+topology_template:
+       
+
+  node_templates:
+
+    marathon-job:
+      type: tosca.nodes.indigo.Container.Application.Docker.Marathon
+      properties:
+        uris: []
+        command: 'deepaas-run --listen-ip 0.0.0.0'
+        labels:
+          HAPROXY_GROUP: external
+      artifacts:
+        image:
+          file: deephdc/deep-oc-plant-classification-theano
+          type: tosca.artifacts.Deployment.Image.Container.Docker
+      requirements:
+        - host: docker_runtime
+
+    docker_runtime:
+      type: tosca.nodes.indigo.Container.Runtime.Docker
+      capabilities:
+        host:
+          properties:
+            num_cpus: 1.0
+            mem_size: 1024 MB
+            publish_ports:
+               - protocol: tcp
+                 source: 5000
+
+  outputs:
+    endpoint: 
+      value: { concat: [ { get_attribute : [ marathon-job, load_balancer_ips, 0 ] }, ':', { get_attribute : [ docker_runtime, host, publish_ports, 0, target ] } ] }
+

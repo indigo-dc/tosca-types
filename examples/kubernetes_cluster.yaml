@@ -99,4 +99,4 @@ topology_template:
 
   outputs:
     dashboard_url:
-      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
+      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }

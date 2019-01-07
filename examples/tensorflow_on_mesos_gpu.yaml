@@ -9,52 +9,32 @@ topology_template:
 
   inputs:
 
-    mesos_password:
+    tensorflow_password:
       type: string
+      description: Password for jupyter
       required: yes
 
     marathon_password:
       type: string
-      description: Admin password for accessing Marathon HTTP service
+      description: Password for marathon admin user
       required: yes
 
-    chronos_password:    
+    mesos_password:
       type: string
-      description: Admin password for accessing Chronos HTTP service
+      description: Password for mesos admin user
       required: yes
-
-    slave_num:
-      type: integer
-      description: Number of slave nodes in the cluster
-      default: 3
-      required: yes
-
-    slave_cpus:
-      type: integer
-      description: Numer of CPUs for the slave node
-      default: 1
-      required: yes
-
-    slave_mem:
-      type: scalar-unit.size
-      description: Amount of Memory for the slave node
-      default: 2 GB
-      required: yes
-
-    master_cpus:
-      type: integer
-      description: Numer of CPUs for the master node
-      default: 2
-      required: yes
-
-    master_mem:
-      type: scalar-unit.size
-      description: Amount of Memory for the master node
-      default: 4 GB
-      required: yes
-
 
   node_templates:
+
+    tensorflow:
+      type: tosca.nodes.indigo.TensorflowOnMesos
+      properties:
+        marathon_password: { get_input: marathon_password }
+        marathon_host: { get_attribute: [ mesos_master_server, private_address, 0 ] }
+        tensorflow_password: { get_input: tensorflow_password }
+      requirements:
+        - host: mesos_master
+
 
     mesos_master:
       type: tosca.nodes.indigo.MesosMaster
@@ -62,7 +42,9 @@ topology_template:
         mesos_masters_list: { get_attribute: [ HOST, private_address ] }
         mesos_password: { get_input: mesos_password }
         marathon_password: { get_input: marathon_password }
-        chronos_password: { get_input: chronos_password }
+        enable_chronos: false
+        enable_consul_sd: false
+        enable_gpu_support: true 
       requirements:
         - host: mesos_master_server
 
@@ -71,6 +53,8 @@ topology_template:
       properties:
         master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         front_end_ip: { get_attribute: [ mesos_master_server, private_address, 0 ] }
+        enable_consul_sd: false
+        enable_gpu_support: true 
       requirements:
         - host: mesos_slave_server
         
@@ -79,8 +63,10 @@ topology_template:
       properties:
         master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         marathon_password: { get_input: marathon_password }
+        enable_consul_sd: false
       requirements:
-        - host: mesos_lb_server        
+        - host: mesos_lb_server
+        - dependency: mesos_master        
 
     mesos_master_server:
       type: tosca.nodes.indigo.Compute
@@ -88,17 +74,6 @@ topology_template:
         endpoint:
           properties:
             dns_name: mesosserverpublic
-            network_name: PUBLIC
-            ports:
-              mesos_port:
-                protocol: tcp
-                source: 5050
-              marathon_port:
-                protocol: tcp
-                source: 8443
-              chronos_port:
-                protocol: tcp
-                source: 4443
         scalable:
           properties:
             count: 1
@@ -108,26 +83,23 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            type: linux
-            distribution: ubuntu
-            version: 16.04
+            image: ubuntu-16.04
 
     mesos_slave_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
         scalable:
           properties:
-            count: { get_input: slave_num }
+            count: 1
         host:
           properties:
-            num_cpus: { get_input: slave_cpus }
-            mem_size: { get_input: slave_mem }
+            #num_cpus: 
+            #mem_size:
+            instance_type: g5.large 
         os:
           properties:
-            type: linux
-            distribution: ubuntu
-            version: 16.04
-            
+            image: ubuntu-16.04-cuda9
+        
     mesos_lb_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
@@ -147,21 +119,10 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-            type: linux
-            distribution: ubuntu
-            version: 16.04
+            image: ubuntu-16.04    
 
   outputs:
-    mesos_lb_ips:
-      value: { get_attribute: [ mesos_lb_server, public_address ] }
-    mesos_master_ips:
-      value: { get_attribute: [ mesos_master_server, public_address ] }
-    mesos_endpoint:
-      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':5050' ] }
     marathon_endpoint: 
-      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
-    chronos_endpoint: 
-      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4443' ] }
-
-      
-      
+      value: { concat: [ 'https://', get_attribute: [ mesos_lb_server, public_address, 0 ], ':8443' ] }
+    jupyter_endpoint: 
+      value: { concat: [ 'http://', get_attribute: [ mesos_lb_server, public_address, 0 ], ':10001' ] }

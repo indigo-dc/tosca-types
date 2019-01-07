@@ -5,12 +5,17 @@
     - set_fact:
         galaxy_flavor: 'galaxy-no-tools'
       when: galaxy_flavor == 'galaxy-minimal'
-    - name: Get the cvmfs public key on node
+    - name: Get reference data cvmfs key for on-the-fly configuration
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
-        dest: '/tmpi'
-      when: (refdata_provider_type == 'cvmfs') or (refdata_provider_type == 'cvmfs_preconfigured')
-    - name: Get refdata-list
+        dest: '/tmp'
+      when: refdata_provider_type == 'cvmfs'
+    - name: Get reference data cvmfs key for preconfigured repository
+      get_url:
+        url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_repository_name }}.pub'
+        dest: '/tmp'
+      when: refdata_provider_type == 'cvmfs_preconfigured'
+    - name: Get reference data cvmfs configuration for preconfigured repository
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_config_files/{{ refdata_cvmfs_repository_name }}.conf'
         dest: '/tmp'
@@ -44,14 +49,18 @@
       proxy_url: '{{ refdata_cvmfs_proxy_url }}'
       proxy_port: '{{ refdata_cvmfs_proxy_port }}'
       cvmfs_mountpoint: '{{ refdata_dir }}'
-      when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs')
+      when:
+        - get_refdata|bool
+        - refdata_provider_type == 'cvmfs'
 
     - role: indigo-dc.cvmfs-client
       repository_name: '{{ refdata_cvmfs_repository_name }}'
       cvmfs_public_key: '{{ refdata_cvmfs_key_file }}'
       cvmfs_mountpoint: '{{ refdata_dir }}'
       cvmfs_preconfigured: true
-      when: (get_refdata|bool) and (refdata_provider_type == 'cvmfs_preconfigured')
+      when:
+        - get_refdata|bool
+        - refdata_provider_type == 'cvmfs_preconfigured'
 
     - role: indigo-dc.nfs
       nfs_mode: 'client'
