@@ -154,7 +154,10 @@ capability_types:
         required: false
       gpu_model:
         type: string
-        required: false  
+        required: false
+      sgx:
+        type: boolean
+        required: no
 
   tosca.capabilities.indigo.LRMS:
     derived_from: tosca.capabilities.Container
@@ -283,6 +286,14 @@ relationship_types:
 
   tosca.relationships.indigo.Manages:
     derived_from: tosca.relationships.Root
+
+  tosca.relationships.indigo.AttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    properties:
+      fs_type:
+        type: string
+        required: false
+        default:
 
 node_types:
 
@@ -892,6 +903,7 @@ node_types:
         type: string
         description: ID of the deployment of this elastic cluster in the orchestrator
         required: false
+        default: ''
       orchestrator_url:
         type: string
         description: URL of the orchestrator
@@ -941,9 +953,22 @@ node_types:
         description: Flag to specify that this ElasticCluster will work in a hybrid environment
         default: false
         required: false
+      powermanager_plugin:
+        type: string
+        description: Plugin that will manage the VMs (indigo_orchestrator or im)
+        default: indigo_orchestrator
+        required: false
+      im_auth:
+        type: string
+        description: IM auth data
+        default: ""
+        required: false
     artifacts:
-      - docker_agent_role:
+      - clues_role:
           file: indigo-dc.clues
+          type: tosca.artifacts.AnsibleGalaxy.role
+      - im_role:
+          file: grycap.im
           type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -961,6 +986,8 @@ node_types:
             clues_marathon_credentials: { get_property: [ SELF, marathon_credentials] }
             clues_chronos_credentials: { get_property: [ SELF, chronos_credentials] }
             clues_mesos_credentials: { get_property: [ SELF, mesos_credentials] }
+            clues_powermanager_plugin: { get_property: [ SELF, powermanager_plugin] }
+            im_auth_data: { get_property: [ SELF, im_auth] }
     requirements:
       - wn:
           capability: tosca.capabilities.Scalable
@@ -2337,3 +2364,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+
+  tosca.nodes.indigo.BlockStorage:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      type:
+        type: string
+        required: false
