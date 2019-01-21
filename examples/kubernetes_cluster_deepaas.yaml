@@ -83,7 +83,7 @@ topology_template:
       interfaces:
         Standard:
           configure: 
-            implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/deepaas/artifacts/deepaas/deepaas.yml
+            implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/deepaas/deepaas.yml
             inputs:
               deepaas_dockerhub_img: { get_input: dockerhub_img }
               deepaas_rclone_conf: { get_input: rclone_conf }
