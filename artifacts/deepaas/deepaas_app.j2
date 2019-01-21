@@ -63,8 +63,10 @@ metadata:
   labels:
     app: deepaas
 spec:
+  type: NodePort
   ports:
-  - port: 5000
-    protocol: TCP
+  - name: deepaas
+    port: 5000
+    nodePort: 35000
   selector:
     name: deepaas

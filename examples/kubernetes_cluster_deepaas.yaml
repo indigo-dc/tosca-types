@@ -21,7 +21,7 @@ topology_template:
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
-      default: 2 GB
+      default: 4 GB
       required: yes
     wn_cpus:
       type: integer
@@ -31,7 +31,7 @@ topology_template:
     wn_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
-      default: 2 GB
+      default: 4 GB
       required: yes
 
     admin_username:
@@ -110,7 +110,7 @@ topology_template:
             ports:
               deepaas_port:
                 protocol: tcp
-                source: 5000
+                source: 35000
               dashboard_port:
                 protocol: tcp
                 source: 30443
@@ -152,3 +152,5 @@ topology_template:
   outputs:
     dashboard_url:
       value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
+    deepaas_url:
+      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':35000/' ] }
