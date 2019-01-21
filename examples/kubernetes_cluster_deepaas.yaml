@@ -55,6 +55,7 @@ topology_template:
     rclone_url:
       type: string
       description: remote storage link to access via webdav
+      default: ""
       required: no
     rclone_vendor:
       type: string
