@@ -1,0 +1,21 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - role: grycap.docker
+  tasks:
+    - name: Start DEEPaaS container
+      docker_container:
+        name: deepaas
+        image: "{{ deepaas_dockerhub_img }}"
+        command: deepaas-run --listen-ip 0.0.0.0
+        state: started
+        ports:
+        - "5000:5000"
+        env:
+            RCLONE_CONFIG: "{{ deepaas_rclone_conf }}"
+            RCLONE_CONFIG_DEEPNC_TYPE: "{{ deepaas_rclone_type }}"
+            RCLONE_CONFIG_DEEPNC_URL: "{{ deepaas_rclone_url }}"
+            RCLONE_CONFIG_DEEPNC_VENDOR: "{{ deepaas_rclone_vendor }}"
+            RCLONE_CONFIG_DEEPNC_USER: "{{ deepaas_rclone_user }}"
+            RCLONE_CONFIG_DEEPNC_PASS: "{{ deepaas_rclone_pass }}"
