@@ -154,4 +154,4 @@ topology_template:
     dashboard_url:
       value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
     deepaas_url:
-      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':35000/' ] }
+      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':35000/' ] }
