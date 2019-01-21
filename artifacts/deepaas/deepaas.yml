@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - get_url:
+      url: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/deepaas/deepaas_app.j2
+      dest: /var/tmp/deepaas_app.j2
+  - template:
+      src: /var/tmp/deepaas_app.j2
+      dest: /var/tmp/deepaas_app.yml
+  - command: kubectl apply -f /var/tmp/deepaas_app.yml

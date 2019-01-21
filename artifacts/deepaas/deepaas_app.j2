@@ -1,0 +1,67 @@
+# Namespace
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: deepaas
+
+# Deployment
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: deepaas
+  name: deepaas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deepaas
+  template:
+    metadata:
+      labels:
+        app: deepaas
+    spec:
+      containers:
+        - name: deepaas
+          image: {{ deepaas_dockerhub_img }}
+          command: ["deepaas-run"]
+          args: ["--listen-ip","0.0.0.0"]
+          ports:
+          - containerPort: 5000
+            name: deepaas
+          env:
+           - name: RCLONE_CONFIG
+             value: {{ deepaas_rclone_conf }}
+           - name: RCLONE_CONFIG_DEEPNC_TYPE
+             value: {{ deepaas_rclone_type }}
+           - name: RCLONE_CONFIG_DEEPNC_URL
+             value: {{ deepaas_rclone_url }}
+           - name: RCLONE_CONFIG_DEEPNC_VENDOR
+             value: {{ deepaas_rclone_vendor }}
+           - name: RCLONE_CONFIG_DEEPNC_USER
+             value: {{ deepaas_rclone_user }}
+           - name: RCLONE_CONFIG_DEEPNC_PASS
+             value: {{ deepaas_rclone_pass }}
+          livenessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 2
+
+# Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: deepaas
+  name: deepaas
+spec:
+  type: NodePort
+  ports:
+  - name: deepaas
+    port: 5000
+    nodePort: 35000
+  selector:
+    app: deepaas
