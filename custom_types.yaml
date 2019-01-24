@@ -158,6 +158,14 @@ capability_types:
         type: boolean
         required: false
         default: true
+      ports:
+        type: map
+        description: The optional map of ports the Endpoint supports (if more than one).
+        required: false
+        constraints:
+          - min_length: 1
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
     attributes:
       credential:
         type: list
@@ -203,6 +211,8 @@ node_types:
 
   tosca.nodes.Database.MySQL:
     derived_from: tosca.nodes.Database
+    metadata:
+      icon: /images/mysql-db.png
     requirements:
       - host:
           capability: tosca.capabilities.Container
@@ -221,6 +231,8 @@ node_types:
 
   tosca.nodes.DBMS.MySQL:
     derived_from: tosca.nodes.DBMS
+    metadata:
+      icon: /images/mysql-server.png
     properties:
       port:
         type: integer
@@ -246,6 +258,8 @@ node_types:
 
   tosca.nodes.WebServer.Apache:
     derived_from: tosca.nodes.WebServer
+    metadata:
+      icon: /images/apache.png
     interfaces:
       Standard:
         create:
@@ -257,6 +271,8 @@ node_types:
 
   tosca.nodes.indigo.Database.MySQL:
     derived_from: tosca.nodes.Database.MySQL
+    metadata:
+      icon: /images/mysql-db-indigo.png
     properties:
       access_host:
         type: string
@@ -283,6 +299,8 @@ node_types:
 
   tosca.nodes.indigo.Compute:
     derived_from: tosca.nodes.indigo.MonitoredCompute
+    metadata:
+      icon: /images/compute.png
     attributes:
       private_address:
         type: list
@@ -315,7 +333,7 @@ node_types:
         required: no
         default: orchestrator.cloud.cnaf.infn.it
       zabbix_server_port:
-        type: tosca.datatypes.network.PortDef
+        type: integer
         required: no
         default: 10051
       zabbix_server_metadata:
@@ -337,6 +355,8 @@ node_types:
 
   tosca.nodes.indigo.GalaxyPortal:
     derived_from: tosca.nodes.WebServer
+    metadata:
+      icon: /images/galaxy.png
     properties:
       admin_email:
         type: string
@@ -516,6 +536,8 @@ node_types:
  
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/galaxy.png
     properties:
       front_end_ip:
         type: string
@@ -635,6 +657,8 @@ node_types:
 
   tosca.nodes.indigo.GalaxyShedTool:
     derived_from: tosca.nodes.WebApplication
+    metadata:
+      icon: /images/galaxy-toolshed.png
     properties:
       flavor:
         type: string
@@ -681,6 +705,8 @@ node_types:
 
   tosca.nodes.indigo.GalaxyReferenceData:
     derived_from: tosca.nodes.WebApplication
+    metadata:
+      icon: /images/galaxydata.png
     properties:
       reference_data:
         type: boolean
@@ -777,6 +803,8 @@ node_types:
 
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/ec3.png
     properties:
       secret_token:
         type: string
@@ -921,6 +949,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.Slurm:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/slurm.png
     artifacts:
       slurm_role:
         file: indigo-dc.slurm
@@ -979,6 +1009,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.FrontEnd.Slurm:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/slurm.png
     properties:
       wn_num:
         type: integer
@@ -1015,7 +1047,9 @@ node_types:
           type: tosca.capabilities.indigo.LRMS.Local
 
   tosca.nodes.indigo.Container.Runtime.Docker:
-    derived_from: tosca.nodes.SoftwareComponent
+    derived_from: tosca.nodes.Root
+    metadata:
+      icon: /images/docker.png
     capabilities:
       host:
         type: tosca.capabilities.indigo.Container.Docker
@@ -1062,6 +1096,8 @@ node_types:
 
   tosca.nodes.indigo.Container.Application.Docker.Chronos:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
+    metadata:
+      icon: /images/chronos.jpg
     properties:
       schedule:
         required: no
@@ -1102,6 +1138,8 @@ node_types:
 
   tosca.nodes.indigo.DariahRepository:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/dariah.png
     properties:
       marathon_password:
         type: string
@@ -1231,6 +1269,8 @@ node_types:
 
   tosca.nodes.indigo.TensorflowOnMesos:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/tensorflow.png
     properties:
       marathon_password:
         type: string
@@ -1293,6 +1333,8 @@ node_types:
 
   tosca.nodes.indigo.Container.Application.Docker.Marathon:
     derived_from: tosca.nodes.indigo.Container.Application.Docker
+    metadata:
+      icon: /images/marathon.png
     attributes:
       load_balancer_ips:
         type: list
@@ -1306,6 +1348,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/mesos.png
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Mesos
@@ -1422,6 +1466,8 @@ node_types:
 
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/cms.png
     properties:
       cms_local_site:
         type: string
@@ -1540,6 +1586,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/mesos.png
     capabilities:
         host:
           type: tosca.capabilities.indigo.MesosSlave
@@ -1609,6 +1657,8 @@ node_types:
 
   tosca.nodes.indigo.CmsWnConfig:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/cms.png
     properties:
       cms_local_site:
         type: string
@@ -1690,6 +1740,8 @@ node_types:
 
   tosca.nodes.indigo.MesosLoadBalancer:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/mesos.png
     properties:
       master_ips:
         required: yes
@@ -1734,6 +1786,8 @@ node_types:
 
   tosca.nodes.indigo.SparkMesos:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/spark-mesos.png
     properties:
       marathon_password:
         type: string
@@ -1832,6 +1886,8 @@ node_types:
 
   tosca.nodes.indigo.OneDataStorage:
     derived_from: tosca.nodes.BlockStorage
+    metadata:
+      icon: /images/onedata.png
     properties:
       size:
         # to overwrite BlockStorage size property to set it as not required
@@ -1856,6 +1912,8 @@ node_types:
 
   tosca.nodes.indigo.HadoopMaster:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/hadoop-master.jpg
     artifacts:
       hadoop_role:
         file: indigo-dc.hadoop
@@ -1869,6 +1927,8 @@ node_types:
 
   tosca.nodes.indigo.HadoopSlave:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/hadoop-wn.jpg
     properties:
       master_ip:
         required: yes
@@ -1886,6 +1946,8 @@ node_types:
 
   tosca.nodes.indigo.HaddockApp:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/Haddock.png
     properties:
       haddock_app_name:
         type: string
@@ -1906,6 +1968,8 @@ node_types:
 
   tosca.nodes.indigo.Disvis:
     derived_from: tosca.nodes.indigo.HaddockApp
+    metadata:
+      icon: /images/disvis.png
     properties:
       haddock_app_name:
         type: string
@@ -1916,6 +1980,8 @@ node_types:
 
   tosca.nodes.indigo.Powerfit:
     derived_from: tosca.nodes.indigo.HaddockApp
+    metadata:
+      icon: /images/powerfit.png
     properties:
       haddock_app_name:
         type: string
@@ -1937,6 +2003,8 @@ node_types:
 
   tosca.nodes.indigo.Ambertools:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/amber.jpg
     artifacts:
       galaxy_role:
         file: indigo-dc.ambertools
@@ -1948,6 +2016,8 @@ node_types:
 
   tosca.nodes.indigo.Kepler:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/kepler.jpeg
     artifacts:
       galaxy_role:
         file: indigo-dc.kepler
@@ -1959,6 +2029,8 @@ node_types:
 
   tosca.nodes.indigo.OphidiaServer:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/ophidia-server.png
     properties:
       io_ips:
         type: list
@@ -1986,6 +2058,8 @@ node_types:
 
   tosca.nodes.indigo.OphidiaIO:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/ophidia-io.png
     properties:
       server_ip:
         type: string
@@ -2060,6 +2134,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/kubernetesWN.png
     artifacts:
       kube_role:
         file: grycap.kubernetes
@@ -2080,6 +2156,8 @@ node_types:
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/kubernetesFE.png
     properties:
       admin_username:
         required: no
@@ -2088,7 +2166,7 @@ node_types:
       admin_token:
         required: no
         type: string
-        value: some_insecure_token
+        default: some_insecure_token
     artifacts:
       kube_role:
         file: grycap.kubernetes
@@ -2114,6 +2192,8 @@ node_types:
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/jupyterhub.png
     properties:
       spawner:
         required: no
