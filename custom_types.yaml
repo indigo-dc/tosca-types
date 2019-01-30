@@ -2240,7 +2240,7 @@ node_types:
           inputs:
             hadoop_master_ip: { get_attribute: [ HOST, private_address, 0 ] }
 
-  tosca.nodes.indigo.HadoopSlave:
+  tosca.nodes.indigo.HadoopWorker:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       master_ip:
@@ -2253,7 +2253,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/hadoop/hadoop_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/hadoop/hadoop_worker_install.yml
           inputs:
             hadoop_master_ip: { get_property: [ SELF, master_ip ] }
 

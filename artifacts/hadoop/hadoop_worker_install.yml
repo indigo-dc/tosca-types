@@ -4,4 +4,4 @@
   roles:
   - role: indigo-dc.hadoop
     hadoop_master: '{{ hadoop_master_ip }}'
-    hadoop_type_of_node: 'slave'
+    hadoop_node_type: 'worker'
