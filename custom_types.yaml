@@ -2229,6 +2229,13 @@ node_types:
 
   tosca.nodes.indigo.HadoopMaster:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_priv_key:
+        required: no
+        type: string
+      master_pub_key:
+        required: no
+        type: string
     artifacts:
       hadoop_role:
         file: indigo-dc.hadoop,dodas-1.1.0
@@ -2239,12 +2246,17 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/hadoop/hadoop_master_install.yml
           inputs:
             hadoop_master_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            master_priv_key: { get_property: [ SELF, master_priv_key ] }
+            master_pub_key: { get_property: [ SELF, master_pub_key ] }
 
   tosca.nodes.indigo.HadoopWorker:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       master_ip:
         required: yes
+        type: string
+      master_pub_key:
+        required: no
         type: string
     artifacts:
       hadoop_role:
@@ -2256,6 +2268,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/hadoop/hadoop_worker_install.yml
           inputs:
             hadoop_master_ip: { get_property: [ SELF, master_ip ] }
+            master_pub_key: { get_property: [ SELF, master_pub_key ] }
 
   tosca.nodes.indigo.HaddockApp:
     derived_from: tosca.nodes.SoftwareComponent
