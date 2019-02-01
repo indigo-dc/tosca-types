@@ -2236,6 +2236,9 @@ node_types:
       master_pub_key:
         required: no
         type: string
+      worker_ips:
+        required: no
+        type: list
     artifacts:
       hadoop_role:
         file: indigo-dc.hadoop,dodas-1.1.0
@@ -2248,6 +2251,7 @@ node_types:
             hadoop_master_ip: { get_attribute: [ HOST, private_address, 0 ] }
             master_priv_key: { get_property: [ SELF, master_priv_key ] }
             master_pub_key: { get_property: [ SELF, master_pub_key ] }
+            worker_ips: { get_property: [ SELF, worker_ips ] }
 
   tosca.nodes.indigo.HadoopWorker:
     derived_from: tosca.nodes.SoftwareComponent
