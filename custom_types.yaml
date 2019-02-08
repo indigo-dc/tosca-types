@@ -2230,6 +2230,10 @@ node_types:
   tosca.nodes.indigo.HadoopMaster:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      hadoop_version:
+        required: no
+        type: string
+        default: 3.2.0
       master_priv_key:
         required: no
         type: string
@@ -2257,10 +2261,15 @@ node_types:
             master_pub_key: { get_property: [ SELF, master_pub_key ] }
             worker_ips: { get_property: [ SELF, worker_ips ] }
             yarn: { get_property: [ SELF, yarn ] }
+            hadoop_version: { get_property: [ SELF, hadoop_version ] }
 
   tosca.nodes.indigo.HadoopWorker:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      hadoop_version:
+        required: no
+        type: string
+        default: 3.2.0
       master_ip:
         required: yes
         type: string
@@ -2283,6 +2292,7 @@ node_types:
             hadoop_master_ip: { get_property: [ SELF, master_ip ] }
             master_pub_key: { get_property: [ SELF, master_pub_key ] }
             yarn: { get_property: [ SELF, yarn ] }
+            hadoop_version: { get_property: [ SELF, hadoop_version ] }
 
   tosca.nodes.indigo.HaddockApp:
     derived_from: tosca.nodes.SoftwareComponent
