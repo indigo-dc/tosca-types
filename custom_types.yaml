@@ -2234,6 +2234,18 @@ node_types:
         required: no
         type: string
         default: 3.2.0
+      httpfs:
+        required: no
+        type: boolean
+        default: false
+      httpfs_user:
+        required: no
+        type: string
+        default: null
+      httpfs_password:
+        required: no
+        type: string
+        default: null
       master_priv_key:
         required: no
         type: string
@@ -2262,6 +2274,9 @@ node_types:
             worker_ips: { get_property: [ SELF, worker_ips ] }
             yarn: { get_property: [ SELF, yarn ] }
             hadoop_version: { get_property: [ SELF, hadoop_version ] }
+            httpfs: { get_property: [ SELF, httpfs ] }
+            httpfs_user: { get_property: [ SELF, httpfs_user ] }
+            httpfs_password: { get_property: [ SELF, httpfs_password ] }
 
   tosca.nodes.indigo.HadoopWorker:
     derived_from: tosca.nodes.SoftwareComponent
