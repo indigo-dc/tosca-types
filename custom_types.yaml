@@ -2249,9 +2249,11 @@ node_types:
       master_priv_key:
         required: no
         type: string
+        default: ''
       master_pub_key:
         required: no
         type: string
+        default: ''
       worker_ips:
         required: no
         type: list
@@ -2291,6 +2293,7 @@ node_types:
       master_pub_key:
         required: no
         type: string
+        default: ''
       yarn:
         required: no
         default: false
