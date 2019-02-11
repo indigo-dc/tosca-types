@@ -2257,6 +2257,7 @@ node_types:
       worker_ips:
         required: no
         type: list
+        default: [ 'localhost' ]
       yarn:
         required: no
         default: false
