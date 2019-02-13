@@ -2246,6 +2246,14 @@ node_types:
         required: no
         type: string
         default: null
+      master_cert:
+        required: no
+        type: string
+        default: ''
+      master_cert_key:
+        required: no
+        type: string
+        default: ''
       master_priv_key:
         required: no
         type: string
@@ -2274,6 +2282,8 @@ node_types:
             hadoop_master_ip: { get_attribute: [ HOST, private_address, 0 ] }
             master_priv_key: { get_property: [ SELF, master_priv_key ] }
             master_pub_key: { get_property: [ SELF, master_pub_key ] }
+            master_cert: { get_property: [ SELF, master_cert ] }
+            master_cert_key: { get_property: [ SELF, master_cert_key ] }
             worker_ips: { get_property: [ SELF, worker_ips ] }
             yarn: { get_property: [ SELF, yarn ] }
             hadoop_version: { get_property: [ SELF, hadoop_version ] }
