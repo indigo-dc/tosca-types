@@ -2112,8 +2112,18 @@ node_types:
       spark_mesos_deploy_app:
         type: string
         constraints:
-        - valid_values: [ apache-zeppelin, spark-dispatcher ]
+        - valid_values: [ "apache-zeppelin", "spark-dispatcher", "spark-bastion" ]
         required: false
+      bastion_target:
+        type: string
+        constraints:
+        - valid_values: [ "JUPYTER", "SSH" ]
+        default: "JUPYTER"
+        required: false
+      jupyter_password:
+        type: string
+        required: false
+        default: test
       spark_hdfs_uri:
         type: string
         required: false
@@ -2196,6 +2206,8 @@ node_types:
             spark_mesos_driver_mem: { get_property: [ SELF, spark_driver_mem ] }
             spark_mesos_driver_cores: { get_property: [ SELF, spark_driver_cores ] }
             spark_mesos_slave_num: { get_property: [ SELF, spark_slave_num ] }
+            bastion_target: { get_property: [ SELF, bastion_target ] }
+            jupyter_password: { get_property: [ SELF, jupyter_password ] }
     requirements:
       - host:
           capability: tosca.capabilities.indigo.MesosMaster
