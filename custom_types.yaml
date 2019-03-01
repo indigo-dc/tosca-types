@@ -1432,15 +1432,20 @@ node_types:
         type: list
         entry_schema:
           type: string
+      cms_orchestrator: 
+        type: string
+        required: no
+        default: 'marathon'
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
+        file: indigo-dc.cms_config,v1.0.1-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/cms_services_start.yml
           inputs:
+            cms_orchestrator: { get_property: [ SELF, cms_orchestrator ] }
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             cms_config_iam_token: { get_property: [ SELF, iam_access_token ] }
@@ -1895,15 +1900,19 @@ node_types:
       elasticsearch_secret:
         type: string
         required: no
+      cms_orchestrator: 
+        type: string
+        required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
+        file: indigo-dc.cms_config,v1.0.1-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/cms_wn_configure.yml
           inputs:
+            cms_orchestrator: { get_property: [ SELF, cms_orchestrator ] }
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
@@ -2296,7 +2305,7 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     artifacts:
       kube_role:
-        file: grycap.kubernetes
+        file: indigo-dc.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2325,7 +2334,7 @@ node_types:
         value: some_insecure_token
     artifacts:
       kube_role:
-        file: grycap.kubernetes
+        file: indigo-dc.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
