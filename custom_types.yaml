@@ -1903,6 +1903,7 @@ node_types:
       cms_orchestrator: 
         type: string
         required: no
+        default: 'marathon'
     artifacts:
       cms_config_role:
         file: indigo-dc.cms_config,v1.0.1-dodas-rc3
