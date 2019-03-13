@@ -810,7 +810,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       galaxy_role:
-        file: mtangaro.tesk
+        file: indigo-dc.tesk
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
