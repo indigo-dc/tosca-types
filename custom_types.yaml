@@ -775,6 +775,54 @@ node_types:
             refdata_cvmfs_proxy_port: { get_property: [ SELF, refdata_cvmfs_proxy_port ] }
             refdata_dir: { get_property: [ SELF, refdata_dir ] }
 
+  tosca.nodes.indigo.TeskAPI:
+    derived_from: tosca.nodes.WebServer
+    properties:
+      auth_mode:
+        type: string
+        description: Authentication mode
+        default: noauth
+        required: false
+      mount_ftp:
+        description: Flag used to specify that the ftp has to be enabled
+        type: boolean
+        required: false
+        default: true
+      teskmaster_ftp_url:
+        type: string
+        description: ftp url
+        default: 'ftp://ftp_url'
+        required: false
+      teskmaster_ftp_user:
+        type: string
+        description: ftp username
+        default: 'user'
+        required: false
+      teskmaster_ftp_password:
+        type: string
+        description: ftp password
+        default: 'password'
+        required: false
+    requirements:
+      - lrms:
+          capability: tosca.capabilities.indigo.LRMS
+          node: tosca.nodes.indigo.LRMS.FrontEnd
+          relationship: tosca.relationships.HostedOn
+    artifacts:
+      galaxy_role:
+        file: indigo-dc.tesk
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/ga4gh_cloud_apis/artifacts/ga4gh_cloud_apis/tesk_install.yml
+          inputs:
+            auth_mode: { get_property: [ SELF, auth_mode ] }
+            mount_ftp: { get_property: [ SELF, mount_ftp ] }
+            teskmaster_ftp_url: { get_property: [ SELF, teskmaster_ftp_url ] }
+            teskmaster_ftp_user:  { get_property: [ SELF, teskmaster_ftp_user ] }
+            teskmaster_ftp_password:  { get_property: [ SELF, teskmaster_ftp_password ] }
+
   tosca.nodes.indigo.ElasticCluster:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
