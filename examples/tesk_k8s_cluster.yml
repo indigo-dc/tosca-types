@@ -1,0 +1,147 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  TOSCA test for launching a Kubernetes Virtual Cluster with GA4GH ELIXIR Tesk cloud API
+
+topology_template:
+  inputs:
+    wn_num:
+      type: integer
+      description: Number of WNs in the cluster
+      default: 1
+      required: yes
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 2
+      required: yes
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 4 GB
+      required: yes
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 2
+      required: yes
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 4 GB
+      required: yes
+
+    admin_username:
+      type: string
+      description: Username of the admin user
+      default: kubeuser
+    admin_token:
+      type: string
+      description: Access Token for the admin user
+      default: not_very_secret_token
+
+    auth_mode:
+      type: string
+      description: Authentication mode
+      default: noauth
+    mount_ftp:
+      description: Flag used to specify that the ftp has to be enabled
+      type: boolean
+      default: true
+    teskmaster_ftp_url:
+      type: string
+      description: ftp url
+      default: 'ftp_url'
+    teskmaster_ftp_user:
+      type: string
+      description: ftp username
+      default: 'user'
+    teskmaster_ftp_password:
+      type: string
+      description: ftp password
+      default: 'password'
+
+  node_templates:
+
+    lrms_front_end:
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
+      properties:
+        admin_username:  { get_input: admin_username }
+        admin_token: { get_input: admin_token }
+      requirements:
+        - host: lrms_server
+
+    tesk:
+      type: tosca.nodes.indigo.TeskAPI
+      properties:
+        auth_mode: { get_input: auth_mode }
+        mount_ftp: { get_input: mount_ftp }
+        teskmaster_ftp_url: { get_input: teskmaster_ftp_url }
+        teskmaster_ftp_user: { get_input: teskmaster_ftp_user }
+        teskmaster_ftp_password: { get_input: teskmaster_ftp_password }
+      requirements:
+        - lrms: lrms_front_end
+
+    lrms_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            dns_name: kubeserver
+            network_name: PUBLIC
+            ports:
+              dashboard_port:
+                protocol: tcp
+                source: 30443
+              tesk_port:
+                protocol: tcp
+                source: 30080
+        host:
+          properties:
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
+        os:
+          properties:
+            image: linux-ubuntu-16.04-vmi
+            #type: linux
+            #distribution: ubuntu
+            #version: 16.04
+
+    wn_node:
+      type: tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes
+      properties:
+        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+      requirements:
+        - host: lrms_wn
+
+    lrms_wn:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            dns_name: vnode-#N#
+            network_name: PUBLIC
+        scalable:
+          properties:
+            count: { get_input: wn_num }
+        host:
+          properties:
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
+        os:
+          properties:
+            image: linux-ubuntu-16.04-vmi
+            #type: linux
+            #distribution: ubuntu
+            #version: 16.04
+
+  outputs:
+    tesk_url:
+      value: { concat: [ 'http://', get_attribute: [ lrms_server, public_address, 0 ], ':30080' ] }
+    dashboard_url:
+      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
+    cluster_creds:
+      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
