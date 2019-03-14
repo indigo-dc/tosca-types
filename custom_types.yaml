@@ -815,7 +815,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/ga4gh_cloud_apis/artifacts/ga4gh_cloud_apis/tesk_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ga4gh_cloud_apis/tesk_install.yml
           inputs:
             auth_mode: { get_property: [ SELF, auth_mode ] }
             mount_ftp: { get_property: [ SELF, mount_ftp ] }
