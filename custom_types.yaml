@@ -2247,3 +2247,45 @@ node_types:
       type:
         type: string
         required: false
+
+
+  tosca.nodes.indigo.CtaArchiveMetadata:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      oneprovider_version:
+        type: string
+        required: yes
+      onezone_host:
+        type: string
+        required: yes
+      onedata_space_name:
+        type: string
+        required: yes
+      oneprovider_host:
+        type: string
+        required: yes
+      onedata_token:
+        type: string
+        required: yes
+    artifacts:
+      docker_role:
+        file: maricaantonacci.docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+      cta_archive_role:
+        file: maricaantonacci.cta_archive
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        create:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/cta_demo/cta/setup_metadata_tools.yml
+          inputs:
+            cta_archive_source_oneprovider_version: { get_property: [ SELF, oneprovider_version ] }
+            cta_archive_onezone_url: { get_property: [ SELF, onezone_host ] }
+            cta_archive_source_space_name: { get_property: [ SELF, onedata_space_name ] }
+            cta_archive_source_provider: { get_property: [ SELF, oneprovider_host ] }
+            cta_archive_api_token: { get_property: [ SELF, onedata_token ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.Compute
+          relationship: tosca.relationships.HostedOn
