@@ -5,4 +5,4 @@
     docker_bridge_ip_cidr: "172.0.17.1/24"
   roles:
     - role: maricaantonacci.docker
-    - role: maricaantonacci.cta-archive
+    - role: maricaantonacci.cta_archive
