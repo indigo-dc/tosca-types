@@ -2277,7 +2277,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/cta_demo/cta/setup_metadata_tools.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/cta_demo/artifacts/cta/setup_metadata_tools.yml
           inputs:
             cta_archive_source_oneprovider_version: { get_property: [ SELF, oneprovider_version ] }
             cta_archive_onezone_url: { get_property: [ SELF, onezone_host ] }
