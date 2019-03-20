@@ -3,6 +3,7 @@
   connection: local
   vars:
     docker_bridge_ip_cidr: "172.0.17.1/24"
+    docker_install_compose: True
   roles:
     - role: maricaantonacci.docker
     - role: maricaantonacci.cta_archive
