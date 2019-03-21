@@ -1,0 +1,75 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/cta_demo/custom_types.yaml
+
+description: >
+  TOSCA test for launching compute node with a specified image and getting
+  as an output the IP and SSH credentials to access
+
+topology_template:
+
+  inputs:
+
+    onedata_space_name:
+      type: string
+      description: Onedata space where the files will be uploaded
+      required: yes
+
+    onezone:
+      type: string
+      description: Onezone host
+      default: onezone.cloud.cnaf.infn.it
+      required: no
+
+    oneprovider:
+      type: string
+      description: Oneprovider host
+      default: cloud-90-147-75-163.cloud.ba.infn.it
+      required: no
+
+    onedata_token:
+      type: string
+      description: Onedata access token
+      required: yes
+
+  node_templates:
+
+    server_node:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            private_ip: false
+        scalable:
+          properties:
+            count: 1
+        host:
+          properties:
+            #instance_type: m1.small
+            num_cpus: 1
+            mem_size: 1 GB
+        os:
+          properties:
+            version: 7
+            distribution: centos
+            type: linux
+
+    cta_metadata_tools:
+      type: tosca.nodes.indigo.CtaArchiveMetadata
+      properties:
+        oneprovider_version: "18.02.0-rc13"
+        onezone_host: { get_input: onezone }
+        onedata_space_name: { get_input: onedata_space_name }
+        oneprovider_host: { get_input : oneprovider }
+        onedata_token: { get_input: onedata_token }
+      requirements:
+        - host: server_node
+
+
+  outputs:
+    node_ip:
+      value: { get_attribute: [ server_node, public_address, 0 ] }
+    node_creds:
+      value: { get_attribute: [ server_node, endpoint, credential, 0 ] }
