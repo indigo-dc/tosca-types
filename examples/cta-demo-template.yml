@@ -4,8 +4,7 @@ imports:
   - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/cta_demo/custom_types.yaml
 
 description: >
-  TOSCA test for launching compute node with a specified image and getting
-  as an output the IP and SSH credentials to access
+  TOSCA template for deploying the CTA Archive Metadata tools stack
 
 topology_template:
 
