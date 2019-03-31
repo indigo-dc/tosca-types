@@ -1300,6 +1300,63 @@ node_types:
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
 
+  tosca.nodes.indigo.metricbeat:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      orchestrator:
+        type: string
+        required: false
+        default: marathon
+      metric_version:
+        type: string
+        required: false
+        default: 6.2.4
+      elastic_host:
+        type: string
+        required: yes
+      index_name:
+        type: string
+        required: true
+        default: metricbeat
+      username:
+        type: string
+        required: false
+        default: 
+      password:
+        type: string
+        required: false
+        default:
+      ssl_enabled:
+        type: boolean
+        required: false
+        default: true
+      ssl_verification:
+        type: string
+        required: false
+        default: none
+      frequency:
+        type: string
+        required: false
+        default: 30s
+    artifacts:
+      cms_config_role:
+        file: cloud-pg.ansible_role_metricbeat
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/metricbeat/metricbeat.yml
+          inputs:
+            orchestrator: { get_property: [ SELF, orchestrator ] }
+            metric_version: { get_property: [ SELF, metric_version ] }
+            elastic_host: { get_property: [ SELF, elastic_host ] }
+            username: { get_property: [ SELF, username ] }
+            password: { get_property: [ SELF, password ] }
+            ssl_enabled: { get_property: [ SELF, ssl_enabled ] }
+            ssl_verification: { get_property: [ SELF, ssl_verification ] }
+            index_name: { get_property: [ SELF, index_name ] }
+            frequency: { get_property: [ SELF, frequency ] }
+
   tosca.nodes.indigo.XCache:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
