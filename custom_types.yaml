@@ -2361,6 +2361,11 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    properties:
+      kube_version:
+        required: no
+        type: string
+        defualt: 1.14.0
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2376,6 +2381,7 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/lrms/kubernetes/kube_wn_install.yml
           inputs:
+            kube_version: { get_property: [ SELF, kube_version ] }
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
@@ -2390,6 +2396,10 @@ node_types:
         required: no
         type: string
         value: some_insecure_token
+      kube_version:
+        required: no
+        type: string
+        defualt: 1.14.0
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2408,6 +2418,7 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/lrms/kubernetes/kube_fe_install.yml
           inputs:
+            kube_version: { get_property: [ SELF, kube_version ] }
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
