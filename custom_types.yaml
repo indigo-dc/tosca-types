@@ -2365,7 +2365,7 @@ node_types:
       kube_version:
         required: no
         type: string
-        defualt: 1.14.0
+        default: 1.14.0
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2399,7 +2399,7 @@ node_types:
       kube_version:
         required: no
         type: string
-        defualt: 1.14.0
+        default: 1.14.0
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
