@@ -1307,6 +1307,10 @@ node_types:
         type: string
         required: false
         default: marathon
+      beat_name:
+        type: string
+        required: false
+        default: dodas-test
       metric_version:
         type: string
         required: false
@@ -1348,6 +1352,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/metricbeat/metricbeat.yml
           inputs:
             orchestrator: { get_property: [ SELF, orchestrator ] }
+            beat_name: { get_property: [ SELF, beat_name ] }
             metric_version: { get_property: [ SELF, metric_version ] }
             elastic_host: { get_property: [ SELF, elastic_host ] }
             username: { get_property: [ SELF, username ] }
