@@ -1311,6 +1311,10 @@ node_types:
         type: string
         required: false
         default: dodas-test
+      kubelet_host:
+        type: string
+        required: false
+        default: localhost:10250
       metric_version:
         type: string
         required: false
@@ -1353,6 +1357,7 @@ node_types:
           inputs:
             orchestrator: { get_property: [ SELF, orchestrator ] }
             beat_name: { get_property: [ SELF, beat_name ] }
+            kubelet_host: { get_property: [ SELF, kubelet_host ] }
             metric_version: { get_property: [ SELF, metric_version ] }
             elastic_host: { get_property: [ SELF, elastic_host ] }
             username: { get_property: [ SELF, username ] }
