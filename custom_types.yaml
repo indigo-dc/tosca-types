@@ -1596,6 +1596,10 @@ node_types:
         type: string
         description: INDIGO IAM client secret
         required: yes
+      iam_group:
+        type: string
+        required: no
+        description: IAM group to be authorized for this resources (defualt ALL)
       marathon_username:
         type: string
         required: no
@@ -1630,7 +1634,7 @@ node_types:
         default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v1.0.0-dodas-pre1
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-authmap
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1658,6 +1662,7 @@ node_types:
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
             config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            config_iam_group: { get_property: [ SELF, iam_group ] }
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
             config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
             config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
