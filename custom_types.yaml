@@ -1600,6 +1600,7 @@ node_types:
         type: string
         required: no
         description: IAM group to be authorized for this resources (defualt ALL)
+        default: "ALL"
       marathon_username:
         type: string
         required: no
