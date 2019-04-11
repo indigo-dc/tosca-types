@@ -2230,7 +2230,7 @@ node_types:
       icon: /images/kubernetesWN.png
     artifacts:
       - kube_role:
-          file: grycap.kubernetes
+          file: indigo-dc.kubernetes
           type: tosca.artifacts.AnsibleGalaxy.role
       - nfs_role:
           file: indigo-dc.nfs
@@ -2261,7 +2261,7 @@ node_types:
         default: some_insecure_token
     artifacts:
       - kube_role:
-          file: grycap.kubernetes
+          file: indigo-dc.kubernetes
           type: tosca.artifacts.AnsibleGalaxy.role
       - nfs_role:
           file: indigo-dc.nfs
