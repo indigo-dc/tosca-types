@@ -1434,7 +1434,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
+        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1558,7 +1558,7 @@ node_types:
         default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v1.0.0-dodas-pre1
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1616,7 +1616,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1676,7 +1676,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1750,7 +1750,7 @@ node_types:
         type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1897,7 +1897,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
+        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
