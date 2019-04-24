@@ -1472,7 +1472,7 @@ node_types:
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
             proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
-            proxy_lock_file_age: { get_property: [ SELF, local_file_age ] }
+            proxy_lock_file_age: { get_property: [ SELF, lock_file_age ] }
             proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
             oneclient_token: { get_property: [ SELF, oneclient_token ] }
             oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
@@ -1614,7 +1614,7 @@ node_types:
             proxy_audience: { get_property: [ SELF, audience ] }
 
             proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
-            proxy_lock_file_age: { get_property: [ SELF, local_file_age ] }
+            proxy_lock_file_age: { get_property: [ SELF, lock_file_age ] }
             proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
             config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
