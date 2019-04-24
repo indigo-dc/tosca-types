@@ -1419,6 +1419,18 @@ node_types:
         type: string
         required: no
         default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      local_cache_expiration_time: 
+        type: integer
+        required: no
+        default: 86400
+      lock_file_age:
+        type: integer
+        required: no
+        default: 20
+      cache_dir: 
+        type: string
+        required: no
+        default: '/tmp'
       oneclient_token: 
         type: string
         required: no
@@ -1459,6 +1471,9 @@ node_types:
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
+            proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
+            proxy_lock_file_age: { get_property: [ SELF, local_file_age ] }
+            proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
             oneclient_token: { get_property: [ SELF, oneclient_token ] }
             oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
     requirements:
@@ -1552,6 +1567,18 @@ node_types:
         type: string
         required: no
         default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      local_cache_expiration_time: 
+        type: integer
+        required: no
+        default: 86400
+      lock_file_age:
+        type: integer
+        required: no
+        default: 20
+      cache_dir: 
+        type: string
+        required: no
+        default: '/tmp'
       proxycache_image:
         type: string
         required: no
@@ -1585,6 +1612,10 @@ node_types:
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
+
+            proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
+            proxy_lock_file_age: { get_property: [ SELF, local_file_age ] }
+            proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
             config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
             config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
