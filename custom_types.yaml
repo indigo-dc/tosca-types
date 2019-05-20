@@ -1433,7 +1433,7 @@ node_types:
         description: URL to values.yaml file
         required: yes
     artifacts:
-      cms_config_role:
+      helm_config_role:
         file: cloud-pg.ansible_role_helm
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
