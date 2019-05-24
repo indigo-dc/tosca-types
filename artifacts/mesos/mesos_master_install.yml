@@ -15,6 +15,12 @@
         service_discovery: "none"
       when: enable_consul_sd == false
 
+    - name: "Create shared directory"
+      file:
+        path: /data
+        state: directory
+      when: "enable_nfs_share == true"
+
   roles:
     - role: indigo-dc.nfs
       nfs_mode: 'server'
