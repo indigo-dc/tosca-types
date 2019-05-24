@@ -1502,6 +1502,9 @@ node_types:
       htcondor_config_schedd_ip:
         type: string
         required: yes
+      htcondor_config_ccb_ip_pub:
+        type: string
+        required: yes
       htcondor_config_ccb_ip:
         type: string
         required: yes
@@ -1585,7 +1588,7 @@ node_types:
         default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc2
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1605,6 +1608,7 @@ node_types:
             low_port:  { get_property: [ SELF, htcondor_config_low_port ] }
             config_mode: { get_property: [ SELF, config_mode ] }
             htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
+            htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip_pub ] }
             htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
             proxycache_host: { get_property: [ SELF, proxycache_host ] }
             proxy_cache_manager: { get_property: [ SELF, proxycache_token_manager ] }
@@ -1647,7 +1651,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-rc3
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1707,7 +1711,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-rc3
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1781,7 +1785,7 @@ node_types:
         type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-rc3
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
