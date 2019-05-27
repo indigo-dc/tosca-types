@@ -1641,6 +1641,12 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      htcondor_config_ccb_ip:
+        type: string
+        required: yes
+      htcondor_config_schedd_ip: 
+        type: string
+        required: yes
       ams_default_squid:
         type: string
         required: yes
@@ -1664,6 +1670,8 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
+            htcondor_config_ccb_ip: { get_property: [ self, htcondor_config_ccb_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ self, htcondor_config_schedd_ip ] }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
     requirements:
       - host:
@@ -1724,8 +1732,8 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
-            htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
-            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
+            htcondor_config_ccb_ip: { get_property: [ self, htcondor_config_ccb_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ self, htcondor_config_schedd_ip ] }
             proxycache_host: { get_property: [ SELF, proxycache_host ] }
             config_proxycache_serviceport: { get_property: [ SELF, config_proxycache_serviceport ] }
             ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
