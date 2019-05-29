@@ -102,10 +102,9 @@ topology_template:
             mem_size: 2 GB
         os:
           properties:
-#            type: linux
-#            distribution: ubuntu
-#            version: 14.04
-            image: linux-ubuntu-14.04-vmi
+            type: linux
+            distribution: ubuntu
+            version: 16.04
 
 
     mesos_slave_server:
@@ -120,10 +119,9 @@ topology_template:
             mem_size: 1 GB
         os:
           properties:
-#            type: linux
-#            distribution: ubuntu
-#            version: 14.04
-            image: linux-ubuntu-14.04-vmi
+            type: linux
+            distribution: ubuntu
+            version: 16.04
 
     mesos_lb_server:
       type: tosca.nodes.indigo.Compute
