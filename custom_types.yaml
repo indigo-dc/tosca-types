@@ -1538,6 +1538,18 @@ node_types:
         type: string
         required: no
         default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      local_cache_expiration_time: 
+        type: integer
+        required: no
+        default: 86400
+      lock_file_age:
+        type: integer
+        required: no
+        default: 20
+      cache_dir: 
+        type: string
+        required: no
+        default: '/tmp'
       oneclient_token: 
         type: string
         required: no
@@ -1553,7 +1565,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
+        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1578,6 +1590,9 @@ node_types:
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
+            proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
+            proxy_lock_file_age: { get_property: [ SELF, lock_file_age ] }
+            proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
             oneclient_token: { get_property: [ SELF, oneclient_token ] }
             oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
     requirements:
@@ -1604,6 +1619,9 @@ node_types:
         type: string
         required: yes
       htcondor_config_schedd_ip:
+        type: string
+        required: yes
+      htcondor_config_ccb_ip_pub:
         type: string
         required: yes
       htcondor_config_ccb_ip:
@@ -1671,13 +1689,25 @@ node_types:
         type: string
         required: no
         default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      local_cache_expiration_time: 
+        type: integer
+        required: no
+        default: 86400
+      lock_file_age:
+        type: integer
+        required: no
+        default: 20
+      cache_dir: 
+        type: string
+        required: no
+        default: '/tmp'
       proxycache_image:
         type: string
         required: no
         default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v1.0.0-dodas-pre1
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1697,6 +1727,7 @@ node_types:
             low_port:  { get_property: [ SELF, htcondor_config_low_port ] }
             config_mode: { get_property: [ SELF, config_mode ] }
             htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
+            htcondor_config_ccb_ip_pub: { get_property: [ SELF, htcondor_config_ccb_ip_pub ] }
             htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
             proxycache_host: { get_property: [ SELF, proxycache_host ] }
             proxy_cache_manager: { get_property: [ SELF, proxycache_token_manager ] }
@@ -1704,6 +1735,9 @@ node_types:
             proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
+            proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
+            proxy_lock_file_age: { get_property: [ SELF, lock_file_age ] }
+            proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
             config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
             config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
@@ -1725,6 +1759,12 @@ node_types:
       marathon_password:
         type: string
         required: yes
+      htcondor_config_ccb_ip:
+        type: string
+        required: yes
+      htcondor_config_schedd_ip: 
+        type: string
+        required: yes
       ams_default_squid:
         type: string
         required: yes
@@ -1735,7 +1775,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1748,6 +1788,8 @@ node_types:
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
+            htcondor_config_ccb_ip: { get_property: [ SELF, htcondor_config_ccb_ip ] }
+            htcondor_config_schedd_ip: { get_property: [ SELF, htcondor_config_schedd_ip ] }
             ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
     requirements:
       - host:
@@ -1795,7 +1837,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1869,7 +1911,7 @@ node_types:
         type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-pre1
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2026,7 +2068,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-pre1
+        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
