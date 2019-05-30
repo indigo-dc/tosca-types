@@ -1382,7 +1382,7 @@ node_types:
         file: indigo-dc.zookeeper,v1.1.0-dodas-rc1
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,v1.1.0-dodas-rc1
+        file: indigo-dc.mesos,v1.1.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
       marathon_agent_role:
         file: indigo-dc.marathon,v1.1.0-dodas-rc1
@@ -1968,6 +1968,10 @@ node_types:
         type: boolean
         required: no
         default: false
+      salves_attributes:
+        type: string
+        required: no       
+        default: "" 
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker,v1.1.0-dodas-rc1
@@ -1976,7 +1980,7 @@ node_types:
         file: indigo-dc.consul,v1.1.0-dodas-rc1
         type: tosca.artifacts.AnsibleGalaxy.role
       mesos_agent_role:
-        file: indigo-dc.mesos,v1.1.0-dodas-rc1
+        file: indigo-dc.mesos,v1.1.0-dodas-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1990,6 +1994,7 @@ node_types:
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
+            mesos_slaves_attributes: { get_property: [ SELF, salves_attributes ] }
             front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
   tosca.nodes.indigo.MesosSlave:
