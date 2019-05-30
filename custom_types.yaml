@@ -1757,7 +1757,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-rc6
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc8
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1811,7 +1811,7 @@ node_types:
           type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-rc6
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc8
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1883,7 +1883,7 @@ node_types:
         type: string
     artifacts:
       ams_config_role:
-        file: indigo-dc.ams_config,v1.0.0-dodas-rc6
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc8
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
