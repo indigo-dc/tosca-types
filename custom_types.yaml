@@ -1968,7 +1968,7 @@ node_types:
         type: boolean
         required: no
         default: false
-      salves_attributes:
+      slaves_attributes:
         type: string
         required: no       
         default: "" 
@@ -1994,7 +1994,7 @@ node_types:
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
-            mesos_slaves_attributes: { get_property: [ SELF, salves_attributes ] }
+            mesos_slave_attributes: { get_property: [ SELF, slaves_attributes ] }
             front_end_ip: { get_property: [ SELF, front_end_ip ] }
 
   tosca.nodes.indigo.MesosSlave:
