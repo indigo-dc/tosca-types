@@ -41,6 +41,7 @@
       mesos_install_mode: "master"
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
       mesos_masters_list: "{{ mesos_masters_list_ips }}"
+      mesos_ip: '0.0.0.0'
 
     - role: indigo-dc.marathon
       zookeeper_peers: "{{ mesos_masters_list_ips }}"
