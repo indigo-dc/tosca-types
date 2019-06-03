@@ -8,22 +8,52 @@ description: TOSCA example for specifying a Mesos Cluster
 topology_template:
 
   inputs:
-    slave_num:
-      type: integer
-      description: Maximum number of slaves in the elastic cluster
-      default: 5
+    mesos_password:
+      type: string
+      description: Admin password for accessing Mesos HTTP service
       required: yes
+      default: mesos_pass
 
     marathon_password:
       type: string
-      description: Password to configure user access to Marathon
-      default: test_pass
+      description: Admin password for accessing Marathon HTTP service
       required: yes
+      default: marathhon_pass
 
     chronos_password:
       type: string
-      description: Password to configure user access to Chronos
-      default: test_pass
+      description: Admin password for accessing Chronos HTTP service
+      required: yes
+      default: chronos_pass
+
+    slave_num:
+      type: integer
+      description: Number of slave nodes in the cluster
+      default: 3
+      required: yes
+
+    slave_cpus:
+      type: integer
+      description: Numer of CPUs for the slave node
+      default: 1
+      required: yes
+
+    slave_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the slave node
+      default: 2 GB
+      required: yes
+
+    master_cpus:
+      type: integer
+      description: Numer of CPUs for the master node
+      default: 2
+      required: yes
+
+    master_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the master node
+      default: 4 GB
       required: yes
 
   node_templates:
@@ -43,6 +73,10 @@ topology_template:
           protocol: https
           token:  { get_input: chronos_password }
           user: admin
+        mesos_credentials:
+          protocol: http
+          token:  { get_input: mesos_password }
+          user: admin
       requirements:
         - lrms: mesos_master
         - wn: mesos_slave
@@ -50,6 +84,8 @@ topology_template:
     mesos_master:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
       properties:
+        mesos_masters_list: { get_attribute: [ HOST, private_address ] }
+        mesos_password: { get_input: mesos_password }
         marathon_password: { get_input: marathon_password }
         chronos_password: { get_input: chronos_password }
       requirements:
@@ -63,15 +99,15 @@ topology_template:
             max_instances: { get_input: slave_num }
             min_instances: 0
       properties:
-        front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        front_end_ip: { get_attribute: [ mesos_master_server, private_address, 0 ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
       requirements:
         - host: mesos_slave_server
 
     mesos_load_balancer:
       type: tosca.nodes.indigo.MesosLoadBalancer
       properties:
-        master_ips: { get_attribute: [ mesos_master_server, public_address ] }
+        master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         marathon_password: { get_input: marathon_password }
       requirements:
         - host: mesos_lb_server
@@ -106,7 +142,6 @@ topology_template:
             distribution: ubuntu
             version: 16.04
 
-
     mesos_slave_server:
       type: tosca.nodes.indigo.Compute
       capabilities:
@@ -115,8 +150,8 @@ topology_template:
             count: 0
         host:
           properties:
-            num_cpus: 1
-            mem_size: 1 GB
+            num_cpus: { get_input: slave_cpus }
+            mem_size: { get_input: slave_mem }
         os:
           properties:
             type: linux
@@ -138,8 +173,8 @@ topology_template:
             count: 1
         host:
           properties:
-            num_cpus: 1
-            mem_size: 1 GB
+            num_cpus: 2
+            mem_size: 2 GB
         os:
           properties:
             type: linux
@@ -151,3 +186,9 @@ topology_template:
       value: { get_attribute: [ mesos_lb_server, public_address ] }
     mesos_master_ips:
       value: { get_attribute: [ mesos_master_server, public_address ] }
+    mesos_endpoint:
+      value: { concat: [ 'http://', get_attribute: [ mesos_master_server, public_address, 0 ], ':5050' ] }
+    marathon_endpoint:
+      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
+    chronos_endpoint:
+      value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4443' ] }
