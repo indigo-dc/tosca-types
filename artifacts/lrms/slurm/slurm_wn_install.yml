@@ -13,6 +13,9 @@
         INDIGOVR_NODE_TYPE: standalone
         INDIGOVR_CENTRALPOINT_IP: '{{ slurm_public_front_end_ip }}'
 
+    - name: Refresh setup data to get new ansible_tun0 item
+      setup:
+
     - name: Add host VPN IP in master
       lineinfile:
         dest: /etc/hosts
