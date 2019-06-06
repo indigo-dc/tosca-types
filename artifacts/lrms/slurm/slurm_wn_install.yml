@@ -9,10 +9,10 @@
     lineinfile: dest=/etc/hosts regexp='.*slurmserver.localdomain.*$' line="{{ slurm_public_front_end_ip }} slurmserver slurmserver.localdomain" state=present
     when: wn_hybrid_cluster and IM_NODE_PUBLIC_IP is defined and IM_NODE_PUBLIC_IP == IM_NODE_PRIVATE_IP
   roles:
-  - role: indigo-dc.openvpn
-    openvpn_type_of_node: 'wn'
-    openvpn_frontname: 'slurmserver'
-    when: wn_hybrid_cluster
+  - role: indigo-dc.indigovr
+    INDIGOVR_NODE_TYPE: standalone
+    INDIGOVR_CENTRALPOINT_IP: '{{ slurm_public_front_end_ip }}'
+    when: fe_hybrid_cluster
   - role: indigo-dc.nfs
     nfs_mode: 'client'
     nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "10.8.0.1" }]

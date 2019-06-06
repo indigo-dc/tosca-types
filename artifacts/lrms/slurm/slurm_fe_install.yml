@@ -10,9 +10,8 @@
   - name: "Add master mapping in hosts file"
     lineinfile: dest=/etc/hosts regexp='.*{{ front_end_ip }}.*$' line="{{ front_end_ip }} slurmserver slurmserver.localdomain" state=present
   roles:
-  - role: indigo-dc.openvpn
-    openvpn_type_of_node: 'front'
-    openvpn_frontname: 'slurmserver'
+  - role: indigo-dc.indigovr
+    INDIGOVR_NODE_TYPE: centralpoint
     when: fe_hybrid_cluster
   - role: indigo-dc.nfs
     nfs_mode: 'server'

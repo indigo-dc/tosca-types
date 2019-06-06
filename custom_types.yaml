@@ -982,7 +982,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1049,7 +1049,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
@@ -2247,3 +2247,54 @@ node_types:
       type:
         type: string
         required: false
+
+  tosca.nodes.indigo.VR.CentralPoint:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      indigovr_role:
+        file: indigo-dc.indigovr
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+      central_point:
+        type: tosca.capabilities.Endpoint
+        valid_source_types: [tosca.nodes.indigo.VR.Client, tosca.nodes.indigo.VR.VRouter]
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/central_point_install.yml
+
+  tosca.nodes.indigo.VR.Client:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      indigovr_role:
+        file: indigo-dc.indigovr
+        type: tosca.artifacts.AnsibleGalaxy.role
+    requirements:
+      - central_point:
+          capability: tosca.capabilities.Endpoint
+          node: tosca.nodes.indigo.VR.CentralPoint
+          relationship: tosca.relationships.DependsOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/standalone_install.yml
+          inputs:
+            INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
+
+  tosca.nodes.indigo.VR.VRouter:
+    derived_from: tosca.nodes.SoftwareComponent
+    artifacts:
+      indigovr_role:
+        file: indigo-dc.indigovr
+        type: tosca.artifacts.AnsibleGalaxy.role
+    requirements:
+      - central_point:
+          capability: tosca.capabilities.Endpoint
+          node: tosca.nodes.indigo.VR.CentralPoint
+          relationship: tosca.relationships.DependsOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/vrouter_install.yml
+          inputs:
+            INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
