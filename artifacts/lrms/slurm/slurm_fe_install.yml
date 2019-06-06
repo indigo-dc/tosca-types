@@ -9,18 +9,37 @@
     with_indexed_items: '{{ wn_ips }}'
   - name: "Add master mapping in hosts file"
     lineinfile: dest=/etc/hosts regexp='.*{{ front_end_ip }}.*$' line="{{ front_end_ip }} slurmserver slurmserver.localdomain" state=present
-  roles:
-  - role: indigo-dc.indigovr
-    INDIGOVR_NODE_TYPE: centralpoint
-    when: fe_hybrid_cluster
-  - role: indigo-dc.nfs
-    nfs_mode: 'server'
-    nfs_exports: [{path: "/home", export: "{{ vnode_prefix }}*.localdomain(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
-  - role: indigo-dc.slurm
-    slurm_type_of_node: 'front'
-    slurm_wn_num: '{{ wn_num }}'
-    slurm_wn_ips: '{{ wn_ips }}'
-    slurm_vnode_prefix: '{{ vnode_prefix }}'
-    slurm_wn_nodenames: '{{ groups["lrms_wn"]|map("extract", hostvars, "ansible_hostname")|list if "lrms_wn" in groups else [] }}'
-    slurm_server_ip: '{{ slurm_front_end_ip }}'
 
+  tasks:
+  - block:
+    - name: Call IndigoVR role as Centralpoint
+      include_role:
+        name: indigo-dc.indigovr
+      vars:
+        INDIGOVR_NODE_TYPE: centralpoint
+
+    - name: Add Master VPN IP in host
+      lineinfile:
+        dest: /etc/hosts
+        regexp: ".*slurmserver.localdomain.*$"
+        line: "192.168.255.1 slurmserver.localdomain slurmserver"
+
+    when: fe_hybrid_cluster
+
+  - name: Call NFS role as Server
+    include_role:
+      name: indigo-dc.nfs
+    vars:
+      nfs_mode: 'server'
+      nfs_exports: [{path: "/home", export: "{{ vnode_prefix }}*.localdomain(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
+
+  - name: Call SLURM role as front
+    include_role:
+      name: indigo-dc.slurm
+    vars:
+      slurm_type_of_node: 'front'
+      slurm_wn_num: '{{ wn_num }}'
+      slurm_wn_ips: '{{ wn_ips }}'
+      slurm_vnode_prefix: '{{ vnode_prefix }}'
+      slurm_wn_nodenames: '{{ groups["lrms_wn"]|map("extract", hostvars, "ansible_hostname")|list if "lrms_wn" in groups else [] }}'
+      slurm_server_ip: '{{ slurm_front_end_ip }}'
