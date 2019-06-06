@@ -19,10 +19,10 @@
         INDIGOVR_NODE_TYPE: centralpoint
 
     - name: Add Master VPN IP in host
-      lineinfile:
+      replace:
         dest: /etc/hosts
         regexp: ".*slurmserver.localdomain.*$"
-        line: "192.168.255.1 slurmserver.localdomain slurmserver"
+        replace: "192.168.255.1 slurmserver.localdomain slurmserver"
 
     when: fe_hybrid_cluster
 
@@ -42,4 +42,3 @@
       slurm_wn_ips: '{{ wn_ips }}'
       slurm_vnode_prefix: '{{ vnode_prefix }}'
       slurm_wn_nodenames: '{{ groups["lrms_wn"]|map("extract", hostvars, "ansible_hostname")|list if "lrms_wn" in groups else [] }}'
-      slurm_server_ip: '{{ slurm_front_end_ip }}'

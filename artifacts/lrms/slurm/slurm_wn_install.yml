@@ -17,40 +17,46 @@
       setup:
 
     - name: Add host VPN IP in master
-      lineinfile:
+      replace:
         dest: /etc/hosts
         regexp: ".*{{ansible_hostname}}.localdomain.*$"
-        line: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
+        replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
       delegate_facts: True
       delegate_to: '{{ slurm_front_end_ip }}'
 
     - name: Add Master VPN IP in host
-      lineinfile:
+      replace:
         dest: /etc/hosts
         regexp: ".*slurmserver.localdomain.*$"
-        line: "192.168.255.1 slurmserver.localdomain slurmserver"
+        replace: "192.168.255.1 slurmserver.localdomain slurmserver"
 
+    - name: Call NFS role as client in hybrid
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'client'
+        nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "192.168.255.1" }]
+
+    - name: Call SLURM role as WN
+      include_role:
+        name: indigo-dc.slurm
+      vars:
+        slurm_type_of_node: 'wn'
+        slurm_server_ip: '192.168.255.1'
     when: wn_hybrid_cluster
 
-  - name: Call NFS role as client in hybrid
-    include_role:
-      name: indigo-dc.nfs
-    vars:
-      nfs_mode: 'client'
-      nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "192.168.255.1" }]
-    when: wn_hybrid_cluster
+  - block:
+    - name: Call NFS role as client
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'client'
+        nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ slurm_front_end_ip }}" }]
 
-  - name: Call NFS role as client
-    include_role:
-      name: indigo-dc.nfs
-    vars:
-      nfs_mode: 'client'
-      nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ slurm_front_end_ip }}" }]
+    - name: Call SLURM role as WN
+      include_role:
+        name: indigo-dc.slurm
+      vars:
+        slurm_type_of_node: 'wn'
+        slurm_server_ip: '{{ slurm_front_end_ip }}'
     when: not wn_hybrid_cluster
-
-  - name: Call NFS role as client
-    include_role:
-      name: indigo-dc.slurm
-    vars:
-      slurm_type_of_node: 'wn'
-      slurm_server_ip: '{{ slurm_front_end_ip }}'
