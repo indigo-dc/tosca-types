@@ -2,19 +2,60 @@
 - hosts: localhost
   connection: local
   roles:
-  - role: indigo-dc.openvpn
-    openvpn_type_of_node: 'wn'
-    openvpn_frontname: 'kubeserver'
+  - block:
+    - name: Call IndigoVR role as standalone
+      include_role:
+        name: indigo-dc.indigovr
+      vars:
+        INDIGOVR_NODE_TYPE: standalone
+        INDIGOVR_CENTRALPOINT_IP: '{{ kube_public_front_end_ip }}'
+
+    - name: Refresh setup data to get new ansible_tun0 item
+      setup:
+
+    - name: Add host VPN IP in master
+      replace:
+        dest: /etc/hosts
+        regexp: ".*{{ansible_hostname}}.localdomain.*$"
+        replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
+      delegate_facts: True
+      delegate_to: '{{ kube_public_front_end_ip }}'
+
+    - name: Add Master VPN IP in host
+      replace:
+        dest: /etc/hosts
+        regexp: ".*kubeserver.localdomain.*$"
+        replace: "192.168.255.1 kubeserver.localdomain kubeserver"
+
+    - name: Call NFS role as client in hybrid
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'client'
+        nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "192.168.255.1" }]
+
+    - name: Call Kubernetes role as WN
+      include_role:
+        name: indigo-dc.kubernetes
+      vars:
+        kube_type_of_node: 'wn'
+        kube_server: '192.168.255.1'
+        kube_api_server: '192.168.255.1'
     when: wn_hybrid_cluster
-  - role: indigo-dc.nfs
-    nfs_mode: 'client'
-    nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "10.8.0.1" }]
-    when: wn_hybrid_cluster
-  - role: indigo-dc.nfs
-    nfs_mode: 'client'
-    nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "{{ kube_front_end_ip }}" }]
+
+  - block:
+    - name: Call NFS role as client
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'client'
+        nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "{{ kube_front_end_ip }}" }]
+
+    - name: Call Kubernetes role as WN
+      include_role:
+        name: indigo-dc.kubernetes
+      vars:
+        kube_type_of_node: 'wn'
+        kube_server: '{{kube_front_end_ip}}'
+        kube_api_server: '{{kube_front_end_ip}}'
     when: not wn_hybrid_cluster
-  - role: 'indigo-dc.kubernetes'
-    kube_type_of_node: 'wn'
-    kube_server: '{{kube_front_end_ip}}'
-    kube_api_server: '{{ kube_front_end_ip }}'
