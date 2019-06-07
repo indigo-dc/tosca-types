@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - role: indigo-dc.indigovr
+    INDIGOVR_NODE_TYPE: centralpoint
