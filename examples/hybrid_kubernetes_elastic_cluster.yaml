@@ -19,25 +19,25 @@ topology_template:
     fe_cpus:
       type: integer
       description: Numer of CPUs for the front-end node
-      default: 1
+      default: 2
       required: yes
 
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
-      default: 1 GB
+      default: 4 GB
       required: yes
 
     wn_cpus:
       type: integer
       description: Numer of CPUs for the WNs
-      default: 1
+      default: 2
       required: yes
 
     wn_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
-      default: 1 GB
+      default: 4 GB
       required: yes
 
     hybrid:
