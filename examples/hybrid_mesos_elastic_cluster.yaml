@@ -109,7 +109,7 @@ topology_template:
             max_instances: { get_input: slave_num }
             min_instances: 0
       properties:
-        public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
+        public_front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
         front_end_ip: { get_attribute: [ mesos_master_server, private_address, 0 ] }
         master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         hybrid: { get_input: hybrid }
