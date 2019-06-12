@@ -1764,6 +1764,11 @@ node_types:
         type: boolean
         required: false
         default: true
+      hybrid:
+        type: boolean
+        description: Flag to specify that this ElasticCluster will work in a hybrid environment
+        default: false
+        required: false
     artifacts:
       docker_agent_role:
         file: indigo-dc.docker,master
