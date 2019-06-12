@@ -1442,6 +1442,9 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.indigovr,master
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
@@ -1464,6 +1467,7 @@ node_types:
             mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             chronos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }  
             wn_ips: { get_property: [ SELF, wn_ips ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
@@ -1624,16 +1628,21 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.indigovr,master
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             mesos_enable_gpu_support: { get_property: [ SELF, enable_gpu_support ] }
             front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
@@ -1765,15 +1774,19 @@ node_types:
       marathon_lb_role:
         file: indigo-dc.marathon-lb,master
         type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.indigovr,master
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_lb_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/mesos/mesos_lb_install.yml
           inputs:
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             master_ips: { get_property: [ SELF, master_ips ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
+            lb_hybrid_cluster: { get_property: [ SELF, hybrid ] }
     requirements:
       - host:
           capability: tosca.capabilities.Container
