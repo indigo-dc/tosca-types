@@ -37,13 +37,13 @@ topology_template:
     slave_cpus:
       type: integer
       description: Numer of CPUs for the slave node
-      default: 1
+      default: 2
       required: yes
 
     slave_mem:
       type: scalar-unit.size
       description: Amount of Memory for the slave node
-      default: 2 GB
+      default: 3 GB
       required: yes
 
     master_cpus:
