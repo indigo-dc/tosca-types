@@ -73,6 +73,7 @@ topology_template:
         hybrid: { get_input: hybrid }
       requirements:
         - host: lrms_server
+        - dependency: indigovr_cp
 
     lrms_server:
       type: tosca.nodes.indigo.Compute
@@ -108,6 +109,7 @@ topology_template:
             min_instances: 0
       requirements:
         - host: lrms_wn
+        - dependency: indigovr_client
 
     indigovr_client:
       type: tosca.nodes.indigo.VR.Client
