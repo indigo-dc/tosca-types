@@ -29,63 +29,41 @@
         delegate_facts: True
         delegate_to: '{{ public_front_end_ip }}'
 
-      - name: Call consul role as agent
-        include_role:
-          name: indigo-dc.consul
-        vars:
-          consul_mode: "agent"
-          consul_servers: ['192.168.255.1']
-          # This is a more generic way to do it:
-          # consul_servers: "{{ groups['mesos_master_server']|map('extract', hostvars,'ansible_tun0.ipv4.address')|list }}"
-          consul_advertise: '{{ ansible_tun0.ipv4.address }}'
-          consul_bind_addr: '{{ ansible_tun0.ipv4.address }}'
-        when: (enable_consul_sd == true )
-
-      - name: Call mesos role as slave
-        include_role:
-          name: indigo-dc.mesos
-        vars:
-          mesos_install_mode: "slave"
-          zookeeper_peers: ['192.168.255.1']
-          mesos_masters_list: ['192.168.255.1']
-
-      - name: Call NFS role as client
-        include_role:
-          name: indigo-dc.nfs
-        vars:
-          nfs_mode: 'client'
-          nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "192.168.255.1", opts: "nolock" }]
-        when: "enable_nfs_share == true"
+      - name: Set facts in case of Hybrid cluster
+        set_fact:
+          mesos_masters_list_ips: "{{ groups['mesos_master_server']|map('extract', hostvars,'ansible_tun0')|list|map(attribute='ipv4.address')|list }}"
+          consul_address: "{{ ansible_tun0.ipv4.address }}"
 
       when: wn_hybrid_cluster
 
-
-    - block:
-
-      - name: Call consul role as agent
-        include_role:
-          name: indigo-dc.consul
-        vars:
-          consul_mode: "agent"
-          consul_servers: "{{ mesos_masters_list_ips }}"
-          consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
-          consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
-        when: (enable_consul_sd == true )
-
-      - name: Call mesos role as slave
-        include_role:
-          name: indigo-dc.mesos
-        vars:
-          mesos_install_mode: "slave"
-          zookeeper_peers: "{{ mesos_masters_list_ips }}"
-          mesos_masters_list: "{{ mesos_masters_list_ips }}"
-
-      - name: Call NFS role as client
-        include_role:
-          name: indigo-dc.nfs
-        vars:
-          nfs_mode: 'client'
-          nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ front_end_ip }}", opts: "nolock" }]
-        when: "enable_nfs_share == true"
-
+    - name: Set facts
+      set_fact:
+        consul_address: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
       when: not wn_hybrid_cluster
+
+    - name: Call consul role as agent
+      include_role:
+        name: indigo-dc.consul
+      vars:
+        consul_mode: "agent"
+        consul_servers: "{{ mesos_masters_list_ips }}"
+        consul_advertise: '{{ consul_address }}'
+        consul_bind_addr: '{{ consul_address }}'
+      when: (enable_consul_sd == true )
+
+    - name: Call mesos role as slave
+      include_role:
+        name: indigo-dc.mesos
+      vars:
+        mesos_install_mode: "slave"
+        zookeeper_peers: "{{ mesos_masters_list_ips }}"
+        mesos_masters_list: "{{ mesos_masters_list_ips }}"
+
+    - name: Call NFS role as client
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'client'
+        nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ mesos_masters_list_ips[0] }}", opts: "nolock" }]
+      when: "enable_nfs_share == true"
+

@@ -25,7 +25,7 @@
 
       - name: Set facts in case of Hybrid cluster
         set_fact:
-          master_ips: ['192.168.255.1']
+          master_ips: "{{ groups['mesos_master_server']|map('extract', hostvars,'ansible_tun0')|list|map(attribute='ipv4.address')|list }}"
           consul_address: '{{ ansible_tun0.ipv4.address }}'
 
       when: lb_hybrid_cluster
