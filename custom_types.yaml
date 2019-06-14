@@ -1076,6 +1076,8 @@ node_types:
       command:
         required: no
         type: string
+        constraints:
+          - min_length: 1
       uris:
         required: no
         type: list
@@ -1098,7 +1100,7 @@ node_types:
         type: map
         entry_schema:
           type: string
-      priviliged:
+      privileged:
         required: no
         type: boolean
         default: false
@@ -1117,6 +1119,8 @@ node_types:
       command:
         required: yes
         type: string
+        constraints:
+          - min_length: 1
       description:
         required: no
         type: string
@@ -1127,7 +1131,7 @@ node_types:
         required: no
         type: string
         default: PT10S
-      priviliged:
+      privileged:
         required: no
         type: boolean
         default: true
@@ -2247,3 +2251,24 @@ node_types:
       type:
         type: string
         required: false
+
+policy_types:
+  tosca.policies.indigo.SlaPlacement:
+    derived_from: tosca.policies.Placement
+    properties:
+      sla_id:
+        required: true
+        type: string
+    
+  tosca.policies.indigo.CredentialsAwareSlaPlacement:
+    derived_from: tosca.policies.indigo.SlaPlacement
+    properties:
+      username:
+        required: true
+        type: string
+      password:
+        required: true
+        type: string
+      subscription_id:
+        required: false
+        type: string
