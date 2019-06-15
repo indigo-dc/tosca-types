@@ -466,7 +466,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/mtangaroo/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
           inputs:
             storage_encryption: { get_property: [ SELF, storage_encryption ] }
             vault_url: { get_property: [ SELF, vault_url ] }
