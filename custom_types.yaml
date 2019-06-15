@@ -427,22 +427,22 @@ node_types:
         type: string
         description: Hashicorp Vault server url
         default: vault_url
-        required: true
+        required: false
       vault_wrapping_token:
         type: string
         description: Vault Wrapping token to write secret
         default: not_a_valid_token
-        required: true
+        required: false
       vault_secret_path:
         type: string
         description: Vault path to store secret
         default: path_to_secret
-        required: true
+        required: false
       vault_secret_key:
         type: string
         description: Vault secret key name
         default: secret_key_name
-        required: true
+        required: false
       iam_client_id:
         type: string
         description: 
