@@ -418,38 +418,47 @@ node_types:
   tosca.nodes.indigo.GalaxyPortalAndStorage:
     derived_from: tosca.nodes.indigo.GalaxyPortal
     properties:
-      os_storage:
-        type: string
-        description: Storage type (Iaas Block Storage (default), Onedata, Filesystem encryption)
-        default: "IaaS"
+      storage_encryption:
+        type: boolean
+        description: Enable storage encryption using Vault to store secrets and LUKS to encrypt
+        default: false
         required: true
-      token:
+      vault_url:
         type: string
-        description: Access token for onedata space
-        default: "not_a_token"
+        description: Hashicorp Vault server url
+        default: vault_url
+        required: true
+      vault_wrapping_token:
+        type: string
+        description: Vault Wrapping token to write secret
+        default: not_a_valid_token
+        required: true
+      vault_secret_path:
+        type: string
+        description: Vault path to store secret
+        default: path_to_secret
+        required: true
+      vault_secret_key:
+        type: string
+        description: Vault secret key name
+        default: secret_key_name
+        required: true
+      iam_client_id:
+        type: string
+        description: 
+        default: iam_client_id_for_luks_client
         required: false
-      provider:
+      iam_client_secret:
         type: string
-        description: default OneProvider
-        default: "not_a_provider_url"
-        required: false
-      space:
-        type: string
-        description: Onedata space
-        default: "galaxy"
+        description: 
+        default: iam_secret_for_luks_client
         required: false
     artifacts:
       nfs_role:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
-      indigorepo_role:
-        file: indigo-dc.galaxycloud-indigorepo
-        type: tosca.artifacts.AnsibleGalaxy.role
-      oneclient_role:
-        file: indigo-dc.oneclient
-        type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os
+        file: indigo-dc.galaxycloud-os,vault
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
         file: indigo-dc.galaxycloud
@@ -457,12 +466,15 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
+          implementation: https://raw.githubusercontent.com/mtangaroo/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
           inputs:
-            os_storage: { get_property: [ SELF, os_storage ] }
-            userdata_token: { get_property: [ SELF, token ] }
-            userdata_oneprovider: { get_property: [ SELF, provider ] }
-            userdata_space: { get_property: [ SELF, space ] }
+            storage_encryption: { get_property: [ SELF, storage_encryption ] }
+            vault_url: { get_property: [ SELF, vault_url ] }
+            vault_wrapping_token: { get_property: [ SELF, vault_wrapping_token ] }
+            vault_secret_path: { get_property: [ SELF, vault_secret_path ] }
+            vault_secret_key: { get_property: [ SELF, vault_secret_key ] }
+            iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_admin: { get_property: [ SELF, admin_email ] }
