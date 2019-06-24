@@ -1303,6 +1303,72 @@ node_types:
         type: boolean
         default: true
 
+  tosca.nodes.indigo.metricbeat:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      orchestrator:
+        type: string
+        required: false
+        default: marathon
+      beat_name:
+        type: string
+        required: false
+        default: dodas-test
+      kubelet_host:
+        type: string
+        required: false
+        default: localhost:10250
+      metric_version:
+        type: string
+        required: false
+        default: 6.2.4
+      elastic_host:
+        type: string
+        required: yes
+      index_name:
+        type: string
+        required: true
+        default: metricbeat
+      username:
+        type: string
+        required: false
+        default: 
+      password:
+        type: string
+        required: false
+        default:
+      ssl_enabled:
+        type: boolean
+        required: false
+        default: true
+      ssl_verification:
+        type: string
+        required: false
+        default: none
+      frequency:
+        type: string
+        required: false
+        default: 30s
+    artifacts:
+      cms_config_role:
+        file: cloud-pg.ansible_role_metricbeat
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/metricbeat/metricbeat.yml
+          inputs:
+            orchestrator: { get_property: [ SELF, orchestrator ] }
+            beat_name: { get_property: [ SELF, beat_name ] }
+            kubelet_host: { get_property: [ SELF, kubelet_host ] }
+            metric_version: { get_property: [ SELF, metric_version ] }
+            elastic_host: { get_property: [ SELF, elastic_host ] }
+            username: { get_property: [ SELF, username ] }
+            password: { get_property: [ SELF, password ] }
+            ssl_enabled: { get_property: [ SELF, ssl_enabled ] }
+            ssl_verification: { get_property: [ SELF, ssl_verification ] }
+            index_name: { get_property: [ SELF, index_name ] }
+            frequency: { get_property: [ SELF, frequency ] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -1418,6 +1484,34 @@ node_types:
 
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
+
+  tosca.nodes.indigo.HelmInstall:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      name:
+        type: string
+        description: name of the helm deployment
+        required: yes
+      chart:
+        type: string
+        description: chart name
+        required: yes
+      values:
+        type: string
+        description: URL to values.yaml file
+        required: yes
+    artifacts:
+      helm_config_role:
+        file: cloud-pg.ansible_role_helm
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/helm/helm.yml
+          inputs:
+            name: { get_property: [ SELF, name ] }
+            chart: { get_property: [ SELF, chart ] }
+            values: { get_property: [ SELF, values ] }
 
   tosca.nodes.indigo.XCache:
     derived_from: tosca.nodes.SoftwareComponent
@@ -1563,15 +1657,20 @@ node_types:
         type: list
         entry_schema:
           type: string
+      cms_orchestrator: 
+        type: string
+        required: no
+        default: 'marathon'
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
+        file: indigo-dc.cms_config,v1.0.1-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/cms_services_start.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/mesos/cms_services_start.yml
           inputs:
+            cms_orchestrator: { get_property: [ SELF, cms_orchestrator ] }
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             cms_config_iam_token: { get_property: [ SELF, iam_access_token ] }
@@ -1652,6 +1751,11 @@ node_types:
         type: string
         description: INDIGO IAM client secret
         required: yes
+      iam_group:
+        type: string
+        required: no
+        description: IAM group to be authorized for this resources (defualt ALL)
+        default: "ALL"
       marathon_username:
         type: string
         required: no
@@ -1698,7 +1802,7 @@ node_types:
         default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc4
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-authmap
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1730,6 +1834,7 @@ node_types:
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
             config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
             config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            config_iam_group: { get_property: [ SELF, iam_group ] }
             config_proxycache_image: { get_property: [ SELF, proxycache_image ]}
     requirements:
       - host:
@@ -2043,15 +2148,20 @@ node_types:
       elasticsearch_secret:
         type: string
         required: no
+      cms_orchestrator: 
+        type: string
+        required: no
+        default: 'marathon'
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
+        file: indigo-dc.cms_config,v1.0.1-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/cms_wn_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/mesos/cms_wn_configure.yml
           inputs:
+            cms_orchestrator: { get_property: [ SELF, cms_orchestrator ] }
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
@@ -2532,7 +2642,7 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     artifacts:
       kube_role:
-        file: grycap.kubernetes
+        file: indigo-dc.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2543,8 +2653,9 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/lrms/kubernetes/kube_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/lrms/kubernetes/kube_wn_install.yml
           inputs:
+            kube_version: { get_property: [ SELF, kube_version ] }
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
 
@@ -2559,9 +2670,13 @@ node_types:
         required: no
         type: string
         value: some_insecure_token
+      kube_version:
+        required: no
+        type: string
+        default: 1.14.0
     artifacts:
       kube_role:
-        file: grycap.kubernetes
+        file: indigo-dc.kubernetes
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2575,8 +2690,9 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/lrms/kubernetes/kube_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/lrms/kubernetes/kube_fe_install.yml
           inputs:
+            kube_version: { get_property: [ SELF, kube_version ] }
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
