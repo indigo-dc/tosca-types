@@ -1809,7 +1809,7 @@ node_types:
         default: "dodasts/ttscache"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc5
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc6
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
