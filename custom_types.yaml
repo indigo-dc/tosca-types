@@ -863,6 +863,7 @@ node_types:
           protocol: http
           user: admin
           token: password
+          token_type: password
         required: false
       chronos_credentials:
         type: tosca.datatypes.Credential
@@ -871,6 +872,7 @@ node_types:
           protocol: http
           user: admin
           token: password
+          token_type: password
         required: false
       mesos_credentials:
         type: tosca.datatypes.Credential
@@ -879,6 +881,7 @@ node_types:
           protocol: http
           user: admin
           token: password
+          token_type: password
         required: false
       hybrid:
         type: boolean
