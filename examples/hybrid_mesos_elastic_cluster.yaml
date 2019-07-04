@@ -77,14 +77,17 @@ topology_template:
           protocol: https
           token:  { get_input: marathon_password }
           user: admin
+          token_type: password
         chronos_credentials:
           protocol: https
           token:  { get_input: chronos_password }
           user: admin
+          token_type: password
         mesos_credentials:
           protocol: http
           token:  { get_input: mesos_password }
           user: admin
+          token_type: password
         hybrid: { get_input: hybrid }
       requirements:
         - lrms: mesos_master
