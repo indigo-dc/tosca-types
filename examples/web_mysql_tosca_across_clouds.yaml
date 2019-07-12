@@ -120,11 +120,13 @@ topology_template:
 #Front-End in OpenNebula (UPV, OneCloud). Back-End in OpenStack (INFN, Recas-Bari)
   policies:
    - across_clouds_policy_backend:
-       type: tosca.policies.Placement
-       properties: { sla_id: 4401ac5dc8cfbbb737b0a02575ee53f6 }
+       type: tosca.policies.indigo.SlaPlacement
+       properties:
+         sla_id: 4401ac5dc8cfbbb737b0a02575ee53f6
        targets: [ db_server ]
 
    - across_clouds_policy_fronted:
-       type: tosca.policies.Placement
-       properties: { sla_id: 7efc59c5db69ea67c5100de0f752b3de }
+       type: tosca.policies.indigo.SlaPlacement
+       properties:
+         sla_id: 7efc59c5db69ea67c5100de0f752b3de
        targets: [ web_server ]
