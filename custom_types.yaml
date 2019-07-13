@@ -466,7 +466,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
           inputs:
             storage_encryption: { get_property: [ SELF, storage_encryption ] }
             vault_url: { get_property: [ SELF, vault_url ] }
@@ -493,14 +493,8 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
-      indigorepo_role:
-        file: indigo-dc.galaxycloud-indigorepo
-        type: tosca.artifacts.AnsibleGalaxy.role
-      oneclient_role:
-        file: indigo-dc.oneclient
-        type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os
+        file: indigo-dc.galaxycloud-os,vault
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role-fastconfig:
         file: indigo-dc.galaxycloud-fastconfig
