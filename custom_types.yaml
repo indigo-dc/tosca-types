@@ -504,10 +504,13 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_fastconfig.yml
           inputs:
-            os_storage: { get_property: [ SELF, os_storage ] }
-            userdata_token: { get_property: [ SELF, token ] }
-            userdata_oneprovider: { get_property: [ SELF, provider ] }
-            userdata_space: { get_property: [ SELF, space ] }
+            storage_encryption: { get_property: [ SELF, storage_encryption ] }
+            vault_url: { get_property: [ SELF, vault_url ] }
+            vault_wrapping_token: { get_property: [ SELF, vault_wrapping_token ] }
+            vault_secret_path: { get_property: [ SELF, vault_secret_path ] }
+            vault_secret_key: { get_property: [ SELF, vault_secret_key ] }
+            iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_admin: { get_property: [ SELF, admin_email ] }
