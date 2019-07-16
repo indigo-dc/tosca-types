@@ -1303,6 +1303,48 @@ node_types:
         type: boolean
         default: true
 
+  tosca.nodes.indigo.NfsMaster:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      remote_path:
+        type: string
+        required: yes 
+    artifacts:
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/nfs/nfs_master.yml
+          inputs:
+            remote_path: { get_property: [ SELF, remote_path ] }
+
+  tosca.nodes.indigo.NfsClient:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      remote_path:
+        type: string
+        required: yes 
+      local_path:
+        type: string
+        required: yes 
+      server_host:
+        type: string
+        required: yes
+    artifacts:
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.1/artifacts/nfs/nfs_slave.yml
+          inputs:
+            remote_path: { get_property: [ SELF, remote_path ] }
+            local_path: { get_property: [ SELF, remote_path ] }
+            server_host: { get_property: [ SELF, server_host ] }
+
   tosca.nodes.indigo.metricbeat:
     derived_from: tosca.nodes.SoftwareComponent
     properties:

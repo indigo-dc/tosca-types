@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+  - role: indigo-dc.nfs
+    nfs_mode: 'client'
+    nfs_client_imports: [{ local: "{{ local_path }}", remote: "{{ remote_path }}", server_host: "{{ server_host }}" }]
