@@ -1565,7 +1565,7 @@ node_types:
           type: string
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
+        file: indigo-dc.cms_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2045,7 +2045,7 @@ node_types:
         required: no
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.0-dodas-rc2
+        file: indigo-dc.cms_config,v1.0.0-dodas-rc5
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
