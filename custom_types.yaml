@@ -784,6 +784,43 @@ node_types:
             refdata_cvmfs_proxy_port: { get_property: [ SELF, refdata_cvmfs_proxy_port ] }
             refdata_dir: { get_property: [ SELF, refdata_dir ] }
 
+  tosca.nodes.indigo.GalaxyPortalDocker:
+    derived_from: tosca.nodes.indigo.GalaxyPortal
+    artifacts:
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_os_role:
+        file: indigo-dc.galaxycloud-os,vault
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role-fastconfig:
+        file: pmandreoli.galaxycloud_docker
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/galaxy/galaxy_docker.yml
+          inputs:
+            storage_encryption: { get_property: [ SELF, storage_encryption ] }
+            vault_url: { get_property: [ SELF, vault_url ] }
+            vault_wrapping_token: { get_property: [ SELF, vault_wrapping_token ] }
+            vault_secret_path: { get_property: [ SELF, vault_secret_path ] }
+            vault_secret_key: { get_property: [ SELF, vault_secret_key ] }
+            iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            galaxy_install_path: { get_property: [ SELF, install_path ] }
+            galaxy_user: { get_property: [ SELF, user ] }
+            galaxy_admin: { get_property: [ SELF, admin_email ] }
+            galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
+            galaxy_lrms: { get_property: [ SELF, lrms, type ] }
+            galaxy_version: { get_property: [ SELF, version ] }
+            galaxy_instance_description: { get_property: [ SELF, instance_description ] }
+            galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
+            export_dir: { get_property: [ SELF, export_dir ] }
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
+            get_refdata: { get_property: [ SELF, reference_data ] }
+
+
   tosca.nodes.indigo.TeskAPI:
     derived_from: tosca.nodes.WebServer
     properties:

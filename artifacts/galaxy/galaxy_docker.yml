@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+     vnode_prefix: vnode-
+  pre_tasks:
+    - set_fact:
+        galaxy_flavor: 'galaxy-no-tools'
+      when: galaxy_flavor == 'galaxy-minimal'
+  roles:
+    - role: indigo-dc.galaxycloud-os
+      GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
+
+    - role: pmandreoli.galaxycloud_docker
+      GALAXY_VERSION: "{{ galaxy_version }}"
+      GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
+      GALAXY_ADMIN_API_KEY: "{{ galaxy_admin_api_key }}"
+
+    - role: indigo-dc.nfs
+      nfs_mode: 'server'
+      nfs_exports: [{path: "{{export_dir}}", export: "{{ vnode_prefix }}*.localdomain(rw,async,no_root_squash,no_subtree_check,insecure)"}]
+      when: galaxy_lrms != "local"
