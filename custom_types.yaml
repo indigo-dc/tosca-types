@@ -785,7 +785,7 @@ node_types:
             refdata_dir: { get_property: [ SELF, refdata_dir ] }
 
   tosca.nodes.indigo.GalaxyPortalDocker:
-    derived_from: tosca.nodes.indigo.GalaxyPortal
+    derived_from: tosca.nodes.indigo.GalaxyPortalAndStorage
     artifacts:
       nfs_role:
         file: indigo-dc.nfs
