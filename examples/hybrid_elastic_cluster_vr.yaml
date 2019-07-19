@@ -25,19 +25,19 @@ topology_template:
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
-      default: 1 GB
+      default: 2 GB
       required: yes
 
     wn_cpus:
       type: integer
       description: Numer of CPUs for the WNs
-      default: 1
+      default: 2
       required: yes
 
     wn_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
-      default: 1 GB
+      default: 3 GB
       required: yes
 
     hybrid:
@@ -143,11 +143,11 @@ topology_template:
 
   policies:
     - deploy_on_ifca:
-        type: tosca.policies.Placement
+        type: tosca.policies.indigo.SlaPlacement
         properties: { sla_id: 5cf12da6cb0e8f527dfb3c97 }
         targets: [ lrms_wn ]
 
 #    - deploy_on_recas:
-#        type: tosca.policies.Placement
+#        type: tosca.policies.indigo.SlaPlacement
 #        properties: { sla_id: 5bfbc091a9a88f528bf5114b }
 #        targets: [ lrms_server ]
