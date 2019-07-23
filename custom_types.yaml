@@ -485,7 +485,7 @@ node_types:
         file: indigo-dc.galaxycloud-os,vault
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role-fastconfig:
-        file: indigo-dc.galaxycloud-fastconfig
+        file: indigo-dc.galaxycloud-fastconfig,devel
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
