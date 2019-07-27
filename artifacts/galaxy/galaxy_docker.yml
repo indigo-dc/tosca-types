@@ -10,6 +10,9 @@
   roles:
     - role: indigo-dc.galaxycloud-os
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
+      enable_reboot_scripts: false
+      enable_customization_scripts: false
+
 
     - role: pmandreoli.galaxycloud_docker
       GALAXY_VERSION: "{{ galaxy_version }}"
