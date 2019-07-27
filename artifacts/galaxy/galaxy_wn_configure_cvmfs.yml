@@ -9,17 +9,17 @@
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_key_file }}'
         dest: '/tmp'
-      when: refdata_provider_type == 'cvmfs'
+      when: refdata_cvmfs_configuration == 'cvmfs'
     - name: Get reference data cvmfs key for preconfigured repository
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_keys/{{ refdata_cvmfs_repository_name }}.pub'
         dest: '/tmp'
-      when: refdata_provider_type == 'cvmfs_preconfigured'
+      when: refdata_cvmfs_configuration == 'cvmfs_preconfigured'
     - name: Get reference data cvmfs configuration for preconfigured repository
       get_url:
         url: 'https://raw.githubusercontent.com/indigo-dc/Reference-data-galaxycloud-repository/master/cvmfs_server_config_files/{{ refdata_cvmfs_repository_name }}.conf'
         dest: '/tmp'
-      when: refdata_provider_type == 'cvmfs_preconfigured'
+      when: refdata_cvmfs_configuration == 'cvmfs_preconfigured'
 
   tasks:
     - local_action: get_url url=https://raw.githubusercontent.com/indigo-dc/ansible-role-galaxycloud/master/defaults/main.yml dest=/tmp/galaxywn.yml
@@ -51,7 +51,7 @@
       cvmfs_mountpoint: '{{ refdata_dir }}'
       when:
         - get_refdata|bool
-        - refdata_provider_type == 'cvmfs'
+        - refdata_cvmfs_configuration == 'cvmfs'
 
     - role: indigo-dc.cvmfs-client
       repository_name: '{{ refdata_cvmfs_repository_name }}'
@@ -60,7 +60,7 @@
       cvmfs_preconfigured: true
       when:
         - get_refdata|bool
-        - refdata_provider_type == 'cvmfs_preconfigured'
+        - refdata_cvmfs_configuration == 'cvmfs_preconfigured'
 
     - role: indigo-dc.nfs
       nfs_mode: 'client'

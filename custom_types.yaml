@@ -570,20 +570,20 @@ node_types:
         description: Install Reference data
         default: true
         required: true
-      refdata_provider_type:
+      refdata_cvmfs_configuration:
         type: string
-        description: Select Reference data provider type (Onedata, CernVM-FS or download)
-        default: 'cvmfs'
+        description: Configure cvmfs or load preconfigured repository
+        default: 'cvmfs_preconfigured'
+        required: false
+      refdata_cvmfs_repository_name:
+        type: string
+        description: CernVM-FS repository name
+        default: 'elixir-italy.galaxy.refdata'
         required: false
       refdata_cvmfs_server_url:
         type: string
         description: CernVM-FS server, replica or stratum-zero
         default: 'server_url'
-        required: false
-      refdata_cvmfs_repository_name:
-        type: string
-        description: Reference data CernVM-FS repository name
-        default: 'not_a_cvmfs_repository_name'
         required: false
       refdata_cvmfs_key_file:
         type: string
@@ -603,7 +603,7 @@ node_types:
       refdata_dir:
         type: string
         description: path to store galaxy reference data
-        default: /refdata
+        default: /cvmfs
         required: false
     requirements:
       - host:
@@ -613,16 +613,16 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure_cvmfs.yml
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/galaxy/galaxy_wn_configure_cvmfs.yml
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             export_dir: { get_property: [ SELF, export_dir ] }
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_version: { get_property: [ SELF, version ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
-            refdata_provider_type: { get_property: [ SELF, refdata_provider_type ] }
-            refdata_cvmfs_server_url: { get_property: [ SELF, refdata_cvmfs_server_url ] }
+            refdata_cvmfs_configuration: { get_property: [ SELF, refdata_cvmfs_configuration ] }
             refdata_cvmfs_repository_name: { get_property: [ SELF, refdata_cvmfs_repository_name ] }
+            refdata_cvmfs_server_url: { get_property: [ SELF, refdata_cvmfs_server_url ] }
             refdata_cvmfs_key_file: { get_property: [ SELF, refdata_cvmfs_key_file ] }
             refdata_cvmfs_proxy_url: { get_property: [ SELF, refdata_cvmfs_proxy_url ] }
             refdata_cvmfs_proxy_port: { get_property: [ SELF, refdata_cvmfs_proxy_port ] }
@@ -682,40 +682,20 @@ node_types:
         description: Install Reference data
         default: true
         required: true
-      flavor:
+      refdata_cvmfs_configuration:
         type: string
-        description: name of the Galaxy flavor
-        required: true
-        default: galaxy-no-tools
-      refdata_repository_name:
+        description: Configure cvmfs or load preconfigured repository
+        default: 'cvmfs_preconfigured'
+        required: false
+      refdata_cvmfs_repository_name:
         type: string
-        description: Onedata space name, CernVM-FS repository name or subdirectory downaload name
+        description: CernVM-FS repository name
         default: 'elixir-italy.galaxy.refdata'
-        required: false
-      refdata_provider_type:
-        type: string
-        description: Select Reference data provider type (Onedata, CernVM-FS or download)
-        default: 'cvmfs'
-        required: false
-      refdata_provider:
-        type: string
-        description: Oneprovider for reference data
-        default: 'not_a_provider'
-        required: false
-      refdata_token:
-        type: string
-        description: Access token for reference data
-        default: 'not_a_token'
         required: false
       refdata_cvmfs_server_url:
         type: string
         description: CernVM-FS server, replica or stratum-zero
         default: 'server_url'
-        required: false
-      refdata_cvmfs_repository_name:
-        type: string
-        description: Reference data CernVM-FS repository name
-        default: 'not_a_cvmfs_repository_name'
         required: false
       refdata_cvmfs_key_file:
         type: string
@@ -735,40 +715,39 @@ node_types:
       refdata_dir:
         type: string
         description: path to store galaxy reference data
-        default: /refdata
+        default: /cvmfs
         required: false
+      flavor:
+        type: string
+        description: name of the Galaxy flavor
+        required: true
+        default: galaxy-no-tools
     requirements:
       - host:
           capability: tosca.capabilities.Container
           node: tosca.nodes.indigo.GalaxyPortal
           relationship: tosca.relationships.HostedOn
     artifacts:
-      oneclient_role:
-        file: indigo-dc.oneclient
-        type: tosca.artifacts.AnsibleGalaxy.role
       cvmfs_role:
         file: indigo-dc.cvmfs-client
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud-refdata
+        file: indigo-dc.galaxycloud-refdata,devel
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_redfata_configure.yml
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/galaxy/galaxy_redfata_configure.yml
           inputs:
             get_refdata: { get_property: [ SELF, reference_data ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
-            refdata_repository_name: { get_property: [ SELF, refdata_repository_name ] }
-            refdata_provider_type: { get_property: [ SELF, refdata_provider_type ] }
-            refdata_provider: { get_property: [ SELF, refdata_provider ] }
-            refdata_token: { get_property: [ SELF, refdata_token ] }
-            refdata_cvmfs_server_url: { get_property: [ SELF, refdata_cvmfs_server_url ] }
+            refdata_cvmfs_configuration: { get_property: [ SELF, refdata_cvmfs_configuration ] }
             refdata_cvmfs_repository_name: { get_property: [ SELF, refdata_cvmfs_repository_name ] }
+            refdata_cvmfs_server_url: { get_property: [ SELF, refdata_cvmfs_server_url ] }
             refdata_cvmfs_key_file: { get_property: [ SELF, refdata_cvmfs_key_file ] }
             refdata_cvmfs_proxy_url: { get_property: [ SELF, refdata_cvmfs_proxy_url ] }
             refdata_cvmfs_proxy_port: { get_property: [ SELF, refdata_cvmfs_proxy_port ] }
             refdata_dir: { get_property: [ SELF, refdata_dir ] }
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
 
   tosca.nodes.indigo.GalaxyPortalDocker:
     derived_from: tosca.nodes.indigo.GalaxyPortalAndStorage
