@@ -552,6 +552,10 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.Compute
           relationship: tosca.relationships.HostedOn
+    artifacts:
+      tooldeps_role:
+        file: indigo-dc.galaxycloud-tooldeps
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
@@ -610,6 +614,13 @@ node_types:
           capability: tosca.capabilities.Container
           node: tosca.nodes.Compute
           relationship: tosca.relationships.HostedOn
+    artifacts:
+      tooldeps_role:
+        file: indigo-dc.galaxycloud-tooldeps
+        type: tosca.artifacts.AnsibleGalaxy.role
+      cvmfs_role:
+        file: indigo-dc.cvmfs-client
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
