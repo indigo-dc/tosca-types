@@ -1011,6 +1011,27 @@ node_types:
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             slurm_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
 
+  tosca.nodes.indigo.LRMS.WorkerNode.SlurmGalaxy:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
+    artifacts:
+      slurm_role:
+        file: indigo-dc.slurm,cons_res
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
+          inputs:
+            slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            slurm_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
+
   tosca.nodes.indigo.LRMS.FrontEnd:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
@@ -1059,6 +1080,31 @@ node_types:
     artifacts:
       slurm_role:
         file: indigo-dc.slurm
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+        lrms:
+          type: tosca.capabilities.indigo.LRMS.Slurm
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
+          inputs:
+            wn_num: { get_property: [ SELF, wn_num ] }
+            wn_ips: { get_property: [ SELF, wn_ips ] }
+            front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+
+  tosca.nodes.indigo.LRMS.FrontEnd.SlurmGalaxy:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
+    artifacts:
+      slurm_role:
+        file: indigo-dc.slurm,cons_res
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
