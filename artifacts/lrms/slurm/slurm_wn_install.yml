@@ -5,6 +5,11 @@
   - name: "Add private ip master mapping in hosts file"
     lineinfile: dest=/etc/hosts regexp='.*slurmserver.localdomain.*$' line="{{ slurm_front_end_ip }} slurmserver slurmserver.localdomain" state=present
   tasks:
+  # to avoid issues en L2 hybrid clusters
+  - name: renew DHCP data
+    command: dhclient -v
+    ignore_errors: yes
+
   - block:
     - name: Call IndigoVR role as standalone
       include_role:
