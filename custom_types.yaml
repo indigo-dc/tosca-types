@@ -980,7 +980,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,dev-micafer
+        file: indigo-dc.indigovr
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2274,7 +2274,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       indigovr_role:
-        file: indigo-dc.indigovr
+        file: indigo-dc.indigovr,mtu_1400
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
       central_point:
@@ -2289,7 +2289,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       indigovr_role:
-        file: indigo-dc.indigovr
+        file: indigo-dc.indigovr,mtu_1400
         type: tosca.artifacts.AnsibleGalaxy.role
     requirements:
       - central_point:
@@ -2307,7 +2307,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       indigovr_role:
-        file: indigo-dc.indigovr
+        file: indigo-dc.indigovr,mtu_1400
         type: tosca.artifacts.AnsibleGalaxy.role
     requirements:
       - central_point:
