@@ -52,7 +52,7 @@ topology_template:
       type: tosca.nodes.network.Network
       properties:
         network_type: public
-        network_name: public-muni-147-251-124
+        network_name: public-cesnet-78-128-251
 
     server_pub_port:
       type: tosca.nodes.network.Port
@@ -66,7 +66,7 @@ topology_template:
       type: tosca.nodes.network.Network
       properties:
         cidr: '192.168.10.0/24'
-        gateway_ip: '192.168.0.0/16,vr1_compute'
+        gateway_ip: '192.168.0.0/16,lrms_server'
         network_type: private
 
     server_port:
@@ -83,14 +83,6 @@ topology_template:
         order: 0
       requirements:
         - binding: lrms_wn
-        - link: network1
-
-    router1_port:
-      type: tosca.nodes.network.Port
-      properties:
-        order: 0
-      requirements:
-        - binding: vr1_compute
         - link: network1
 
     elastic_cluster_front_end:
@@ -152,7 +144,7 @@ topology_template:
             min_instances: 0
       requirements:
         - host: lrms_wn
-        - dependency: indigovr_router1
+        - dependency: indigovr_cp
 
     lrms_wn:
       type: tosca.nodes.indigo.Compute
@@ -168,27 +160,6 @@ topology_template:
           properties:
               type: linux
               image: ost://identity.cloud.muni.cz/2a5bbbf5-c135-4cd8-896e-8690fb82a7e9
-
-
-    indigovr_router1:
-      type: tosca.nodes.indigo.VR.VRouter
-      requirements:
-        - central_point:
-            node: indigovr_cp
-        - host:
-            node: vr1_compute
-
-    vr1_compute:
-      type: tosca.nodes.indigo.Compute
-      capabilities:
-        host:
-          properties:
-            num_cpus: 1
-            mem_size: 1 GB
-        os:
-          properties:
-              image: ost://identity.cloud.muni.cz/2a5bbbf5-c135-4cd8-896e-8690fb82a7e9
-              type: linux
 
   outputs:
     cluster_ip:
