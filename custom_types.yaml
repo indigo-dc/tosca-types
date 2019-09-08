@@ -443,6 +443,13 @@ node_types:
         description: Vault secret key name
         default: secret_key_name
         required: false
+      wn_ips:
+        type: list
+        entry_schema:
+          type: string
+        description: List of IPs of the WNs
+        required: false
+        default: []
     artifacts:
       nfs_role:
         file: indigo-dc.nfs
@@ -463,6 +470,7 @@ node_types:
             vault_wrapping_token: { get_property: [ SELF, vault_wrapping_token ] }
             vault_secret_path: { get_property: [ SELF, vault_secret_path ] }
             vault_secret_key: { get_property: [ SELF, vault_secret_key ] }
+            wn_ips: { get_property: [ SELF, wn_ips ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_admin: { get_property: [ SELF, admin_email ] }
@@ -497,6 +505,7 @@ node_types:
             vault_wrapping_token: { get_property: [ SELF, vault_wrapping_token ] }
             vault_secret_path: { get_property: [ SELF, vault_secret_path ] }
             vault_secret_key: { get_property: [ SELF, vault_secret_key ] }
+            wn_ips: { get_property: [ SELF, wn_ips ] }
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
             galaxy_admin: { get_property: [ SELF, admin_email ] }
