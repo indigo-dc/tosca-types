@@ -543,40 +543,8 @@ node_types:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             export_dir: { get_property: [ SELF, export_dir ] }
 
-  tosca.nodes.indigo.GalaxyWnToolDeps:
+  tosca.nodes.indigo.GalaxyWNCVMFS:
     derived_from: tosca.nodes.indigo.GalaxyWN
-    properties:
-      flavor:
-        type: string
-        description: name of the Galaxy flavor
-        required: true
-        default: galaxy-no-tools
-      version:
-        type: string
-        description: galaxy version installed
-        default: master
-        required: false
-    requirements:
-      - host:
-          capability: tosca.capabilities.Container
-          node: tosca.nodes.Compute
-          relationship: tosca.relationships.HostedOn
-    artifacts:
-      tooldeps_role:
-        file: indigo-dc.galaxycloud-tooldeps
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure_tooldeps.yml
-          inputs:
-            galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
-            export_dir: { get_property: [ SELF, export_dir ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
-            galaxy_version: { get_property: [ SELF, version ] }
-
-  tosca.nodes.indigo.GalaxyWnCvmfsReferenceData:
-    derived_from: tosca.nodes.indigo.GalaxyWnToolDeps
     properties:
       reference_data:
         type: boolean
@@ -625,7 +593,7 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       tooldeps_role:
-        file: indigo-dc.galaxycloud-tooldeps
+        file: indigo-dc.galaxycloud-os,vault
         type: tosca.artifacts.AnsibleGalaxy.role
       cvmfs_role:
         file: indigo-dc.cvmfs-client
@@ -637,8 +605,6 @@ node_types:
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             export_dir: { get_property: [ SELF, export_dir ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
-            galaxy_version: { get_property: [ SELF, version ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
             refdata_cvmfs_configuration: { get_property: [ SELF, refdata_cvmfs_configuration ] }
             refdata_cvmfs_repository_name: { get_property: [ SELF, refdata_cvmfs_repository_name ] }

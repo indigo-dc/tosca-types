@@ -38,9 +38,8 @@
       authorized_key: user={{galaxy_user}} key="{{ lookup('file', '/tmp/' + galaxy_user + '_id_rsa.pub') }}"
 
   roles:
-    - role: indigo-dc.galaxycloud-tooldeps
+    - role: indigo-dc.galaxycloud-os
       type_of_node: wn
-      GALAXY_VERSION: '{{ galaxy_version }}'
 
     - role: indigo-dc.cvmfs-client
       server_url: '{{ refdata_cvmfs_server_url }}'
