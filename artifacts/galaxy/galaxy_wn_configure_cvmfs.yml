@@ -37,6 +37,8 @@
   roles:
     - role: indigo-dc.galaxycloud-os
       type_of_node: wn
+      when:
+        - storage_encryption|bool
 
     - role: indigo-dc.cvmfs-client
       server_url: '{{ refdata_cvmfs_server_url }}'
