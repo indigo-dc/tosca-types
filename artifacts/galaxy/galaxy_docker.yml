@@ -10,6 +10,7 @@
   roles:
     - role: indigo-dc.galaxycloud-os
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
+      application_virtualization_type: 'docker'
       enable_reboot_scripts: false
       enable_customization_scripts: false
 
