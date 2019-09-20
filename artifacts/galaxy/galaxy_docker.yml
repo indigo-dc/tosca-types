@@ -5,7 +5,7 @@
      vnode_prefix: vnode-
   pre_tasks:
     - set_fact:
-        galaxy_flavor: 'galaxy-no-tools'
+        galaxy_flavor: 'bgruening/galaxy-stable'
       when: galaxy_flavor == 'galaxy-minimal'
   roles:
     - role: indigo-dc.galaxycloud-os

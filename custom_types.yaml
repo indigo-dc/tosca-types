@@ -380,7 +380,7 @@ node_types:
         type: string
         description: name of the Galaxy flavor
         required: false
-        default: "bgruening/galaxy-stable"
+        default: galaxy-no-tools
       reference_data:
         type: boolean
         description: Install Reference data
