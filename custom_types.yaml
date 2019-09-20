@@ -492,7 +492,7 @@ node_types:
       galaxy_os_role:
         file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
-      galaxy_role-fastconfig:
+      galaxy_role_fastconfig:
         file: indigo-dc.galaxycloud-fastconfig
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -748,8 +748,8 @@ node_types:
       docker_role:
         file: indigo-dc.docker
         type: tosca.artifacts.AnsibleGalaxy.role
-      galaxy_role-fastconfig:
-        file: pmandreoli.galaxycloud_docker
+      galaxy_role_docker:
+        file: indigo-dc.galaxycloud_docker
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:

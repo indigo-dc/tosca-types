@@ -14,8 +14,7 @@
       enable_reboot_scripts: false
       enable_customization_scripts: false
 
-
-    - role: pmandreoli.galaxycloud_docker
+    - role: indigo-dc.galaxycloud_docker
       GALAXY_VERSION: "{{ galaxy_version }}"
       GALAXY_ADMIN_EMAIL: "{{ galaxy_admin }}"
       GALAXY_ADMIN_API_KEY: "{{ galaxy_admin_api_key }}"
