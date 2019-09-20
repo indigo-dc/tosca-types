@@ -396,7 +396,7 @@ node_types:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud,fixes
+        file: indigo-dc.galaxycloud
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -455,10 +455,10 @@ node_types:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os,vault
+        file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud,fixes
+        file: indigo-dc.galaxycloud
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -490,10 +490,10 @@ node_types:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os,vault
+        file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role-fastconfig:
-        file: indigo-dc.galaxycloud-fastconfig,devel
+        file: indigo-dc.galaxycloud-fastconfig
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -596,8 +596,8 @@ node_types:
           node: tosca.nodes.Compute
           relationship: tosca.relationships.HostedOn
     artifacts:
-      tooldeps_role:
-        file: indigo-dc.galaxycloud-os,vault
+      os_role:
+        file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       cvmfs_role:
         file: indigo-dc.cvmfs-client
@@ -651,17 +651,13 @@ node_types:
       galaxy_role:
         file: indigo-dc.galaxycloud-tools
         type: tosca.artifacts.AnsibleGalaxy.role
-      tooldeps_role:
-        file: indigo-dc.galaxycloud-tooldeps
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_tools_configure.yml
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/galaxy/galaxy_tools_configure.yml
           inputs:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
-            instance_public_ip: { get_attribute: [ HOST, public_address, 0 ] }
             galaxy_version: { get_property: [ SELF, version ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
 
@@ -723,7 +719,7 @@ node_types:
         file: indigo-dc.cvmfs-client
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud-refdata,devel
+        file: indigo-dc.galaxycloud-refdata
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -747,7 +743,7 @@ node_types:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os,vault
+        file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
       docker_role:
         file: indigo-dc.docker
@@ -776,7 +772,6 @@ node_types:
             export_dir: { get_property: [ SELF, export_dir ] }
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
-
 
   tosca.nodes.indigo.TeskAPI:
     derived_from: tosca.nodes.WebServer
