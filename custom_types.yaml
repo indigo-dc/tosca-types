@@ -221,7 +221,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_db_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_db_configure.yml
           inputs:
             db_password: { get_property: [ SELF, password ] }
             db_name: { get_property: [ SELF, name ] }
@@ -249,9 +249,9 @@ node_types:
         valid_source_types: [ tosca.nodes.Database.MySQL ]
     interfaces:
       Standard:
-        create: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_install.yml
+        create: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_install.yml
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_configure.yml
           inputs:
             root_password: { get_property: [ SELF, root_password ] }
             port: { get_property: [ SELF, port ] }
@@ -263,9 +263,9 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/apache/apache_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/apache/apache_install.yml
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/apache/apache_start.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/apache/apache_start.yml
 
 # INDIGO non normative types
 
@@ -289,7 +289,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_db_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_db_configure.yml
           inputs:
             db_password: { get_property: [ SELF, password ] }
             db_name: { get_property: [ SELF, name ] }
@@ -347,7 +347,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/zabbix/zabbix_agent_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/zabbix/zabbix_agent_install.yml
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
@@ -421,7 +421,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_install.yml
           inputs:
             galaxy_install_path: { get_property: [ SELF, install_path ] }
             galaxy_user: { get_property: [ SELF, user ] }
@@ -483,7 +483,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_os_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_os_install.yml
           inputs:
             storage_encryption: { get_property: [ SELF, storage_encryption ] }
             vault_url: { get_property: [ SELF, vault_url ] }
@@ -518,7 +518,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_fastconfig.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_fastconfig.yml
           inputs:
             storage_encryption: { get_property: [ SELF, storage_encryption ] }
             vault_url: { get_property: [ SELF, vault_url ] }
@@ -560,7 +560,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_wn_configure.yml
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             export_dir: { get_property: [ SELF, export_dir ] }
@@ -627,7 +627,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_wn_configure_cvmfs.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_wn_configure_cvmfs.yml
           inputs:
             galaxy_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             export_dir: { get_property: [ SELF, export_dir ] }
@@ -678,7 +678,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_tools_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_tools_configure.yml
           inputs:
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             galaxy_admin_api_key: { get_property: [ HOST, admin_api_key ] }
@@ -750,7 +750,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_redfata_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_redfata_configure.yml
           inputs:
             get_refdata: { get_property: [ SELF, reference_data ] }
             refdata_cvmfs_configuration: { get_property: [ SELF, refdata_cvmfs_configuration ] }
@@ -780,7 +780,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/galaxy/galaxy_docker.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_docker.yml
           inputs:
             storage_encryption: { get_property: [ SELF, storage_encryption ] }
             vault_url: { get_property: [ SELF, vault_url ] }
@@ -839,7 +839,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ga4gh_cloud_apis/tesk_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/ga4gh_cloud_apis/tesk_install.yml
           inputs:
             auth_mode: { get_property: [ SELF, auth_mode ] }
             mount_ftp: { get_property: [ SELF, mount_ftp ] }
@@ -934,7 +934,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ec3/ec3_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/ec3/ec3_install.yml
           inputs:
             clues_secret_token: { get_property: [ SELF, secret_token ] }
             clues_queue_system: { get_property: [ SELF, lrms, type ] }
@@ -991,7 +991,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/torque/torque_wn_install.yml
           inputs:
             torque_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1013,7 +1013,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1034,7 +1034,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1072,7 +1072,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/torque/torque_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/torque/torque_fe_install.yml
           inputs:
             torque_wn_ips: { get_property: [ SELF, wn_ips ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1103,7 +1103,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
@@ -1128,7 +1128,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
@@ -1342,7 +1342,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/dariahrepo-setup.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/dariahrepo-setup.yml
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             dariahrepo_app_cache_cpus: { get_property: [ SELF, cache_cpus ] }
@@ -1424,7 +1424,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/start_tensorflow.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/start_tensorflow.yml
           inputs:
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }      
@@ -1551,7 +1551,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/mesos/mesos_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
             mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
@@ -1665,7 +1665,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_services_start.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/cms_services_start.yml
           inputs:
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
@@ -1741,7 +1741,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
@@ -1767,7 +1767,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/oneclient/artifacts/onedata/cms_oneclient.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/onedata/cms_oneclient.yml
           inputs:
             oneclient_pkg: { get_property: [ SELF, oneclient_pkg ] }
 
@@ -1830,7 +1830,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_wn_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/cms_wn_configure.yml
           inputs:
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
@@ -1896,7 +1896,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/mesos/mesos_lb_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/mesos_lb_install.yml
           inputs:
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             master_ips: { get_property: [ SELF, master_ips ] }
@@ -1984,7 +1984,7 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/spark_mesos_setup.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/spark_mesos_setup.yml
           inputs:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             zookeeper_peers: { get_property: [ SELF, zookeeper_peers ] }
@@ -2046,7 +2046,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/hadoop/hadoop_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/hadoop/hadoop_master_install.yml
           inputs:
             hadoop_master_ip: { get_attribute: [ HOST, private_address, 0 ] }
 
@@ -2065,7 +2065,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/hadoop/hadoop_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/hadoop/hadoop_wn_install.yml
           inputs:
             hadoop_master_ip: { get_property: [ SELF, master_ip ] }
 
@@ -2087,7 +2087,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/haddock/haddock_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/haddock/haddock_install.yml
           inputs:
             haddock_app_name: { get_property: [ SELF, haddock_app_name ] }
 
@@ -2124,7 +2124,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/eubiosteo/eubiosteo_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/eubiosteo/eubiosteo_install.yml
 
   tosca.nodes.indigo.Ambertools:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2137,7 +2137,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ambertools/ambertools_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/ambertools/ambertools_install.yml
 
   tosca.nodes.indigo.Kepler:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2150,7 +2150,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/kepler/kepler_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/kepler/kepler_install.yml
 
   tosca.nodes.indigo.OphidiaServer:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2177,7 +2177,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_server_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/ophidia/ophidia_server_install.yml
           inputs:
             ophidia_io_ips: { get_property: [ SELF, io_ips ] }
 
@@ -2203,7 +2203,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ophidia/ophidia_io_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/ophidia/ophidia_io_install.yml
           inputs:
             ophidia_server_ip: { get_property: [ SELF, server_ip ] }
 
@@ -2290,7 +2290,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/kubernetes/kube_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/kubernetes/kube_wn_install.yml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -2325,7 +2325,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/kubernetes/kube_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/kubernetes/kube_fe_install.yml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -2356,7 +2356,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/jupyter/jupyterhub_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/jupyter/jupyterhub_install.yml
           inputs:
             jupyterhub_spawner: { get_property: [ SELF, spawner ] }
             jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
@@ -2435,7 +2435,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/central_point_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/indigovr/central_point_install.yml
 
   tosca.nodes.indigo.VR.Client:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2451,7 +2451,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/standalone_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/indigovr/standalone_install.yml
           inputs:
             INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
 
@@ -2469,7 +2469,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/vrouter_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/indigovr/vrouter_install.yml
           inputs:
             INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
 
