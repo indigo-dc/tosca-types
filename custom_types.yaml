@@ -513,7 +513,7 @@ node_types:
         file: indigo-dc.galaxycloud-os,master
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role_fastconfig:
-        file: indigo-dc.galaxycloud-fastconfig
+        file: indigo-dc.galaxycloud-fastconfig,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -619,10 +619,10 @@ node_types:
           relationship: tosca.relationships.HostedOn
     artifacts:
       os_role:
-        file: indigo-dc.galaxycloud-os
+        file: indigo-dc.galaxycloud-os,master
         type: tosca.artifacts.AnsibleGalaxy.role
       cvmfs_role:
-        file: indigo-dc.cvmfs-client
+        file: indigo-dc.cvmfs-client,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -766,16 +766,16 @@ node_types:
     derived_from: tosca.nodes.indigo.GalaxyPortalAndStorage
     artifacts:
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_os_role:
-        file: indigo-dc.galaxycloud-os
+        file: indigo-dc.galaxycloud-os,master
         type: tosca.artifacts.AnsibleGalaxy.role
       docker_role:
-        file: indigo-dc.docker
+        file: indigo-dc.docker,master
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role_docker:
-        file: indigo-dc.galaxycloud_docker
+        file: indigo-dc.galaxycloud_docker,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1026,10 +1026,10 @@ node_types:
         file: indigo-dc.slurm,cons_res
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.openvpn
+        file: indigo-dc.indigovr,mtu_1400
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1117,10 +1117,10 @@ node_types:
         file: indigo-dc.slurm,cons_res
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs
+        file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.openvpn
+        file: indigo-dc.indigovr,mtu_1400
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -1163,6 +1163,18 @@ node_types:
         entry_schema:
           type: string
       environment_variables:
+        required: no
+        type: map
+        entry_schema:
+          type: string
+      constraints:
+        required: no
+        type: list
+        entry_schema:
+          type: list
+          entry_schema:
+            type: string
+      secrets:
         required: no
         type: map
         entry_schema:
@@ -2211,6 +2223,22 @@ node_types:
         entry_schema:
           type: string
         description: A map of string representing environment settings
+
+  tosca.nodes.indigo.Qcg.Job:
+    derived_from: tosca.nodes.indigo.Batch.Job
+    properties:
+      directory:
+        required: no
+        type: string
+        description: Work directory for the Job
+      schema:
+        required: no
+        type: string
+        description: Job schema
+      note:
+        required: no
+        type: string
+        description: User's note for the Job
 
 # https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
   tosca.nodes.indigo.Grid.Job:
