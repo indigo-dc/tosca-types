@@ -43,7 +43,7 @@ topology_template:
     hybrid:
       type: boolean
       description: Flag to specify that this cluster will work in an hybrid environment
-      default: false
+      default: true
       required: false
 
   node_templates:
@@ -75,6 +75,10 @@ topology_template:
           properties:
             dns_name: slurmserver
             network_name: PUBLIC
+            ports:
+              openvpn:
+                protocol: udp
+                source: 1194
         host:
           properties:
             num_cpus: { get_input: fe_cpus }
@@ -121,3 +125,13 @@ topology_template:
     cluster_creds:
       value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
 
+  policies:
+    - deploy_on_ifca:
+        type: tosca.policies.Placement
+        properties: { sla_id: 5cf12da6cb0e8f527dfb3c97 }
+        targets: [ lrms_wn ]
+
+#    - deploy_on_recas:
+#        type: tosca.policies.Placement
+#        properties: { sla_id: 5bfbc091a9a88f528bf5114b }
+#        targets: [ lrms_server ]

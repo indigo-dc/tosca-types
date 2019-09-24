@@ -2,11 +2,13 @@ tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
   - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/custom_types.yaml
-
-description: TOSCA example for specifying a Mesos Cluster
+ 
+description: >
+  TOSCA test for launching a Virtual Elastic Cluster. It will launch
+  a single front-end that will be in change of managing the elasticity
+  using the specified LRMS (torque, sge, slurm and condor) workload.
 
 topology_template:
-
   inputs:
     mesos_password:
       type: string
@@ -35,13 +37,13 @@ topology_template:
     slave_cpus:
       type: integer
       description: Numer of CPUs for the slave node
-      default: 1
+      default: 2
       required: yes
 
     slave_mem:
       type: scalar-unit.size
       description: Amount of Memory for the slave node
-      default: 2 GB
+      default: 3 GB
       required: yes
 
     master_cpus:
@@ -56,6 +58,12 @@ topology_template:
       default: 4 GB
       required: yes
 
+    hybrid:
+      type: boolean
+      description: Flag to specify that this cluster will work in an hybrid environment
+      default: true
+      required: false
+
   node_templates:
 
     elastic_cluster_front_end:
@@ -69,14 +77,18 @@ topology_template:
           protocol: https
           token:  { get_input: marathon_password }
           user: admin
+          token_type: password
         chronos_credentials:
           protocol: https
           token:  { get_input: chronos_password }
           user: admin
+          token_type: password
         mesos_credentials:
           protocol: http
           token:  { get_input: mesos_password }
           user: admin
+          token_type: password
+        hybrid: { get_input: hybrid }
       requirements:
         - lrms: mesos_master
         - wn: mesos_slave
@@ -88,6 +100,7 @@ topology_template:
         mesos_password: { get_input: mesos_password }
         marathon_password: { get_input: marathon_password }
         chronos_password: { get_input: chronos_password }
+        hybrid: { get_input: hybrid }
       requirements:
         - host: mesos_master_server
 
@@ -99,8 +112,10 @@ topology_template:
             max_instances: { get_input: slave_num }
             min_instances: 0
       properties:
+        public_front_end_ip: { get_attribute: [ mesos_master_server, public_address, 0 ] }
         front_end_ip: { get_attribute: [ mesos_master_server, private_address, 0 ] }
         master_ips: { get_attribute: [ mesos_master_server, private_address ] }
+        hybrid: { get_input: hybrid }
       requirements:
         - host: mesos_slave_server
 
@@ -109,6 +124,7 @@ topology_template:
       properties:
         master_ips: { get_attribute: [ mesos_master_server, private_address ] }
         marathon_password: { get_input: marathon_password }
+        hybrid: { get_input: hybrid }
       requirements:
         - host: mesos_lb_server
 
@@ -129,6 +145,9 @@ topology_template:
               chronos_port:
                 protocol: tcp
                 source: 4443
+              openvpn:
+                protocol: udp
+                source: 1194
         scalable:
           properties:
             count: 1
@@ -192,3 +211,14 @@ topology_template:
       value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':8443' ] }
     chronos_endpoint:
       value: { concat: [ 'https://', get_attribute: [ mesos_master_server, public_address, 0 ], ':4443' ] }
+
+  policies:
+    - deploy_on_ifca:
+        type: tosca.policies.Placement
+        properties: { sla_id: 5cf12da6cb0e8f527dfb3c97 }
+        targets: [ mesos_slave_server ]
+
+#    - deploy_on_recas:
+#        type: tosca.policies.Placement
+#        properties: { sla_id: 5bfbc091a9a88f528bf5114b }
+#        targets: [ mesos_slave_server ]

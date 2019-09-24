@@ -3,23 +3,58 @@
   connection: local
   vars:
     docker_bridge_ip_cidr: "172.0.17.1/24"
-  pre_tasks:
+  tasks:
+    - name: Call Docker role
+      include_role:
+        name: indigo-dc.docker
+
+    - block:
+
+      - name: Call IndigoVR role as standalone
+        include_role:
+          name: indigo-dc.indigovr
+        vars:
+          INDIGOVR_NODE_TYPE: standalone
+          # I use the master_ips, that is the private IPs 
+          # we should use the public one, but we will launch the 
+          # LB allways in the same site as the mesos master
+          INDIGOVR_CENTRALPOINT_IP: '{{ master_ips[0] }}'
+
+      - name: Refresh setup data to get new ansible_tun0 item
+        setup:
+
+      - name: Set facts in case of Hybrid cluster
+        set_fact:
+          master_ips: "{{ groups['mesos_master_server']|map('extract', hostvars,'ansible_tun0')|list|map(attribute='ipv4.address')|list }}"
+          consul_address: '{{ ansible_tun0.ipv4.address }}'
+
+      when: lb_hybrid_cluster
+
+    - name: Set facts
+      set_fact:
+        consul_address: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      when: not lb_hybrid_cluster
+
+    - name: Call consul role as agent
+      include_role:
+        name: indigo-dc.consul
+      vars:
+        consul_mode: "agent"
+        consul_servers: "{{ master_ips }}"
+        consul_advertise: '{{ consul_address }}'
+        consul_bind_addr: '{{ consul_address }}'
+      when: (enable_consul_sd == true)
+
     - set_fact: 
         marathon_lb_marathon_url: "https://{{ master_ips[0]  }}:8443"
         marathon_lb_service_discovery: "none" 
       when: (enable_consul_sd == false)
-  roles:
-    - role: indigo-dc.docker
 
-    - role: indigo-dc.consul
-      consul_mode: "agent"
-      consul_servers: "{{ master_ips }}"
-      consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
-      consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
-      when: (enable_consul_sd == true)
-
-    - role: indigo-dc.marathon-lb
-      marathon_lb_auth_creds: "{{marathon_username}}:{{marathon_password}}"
-      marathon_lb_marathon_servers: "{{ master_ips }}"
-      marathon_lb_chronos_servers: "{{ master_ips }}"
-      marathon_lb_mesos_servers: "{{ master_ips }}"
+    - name: Call consul role as agent
+      include_role:
+        name: indigo-dc.marathon-lb
+      vars:
+        marathon_lb_auth_creds: "{{marathon_username}}:{{marathon_password}}"
+        marathon_lb_marathon_servers: "{{ master_ips }}"
+        marathon_lb_chronos_servers: "{{ master_ips }}"
+        marathon_lb_mesos_servers: "{{ master_ips }}"
