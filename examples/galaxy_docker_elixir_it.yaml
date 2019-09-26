@@ -40,7 +40,7 @@ topology_template:
     instance_key_pub:
       type: string
       description: galaxy instance ssh public key
-      default: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDrm8mxOuqwP5XTHf685V9rqRXXg41F4isJvRr4h3MPDs8PgqZBzzjxEFyGpJ/Rgg4ACesGBZy+CbVVGtOveltKvgkpzyHIrh+vMay9z82eK2LMZEfmEPgw1BHdRifPZ1Qb7Zmj1nRk1EMWoNvbBxEc3/MSorWb+2SVMs+42EZ7QxavBmsU7zNU0Nd0e1xiqJ00VDWMnXullp/ieR9M4/XsSlS3oqxsxkAbY3eQYVMsnh64oiRw3lpYBkPyNtC/VSL5Cqig3CMaiK9AW8FjP1GwwqoMjL0H0Mkr0fY8eSSQ9Tcy5AqyaiPn7tmG0fSeNOFwxGkTzrujqlCiOkRSM1Yj marco@MacBook-Pro-di-Marco.local'
+      default: 'changeit'
     export_dir:
       type: string
       description: path to store galaxy data
