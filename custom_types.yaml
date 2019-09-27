@@ -1533,7 +1533,7 @@ node_types:
         default: 'marathon'
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.1-k8s-rc1
+        file: indigo-dc.cms_config,v1.0.1-k8s-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2007,7 +2007,7 @@ node_types:
         default: 'marathon'
     artifacts:
       cms_config_role:
-        file: indigo-dc.cms_config,v1.0.1-k8s-rc1
+        file: indigo-dc.cms_config,v1.0.1-k8s-rc2
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
