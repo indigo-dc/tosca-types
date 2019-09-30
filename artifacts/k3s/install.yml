@@ -1,0 +1,4 @@
+- hosts: localhost
+  connection: local
+  roles:
+    - role: cloud-pg.ansible_role_k3s 

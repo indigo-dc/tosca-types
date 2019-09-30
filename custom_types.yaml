@@ -1446,6 +1446,29 @@ node_types:
             chart: { get_property: [ SELF, chart ] }
             values: { get_property: [ SELF, values ] }
 
+
+  tosca.nodes.indigo.k3s:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_ip:
+        type: string
+        required: yes
+      mode:
+        type: string
+        required: yes
+    artifacts:
+      k3s_config_role:
+        file: cloud-pg.ansible_role_k3s
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/k3s/install.yml
+          inputs:
+            master_ip: { get_property: [ SELF, master_ip ] }
+            mode: { get_property: [ SELF, mode ] }
+      
+
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
