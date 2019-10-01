@@ -1467,9 +1467,6 @@ node_types:
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
-    requirements:
-      - host:
-          capability: tosca.capabilities.Container.Docker
 
   tosca.nodes.indigo.CmsServices:
     derived_from: tosca.nodes.SoftwareComponent
