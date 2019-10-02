@@ -1451,7 +1451,10 @@ node_types:
         required: no
         type: boolean
         default: true
-
+    artifacts:
+      image:
+        file: ""
+        type: "tosca.artifacts.Deployment.Image.Container.Docker"
 
   tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
