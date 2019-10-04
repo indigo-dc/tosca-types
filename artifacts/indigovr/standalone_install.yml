@@ -4,3 +4,4 @@
   roles:
   - role: indigo-dc.indigovr
     INDIGOVR_NODE_TYPE: standalone
+    INDIGOVR_MTU: 1400

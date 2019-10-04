@@ -18,6 +18,7 @@
         name: indigo-dc.indigovr
       vars:
         INDIGOVR_NODE_TYPE: centralpoint
+        INDIGOVR_MTU: 1400
 
     - name: Add Master VPN IP in host
       replace:
