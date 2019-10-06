@@ -9,6 +9,7 @@
       vars:
         INDIGOVR_NODE_TYPE: standalone
         INDIGOVR_CENTRALPOINT_IP: '{{ kube_public_front_end_ip }}'
+        INDIGOVR_MTU: 1400
 
     - name: Refresh setup data to get new ansible_tun0 item
       setup:

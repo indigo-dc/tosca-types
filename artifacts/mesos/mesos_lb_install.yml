@@ -19,6 +19,7 @@
           # we should use the public one, but we will launch the 
           # LB allways in the same site as the mesos master
           INDIGOVR_CENTRALPOINT_IP: '{{ master_ips[0] }}'
+          INDIGOVR_MTU: 1400
 
       - name: Refresh setup data to get new ansible_tun0 item
         setup:

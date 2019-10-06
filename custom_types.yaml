@@ -1008,7 +1008,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1029,7 +1029,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1095,7 +1095,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -1120,7 +1120,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -1549,7 +1549,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1739,7 +1739,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -1894,7 +1894,7 @@ node_types:
         file: indigo-dc.marathon-lb,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2288,7 +2288,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
@@ -2320,7 +2320,7 @@ node_types:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
@@ -2429,7 +2429,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       indigovr_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
       central_point:
@@ -2444,7 +2444,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       indigovr_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     requirements:
       - central_point:
@@ -2462,7 +2462,7 @@ node_types:
     derived_from: tosca.nodes.SoftwareComponent
     artifacts:
       indigovr_role:
-        file: indigo-dc.indigovr,mtu_1400
+        file: indigo-dc.indigovr,master
         type: tosca.artifacts.AnsibleGalaxy.role
     requirements:
       - central_point:

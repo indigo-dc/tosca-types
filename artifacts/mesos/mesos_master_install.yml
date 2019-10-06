@@ -37,6 +37,7 @@
           name: indigo-dc.indigovr
         vars:
           INDIGOVR_NODE_TYPE: centralpoint
+          INDIGOVR_MTU: 1400
 
       - name: Refresh setup data to get new ansible_tun0 item
         setup:
