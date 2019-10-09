@@ -485,6 +485,12 @@ node_types:
 
   tosca.nodes.indigo.GalaxyPortalFastConfig:
     derived_from: tosca.nodes.indigo.GalaxyPortalAndStorage
+    properties:
+      remote_tool_deps_dir_url:
+        type: string
+        description: tools tar gz location
+        default: tool_deps_repository_directory_url
+        required: false
     artifacts:
       nfs_role:
         file: indigo-dc.nfs
@@ -517,7 +523,8 @@ node_types:
             export_dir: { get_property: [ SELF, export_dir ] }
             galaxy_flavor: { get_property: [ SELF, flavor ] }
             get_refdata: { get_property: [ SELF, reference_data ] }
- 
+            remote_tool_deps_dir_url: { get_property: [ SELF, remote_tool_deps_dir_url ] }
+
   tosca.nodes.indigo.GalaxyWN:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
