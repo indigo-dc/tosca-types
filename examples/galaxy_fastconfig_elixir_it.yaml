@@ -134,7 +134,7 @@ topology_template:
         instance_key_pub: { get_input: instance_key_pub }
         export_dir: { get_input: export_dir }
         flavor: { get_input: flavor }
-        remote_tool_deps_dir_url: {get_input: remote_tool_deps_dir_url }
+        remote_tool_deps_dir_url: { get_input: remote_tool_deps_dir_url }
       requirements:
         - lrms: local_lrms
 
