@@ -81,7 +81,11 @@ topology_template:
       type: boolean
       description: Install Reference data
       default: true
-
+    refdata_cvmfs_repository_name:
+      type: string
+      description: CernVM-FS repository name
+      default: 'elixir-italy.galaxy.refdata'
+      required: false
  
   node_templates:
 
@@ -100,6 +104,7 @@ topology_template:
         instance_key_pub: { get_input: instance_key_pub }
         export_dir: { get_input: export_dir }
         flavor: { get_input: flavor }
+        refdata_cvmfs_repository_name: { get_input: refdata_cvmfs_repository_name }
       requirements:
         - lrms: local_lrms
 
