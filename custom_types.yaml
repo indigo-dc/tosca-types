@@ -1,5 +1,11 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
+metadata:
+  template_author: INDIGO/DEEP
+  template_name: indigo_custom_types
+  template_version: 4.0.0
+description: Contains the custom types definition as defined by the INDIGO & DEEP team
+
 capability_types:
 
   tosca.capabilities.indigo.OperatingSystem:
