@@ -1457,6 +1457,10 @@ node_types:
         required: no
         type: boolean
         default: true
+      enable_https:
+        required: no
+        type: boolean
+        default: false
     artifacts:
       image:
         file: ""
