@@ -1,8 +1,15 @@
 ---
 - hosts: localhost
   connection: local
+  vars:
+    slurm_wn_cpus: 1
+  pre_tasks:
+  - set_fact:
+      slurm_wn_cpus: '{{ IM_INFRASTRUCTURE_RADL|json_query("[?id == ''lrms_wn''].cpu_count_min|[0]") }}'
+    when: clues_queue_system == 'slurm'
   roles:
   - role: grycap.im
     when: clues_powermanager_plugin == "im"
   - role: indigo-dc.clues
     indigo_orchestrator_url: "{{ orchestrator_url }}"
+    wn_cpus: '{{ slurm_wn_cpus }}'
