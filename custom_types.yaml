@@ -909,7 +909,7 @@ node_types:
         required: false
     artifacts:
       clues_role:
-        file: indigo-dc.clues
+        file: indigo-dc.clues,slurm_cons_res
         type: tosca.artifacts.AnsibleGalaxy.role
       im_role:
         file: grycap.im
@@ -1002,9 +1002,15 @@ node_types:
 
   tosca.nodes.indigo.LRMS.WorkerNode.SlurmGalaxy:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
+    properties:
+      resource_allocation_type:
+        type: string
+        description: SLURM resource allocation algorithm (linear or cons_res)
+        required: false
+        default: linear
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm,cons_res
+        file: indigo-dc.slurm,slurm_cons_res
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1020,6 +1026,7 @@ node_types:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             slurm_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
+            resource_allocation_type: { get_property: [ SELF, resource_allocation_type] }
 
   tosca.nodes.indigo.LRMS.FrontEnd:
     derived_from: tosca.nodes.SoftwareComponent
@@ -1091,9 +1098,15 @@ node_types:
 
   tosca.nodes.indigo.LRMS.FrontEnd.SlurmGalaxy:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
+    properties:
+      resource_allocation_type:
+        type: string
+        description: SLURM resource allocation algorithm (linear or cons_res)
+        required: false
+        default: linear
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm,cons_res
+        file: indigo-dc.slurm,slurm_cons_res
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -1107,12 +1120,13 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v3.0.1/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v3.0.1/artifacts/galaxy/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
             front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            resource_allocation_type: { get_property: [ SELF, resource_allocation_type] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Local:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
