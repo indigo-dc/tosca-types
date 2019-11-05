@@ -1690,7 +1690,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas_roll/artifacts/mesos/htcondor_master_config.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/mesos/htcondor_master_config.yml
           inputs:
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
