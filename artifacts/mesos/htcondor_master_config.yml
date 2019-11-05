@@ -3,4 +3,4 @@
   connection: local
   roles:
     - role: indigo-dc.htcondor_config
-      config_mode: "master"
+      #config_mode: "master"
