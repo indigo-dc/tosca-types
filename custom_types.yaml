@@ -1695,6 +1695,14 @@ node_types:
         type: string
         required: no
         default: "dodasts/ttscache"
+      hostname_ccb:
+        type: string
+        required: no
+        default: "vnode-1.localdomain"
+      hostname_schedd:
+        type: string
+        required: no
+        default: "vnode-2.localdomain"
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config,v2.0.0-dodas-rc3
@@ -1706,6 +1714,8 @@ node_types:
           inputs:
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
+            hostname_ccb:  { get_property: [ SELF, hostname_ccb ] }
+            hostname_schedd:  { get_property: [ SELF, hostname_schedd ] }
             condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
             zookeeper_peers: { get_property: [ SELF, master_ips ] }
             zookeeper_host_list: { get_property: [ SELF, master_ips ] } 
