@@ -1705,7 +1705,7 @@ node_types:
         default: "vnode-2.localdomain"
     artifacts:
       htcondor_config_role:
-        file: indigo-dc.htcondor_config,v2.0.0-dodas-rc4
+        file: indigo-dc.htcondor_config,v2.0.0-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
