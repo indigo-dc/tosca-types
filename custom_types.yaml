@@ -2475,6 +2475,9 @@ node_types:
       openvpn_role:
         file: indigo-dc.openvpn
         type: tosca.artifacts.AnsibleGalaxy.role
+      ntp_role:
+        file: grycap.ntp
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
@@ -2514,6 +2517,9 @@ node_types:
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
         file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+      ntp_role:
+        file: grycap.ntp
         type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
