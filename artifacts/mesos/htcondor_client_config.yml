@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: cloud-pg.ansible_role_condor_client
+      iam:
+        client_id: "{{ iam_client_id }}"
+        client_secret: "{{ iam_client_secret }}"
+        token: "{{ iam_access_token }}"
+      admin:
+        DN: "{{ admin_DN }}"
+      condor:
+        host: "{{ condor_host }}"
+        schedd_name: "{{ schedd_name }}"

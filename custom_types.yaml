@@ -1590,6 +1590,48 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
+  tosca.nodes.indigo.HTCondorClient:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:  
+      condor_host:
+        type: string
+        required: yes
+        default: DUMMY 
+      schedd_name:
+        type: string
+        required: yes
+        default: DUMMY 
+      iam_client_id:
+        type: string
+        required: yes
+        default: DUMMY       
+      iam_client_secret:
+        type: string
+        required: yes
+        default: DUMMY 
+      iam_access_token:
+        type: string
+        required: yes
+        default: DUMMY
+      admin_DN:
+        type: string
+        required: yes
+        default: DUMMY
+    artifacts:
+      htcondor_config_role:
+        file: cloud-pg.ansible_role_condor_client,v2.0.0-dodas-rc1
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/mesos/htcondor_client_config.yml
+          inputs:
+            condor_host: { get_property: [ SELF, condor_host ] }
+            schedd_name: { get_property: [ SELF, schedd_name ] }
+            iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            iam_access_token: { get_property: [ SELF, iam_access_token ] }
+            admin_DN: { get_property: [ SELF, admin_DN ] }
 
   tosca.nodes.indigo.HTCondorServices:
     derived_from: tosca.nodes.SoftwareComponent
