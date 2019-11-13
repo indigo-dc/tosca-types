@@ -1619,7 +1619,7 @@ node_types:
         default: DUMMY
     artifacts:
       htcondor_client_config_role:
-        file: cloud-pg.ansible_role_condor_client,v2.0.0-dodas-rc2
+        file: cloud-pg.ansible_role_condor_client,v2.0.0-dodas-rc3
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
