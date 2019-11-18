@@ -2527,7 +2527,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/lrms/kubernetes/kube_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_wn_install.yml
           inputs:
             node_name: { get_property: [ SELF, node_name ] }
             kube_version: { get_property: [ SELF, kube_version ] }
