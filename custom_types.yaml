@@ -1765,7 +1765,6 @@ node_types:
             proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
             proxy_audience: { get_property: [ SELF, audience ] }
             config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
-            config_iam_group: { get_property: [ SELF, iam_group ] }
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
             config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
             config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
