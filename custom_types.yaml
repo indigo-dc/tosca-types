@@ -2552,6 +2552,9 @@ node_types:
         required: no
         type: string
         default: flannel
+      kube_front_end_ip:
+        required: yes
+        type: string
     artifacts:
       kube_role:
         file: cloud-pg.kubernetes,v2.0.0-dodas-rc15
@@ -2576,7 +2579,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/lrms/kubernetes/kube_fe_install.yml
           inputs:
             kube_version: { get_property: [ SELF, kube_version ] }
-            kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            kube_front_end_ip: { get_property: [ SELF, kube_front_end_ip ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
