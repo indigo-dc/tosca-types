@@ -1680,18 +1680,6 @@ node_types:
       proxycache_host:
         type: string
         required: yes
-      iam_map_client_id:
-        type: string
-        description: INDIGO IAM scim read client id
-        required: yes
-      iam_map_client_secret:
-        type: string
-        description: INDIGO IAM scim read client secret
-        required: yes
-      iam_map_group:
-        type: string
-        description: INDIGO IAM group authorized
-        required: yes
       iam_access_token:
         type: string
         description: INDIGO IAM access token
@@ -1704,11 +1692,6 @@ node_types:
         type: string
         description: INDIGO IAM client secret
         required: yes
-      iam_group:
-        type: string
-        required: no
-        description: IAM group to be authorized for this resources (defualt ALL)
-        default: "ALL"
       marathon_username:
         type: string
         required: no
@@ -1786,9 +1769,6 @@ node_types:
             config_iam_token: { get_property: [ SELF, iam_access_token ] }
             config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
             config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
-            config_iam_map_client_id: { get_property: [ SELF, iam_map_client_id ] }
-            config_iam_map_client_secret: { get_property: [ SELF, iam_map_client_secret ] }
-            config_iam_map_group: { get_property: [ SELF, iam_map_group ] }
             config_proxycache_image: { get_property: [ SELF, proxycache_image ]}
     requirements:
       - host:
