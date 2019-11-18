@@ -2508,6 +2508,9 @@ node_types:
         required: no
         type: string
         default: flannel
+      nfs_master_ip:
+        required: yes
+        type: string
     artifacts:
       kube_role:
         file: cloud-pg.kubernetes,v2.0.0-dodas-rc15
@@ -2530,6 +2533,7 @@ node_types:
             kube_version: { get_property: [ SELF, kube_version ] }
             kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args ] }
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            nfs_master_ip: { get_property: [ SELF, nfs_master_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_network: { get_property: [ SELF, kube_network] }
 
