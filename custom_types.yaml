@@ -1668,6 +1668,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      prepare_only:
+        type: boolean
+        required: yes
+        default: false
       lb_ips:
         required: yes
         type: list
@@ -1754,6 +1758,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/mesos/htcondor_master_config.yml
           inputs:
+            prepare_only: { get_property: [ SELF, prepare_only ] }
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
             hostname_ccb:  { get_property: [ SELF, hostname_ccb ] }
