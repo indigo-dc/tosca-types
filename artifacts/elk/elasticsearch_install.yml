@@ -3,7 +3,7 @@
   connection: local
   vars:
     es_config:
-      network.bind_host: "{{ bind_address }}"
+      network.bind_host: "{{ bind_host }}"
       discovery.type: "{{ discovery_type }}"
   roles:
     - role: elastic.elasticsearch
