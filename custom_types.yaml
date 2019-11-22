@@ -2634,7 +2634,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/elasticsearch_install.yml
           inputs:
             es_version: { get_property: [ SELF, es_version ] }
-            bind_host: { get_property: [ SELF, bind_host ] }
+            bind_host: { get_property: [ SELF, bind_address ] }
             discovery_type: { get_property: [ SELF, discovery_type ] }
     
   tosca.nodes.indigo.BlockStorage:
