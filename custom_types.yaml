@@ -2624,6 +2624,18 @@ node_types:
         type: string
         required: false
         default: single-node
+      enable_security:
+        type: boolean
+        default: true
+        required: false
+      elastic_password:
+        type: string
+        required: false
+        default: changeme
+      kibana_system_password:
+        type: string
+        required: false
+        default: changeme
     artifacts:
       es_role:
         file: elastic.elasticsearch,7.4.1
@@ -2636,6 +2648,9 @@ node_types:
             es_version: { get_property: [ SELF, es_version ] }
             bind_host: { get_property: [ SELF, bind_address ] }
             discovery_type: { get_property: [ SELF, discovery_type ] }
+            enable_security: { get_property: [ SELF, enable_security ] }
+            elastic_password: { get_property: [ SELF, elastic_password ] }
+            kibana_system_password: { get_property: [ SELF, kibana_system_password ] }
     
   tosca.nodes.indigo.BlockStorage:
     derived_from: tosca.nodes.BlockStorage
