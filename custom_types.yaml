@@ -2608,6 +2608,34 @@ node_types:
           inputs:
             jupyterhub_spawner: { get_property: [ SELF, spawner ] }
             jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
+
+  tosca.nodes.indigo.Elasticsearch:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      es_version:
+        type: string
+        required: false
+        default: 7.4.1
+      bind_address:
+        type: string
+        required: false
+        default: 0.0.0.0
+      discovery_type:
+        type: string
+        required: false
+        default: single-node
+    artifacts:
+      es_role:
+        file: elastic.elasticsearch,7.4.1
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/elasticsearch_install.yml
+          inputs:
+            es_version: { get_property: [ SELF, es_version ] }
+            bind_host: { get_property: [ SELF, bind_host ] }
+            discovery_type: { get_property: [ SELF, discovery_type ] }
     
   tosca.nodes.indigo.BlockStorage:
     derived_from: tosca.nodes.BlockStorage

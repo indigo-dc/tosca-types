@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    - es_config:
+        network.bind_host: "{{ bind_address }}"
+        discovery.type: "{{ discovery_type }}"
+  roles:
+    - role: elastic.elasticsearch
