@@ -2651,7 +2651,40 @@ node_types:
             enable_security: { get_property: [ SELF, enable_security ] }
             elastic_password: { get_property: [ SELF, elastic_password ] }
             kibana_system_password: { get_property: [ SELF, kibana_system_password ] }
-    
+   
+  tosca.nodes.indigo.Kibana:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      kibana_version:
+        type: string
+        required: false
+        default: 7.4.1
+      elasticsearch_url:
+        type: string
+        required: false
+        default: "http://localhost:9200"
+      elasticsearch_username:
+        type: string
+        required: false
+        default: kibana
+      elasticsearch_password:
+        type: string
+        required: false
+        default: changeme
+    artifacts:
+      es_role:
+        file: maricaantonacci.kibana,7.4.1
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/kibana_install.yml
+          inputs:
+            kibana_version: { get_property: [ SELF, kibana_version ] }
+            kibana_elasticsearch_url: { get_property: [ SELF, elasticsearch_url ] }
+            kibana_elasticsearch_username: { get_property: [ SELF, elasticsearch_username ] }
+            kibana_elasticsearch_password: { get_property: [ SELF, elasticsearch_password ] }
+ 
   tosca.nodes.indigo.BlockStorage:
     derived_from: tosca.nodes.BlockStorage
     properties:
