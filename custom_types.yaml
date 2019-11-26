@@ -2608,7 +2608,83 @@ node_types:
           inputs:
             jupyterhub_spawner: { get_property: [ SELF, spawner ] }
             jupyterhub_authenticator: { get_property: [ SELF, spawner ] }
-    
+
+  tosca.nodes.indigo.Elasticsearch:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      es_version:
+        type: string
+        required: false
+        default: 7.4.1
+      bind_address:
+        type: string
+        required: false
+        default: 0.0.0.0
+      discovery_type:
+        type: string
+        required: false
+        default: single-node
+      enable_security:
+        type: boolean
+        default: true
+        required: false
+      elastic_password:
+        type: string
+        required: false
+        default: changeme
+      kibana_system_password:
+        type: string
+        required: false
+        default: changeme
+    artifacts:
+      es_role:
+        file: elastic.elasticsearch,7.4.1
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/elasticsearch_install.yml
+          inputs:
+            es_version: { get_property: [ SELF, es_version ] }
+            bind_host: { get_property: [ SELF, bind_address ] }
+            discovery_type: { get_property: [ SELF, discovery_type ] }
+            enable_security: { get_property: [ SELF, enable_security ] }
+            elastic_password: { get_property: [ SELF, elastic_password ] }
+            kibana_system_password: { get_property: [ SELF, kibana_system_password ] }
+   
+  tosca.nodes.indigo.Kibana:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      kibana_version:
+        type: string
+        required: false
+        default: 7.4.1
+      elasticsearch_url:
+        type: string
+        required: false
+        default: "http://localhost:9200"
+      elasticsearch_username:
+        type: string
+        required: false
+        default: kibana
+      elasticsearch_password:
+        type: string
+        required: false
+        default: changeme
+    artifacts:
+      es_role:
+        file: maricaantonacci.kibana,7.4.1
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/kibana_install.yml
+          inputs:
+            kibana_version: { get_property: [ SELF, kibana_version ] }
+            kibana_elasticsearch_url: { get_property: [ SELF, elasticsearch_url ] }
+            kibana_elasticsearch_username: { get_property: [ SELF, elasticsearch_username ] }
+            kibana_elasticsearch_password: { get_property: [ SELF, elasticsearch_password ] }
+ 
   tosca.nodes.indigo.BlockStorage:
     derived_from: tosca.nodes.BlockStorage
     properties:
