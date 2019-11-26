@@ -2643,7 +2643,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/elasticsearch_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/elk/elasticsearch_install.yml
           inputs:
             es_version: { get_property: [ SELF, es_version ] }
             bind_host: { get_property: [ SELF, bind_address ] }
@@ -2678,7 +2678,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s_add_es/artifacts/elk/kibana_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/elk/kibana_install.yml
           inputs:
             kibana_version: { get_property: [ SELF, kibana_version ] }
             kibana_elasticsearch_url: { get_property: [ SELF, elasticsearch_url ] }
