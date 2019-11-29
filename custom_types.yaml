@@ -1431,7 +1431,7 @@ node_types:
             marathon_password: { get_property: [ SELF, marathon_password ] }
             server_image: { get_property: [ SELF, server_image ] }
 
-   tosca.nodes.indigo.HelmInstall:
+  tosca.nodes.indigo.HelmInstall:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       name:
