@@ -1442,9 +1442,13 @@ node_types:
         type: string
         description: chart name
         required: yes
-      values:
+      repos:
+        type: list
+        entry_schema:
+          type: string
+      values_file:
         type: string
-        description: URL to values.yaml file
+        description: values.yaml file content
         required: yes
     artifacts:
       helm_config_role:
@@ -1457,7 +1461,8 @@ node_types:
           inputs:
             name: { get_property: [ SELF, name ] }
             chart: { get_property: [ SELF, chart ] }
-            values: { get_property: [ SELF, values ] }
+            values_file: { get_property: [ SELF, values_file ] }
+            repos: { get_property: [ SELF, repos ] }
 
 
   tosca.nodes.indigo.k3s:
