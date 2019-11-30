@@ -1486,7 +1486,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/k3s/install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/k3s/install.yml
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             nfs_master_ip: { get_property: [ SELF, nfs_master_ip ] }
