@@ -1476,6 +1476,9 @@ node_types:
       mode:
         type: string
         required: yes
+      nfs_master_ip:
+        required: yes
+        type: string
     artifacts:
       k3s_config_role:
         file: cloud-pg.ansible_role_k3s
@@ -1486,6 +1489,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/k3s/install.yml
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
+            nfs_master_ip: { get_property: [ SELF, nfs_master_ip ] }
             mode: { get_property: [ SELF, mode ] }
 
   tosca.nodes.indigo.CmsServices:

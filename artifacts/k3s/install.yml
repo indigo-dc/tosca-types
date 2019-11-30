@@ -7,7 +7,7 @@
       when: (mode == "server")
     - role: 'indigo-dc.nfs'
       nfs_mode: 'client'
-      nfs_client_imports: [{ local: "/mnt/nfs", remote: "/root", server_host: "{{ master_ip }}" }]
+      nfs_client_imports: [{ local: "/mnt/nfs", remote: "/root", server_host: "{{ nfs_master_ip }}" }]
       when: (mode == "node")
     - role: indigo-dc.docker
     - role: cloud-pg.ansible_role_k3s 
