@@ -1445,7 +1445,9 @@ node_types:
       repos:
         type: list
         entry_schema:
-          type: string
+          type: map
+          entry_schema:
+            type: string
       values_file:
         type: string
         description: values.yaml file content
