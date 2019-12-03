@@ -1450,7 +1450,10 @@ node_types:
             type: string
       values_file:
         type: string
-        description: values.yaml file content
+        description: values.yaml file url 
+        required: yes
+      externalIP:
+        type: string
         required: yes
     artifacts:
       helm_config_role:
@@ -1465,6 +1468,7 @@ node_types:
             chart: { get_property: [ SELF, chart ] }
             values_file: { get_property: [ SELF, values_file ] }
             repos: { get_property: [ SELF, repos ] }
+            externalIP: { get_property: [ SELF, externalIP ] }
 
 
   tosca.nodes.indigo.k3s:
