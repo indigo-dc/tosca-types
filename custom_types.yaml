@@ -1455,6 +1455,14 @@ node_types:
       externalIP:
         type: string
         required: yes
+      minio_access_key:
+        type: string
+        required: no
+        default: admin      
+      minio_secret_key:
+        type: string
+        required: no
+        default: passwd 
     artifacts:
       helm_config_role:
         file: cloud-pg.ansible_role_helm
@@ -1469,6 +1477,8 @@ node_types:
             values_file: { get_property: [ SELF, values_file ] }
             repos: { get_property: [ SELF, repos ] }
             externalIP: { get_property: [ SELF, externalIP ] }
+            minio_access_key:  { get_property: [ SELF, minio_access_key ] }
+            minio_secret_key:  { get_property: [ SELF, minio_secret_key ] }
 
 
   tosca.nodes.indigo.k3s:
