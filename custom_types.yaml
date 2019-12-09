@@ -1465,7 +1465,7 @@ node_types:
         default: passwd 
     artifacts:
       helm_config_role:
-        file: cloud-pg.ansible_role_helm
+        file: dciangot.ansible_role_helmtest
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
