@@ -2,4 +2,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: cloud-pg.ansible_role_helm
+    - role: dciangot.ansible_role_helmtest

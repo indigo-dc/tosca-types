@@ -1470,7 +1470,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s/artifacts/helm/helm.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/helm_example/artifacts/helm/helm.yml
           inputs:
             name: { get_property: [ SELF, name ] }
             chart: { get_property: [ SELF, chart ] }
