@@ -1493,15 +1493,21 @@ node_types:
       externalIP:
         type: string
         required: yes
+      role_name:
+        type: string
+        required: no
+        default: cloud-pg.ansible_role_kubecreate
     artifacts:
       helm_config_role:
-        file: cloud-pg.ansible_role_kubecreate
+        file: { get_property: [ SELF, role_name ] }
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_create.yml
+          #implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_create.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-example/artifacts/ansible/ansible.yaml
           inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
             externalIP: { get_property: [ SELF, externalIP ] }
