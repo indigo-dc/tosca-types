@@ -2,4 +2,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: "{{ role_name.split('/tmp/')[1] }}"
+    - role: "{{ role_name }}"
