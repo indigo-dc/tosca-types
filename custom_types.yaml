@@ -1481,6 +1481,27 @@ node_types:
             minio_secret_key:  { get_property: [ SELF, minio_secret_key ] }
 
 
+  tosca.nodes.indigo.KubeCreate:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      manifest_file:
+        type: string
+        required: yes
+      externalIP:
+        type: string
+        required: yes
+    artifacts:
+      helm_config_role:
+        file: cloud-pg.ansible_role_kubecreate
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_create.yml
+          inputs:
+            manifest_file: { get_property: [ SELF, values_file ] }
+            externalIP: { get_property: [ SELF, externalIP ] }
+
   tosca.nodes.indigo.k3s:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
