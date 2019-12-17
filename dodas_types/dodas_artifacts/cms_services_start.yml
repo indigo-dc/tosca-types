@@ -1,9 +1,0 @@
----
-- hosts: localhost
-  connection: local
-  roles:
-    - role: indigo-dc.cms_config
-      marathon_username: "{{ marathon_user }}"
-      marathon_password: "{{ marathon_pass }}"
-      cms_input_protocol: "{{ cms_input_protocol }}"
-
