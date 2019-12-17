@@ -1498,8 +1498,9 @@ node_types:
         required: no
         default: cloud-pg.ansible_role_kubecreate
     artifacts:
+      # TO BE REMOVED and substitute in ansible artifacts
       helm_config_role:
-        file: { get_property: [ SELF, role_name ] }
+        file: cloud-pg.ansible_role_kubecreate
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
