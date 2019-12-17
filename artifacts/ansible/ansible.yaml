@@ -2,4 +2,4 @@
 - hosts: localhost
   connection: local
   roles:
-    - role: {{ role_name }}
+    - role: "{{ role_name }}"
