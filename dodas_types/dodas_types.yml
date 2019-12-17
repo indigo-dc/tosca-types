@@ -41,9 +41,12 @@ node_types:
       externalIP:
         type: string
         required: yes
+      role_name:
+        type: string
+        required: no
+        default: dciangot.ansible_role_helmtest
     artifacts:
       helm_config_role:
-        description: dciangot.ansible_role_helmtest
         file: dciangot.ansible_role_helmtest
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -51,7 +54,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name:  { get_artifact: [ SELF, helm_config_role, description ] }
+            role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
             chart: { get_property: [ SELF, chart ] }
             values_file: { get_property: [ SELF, values_file ] }
@@ -72,10 +75,12 @@ node_types:
       externalIP:
         type: string
         required: yes
+      role_name:
+        type: string
+        required: no
+        default: cloud-pg.ansible_role_kubecreate
     artifacts:
-      # TO BE REMOVED and substitute in ansible artifacts
       kubecreate_config_role:
-        description: cloud-pg.ansible_role_kubecreate
         file: cloud-pg.ansible_role_kubecreate
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -83,7 +88,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, kubecreate_config_role, description ] }
+            role_name: { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
             externalIP: { get_property: [ SELF, externalIP ] }
@@ -177,6 +182,10 @@ node_types:
       elasticsearch_secret:
         type: string
         required: no
+      role_name:
+        type: string
+        required: no
+        default:  indigo-dc.cms_config
     artifacts:
       cms_config_role:
         file: indigo-dc.cms_config,v1.0.1-dodas-rc5
@@ -186,7 +195,7 @@ node_types:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, cms_config_role, file ] }
+            role_name: { get_property: [ SELF, role_name ] }
             cms_config_node: "wn"
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
@@ -303,6 +312,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      role_name:
+        type: string
+        required: no
+        default:  indigo-dc.cms_config
     artifacts:
       cms_config_role:
         file: indigo-dc.cms_config,v1.0.1-dodas-rc5
@@ -312,7 +325,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, cms_config_role, file ] }
+            role_name: { get_property: [ SELF, role_name ] }
             cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
             cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
             cms_config_iam_token: { get_property: [ SELF, iam_access_token ] }
@@ -446,6 +459,10 @@ node_types:
         type: string
         required: no
         default: "dodasts/ttscache"
+      role_name:
+        type: string
+        required: no
+        default: indigo-dc.htcondor_config
     artifacts:
       htcondor_config_role:
         file: indigo-dc.htcondor_config,v1.0.0-dodas-rc4
@@ -455,7 +472,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, htcondor_config_role, file ] }
+            role_name: { get_property: [ SELF, role_name ] }
             config_mode: "master"
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
@@ -507,6 +524,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      role_name:
+        type: string
+        required: no
+        default: indigo-dc.ams_config
     artifacts:
       ams_config_role:
         file: indigo-dc.ams_config,v1.0.0-dodas-rc7
@@ -516,7 +537,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, ams_config_role, file ] }
+            role_name: { get_property: [ SELF, role_name ] }
             ams_config_node: "master"
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -563,6 +584,10 @@ node_types:
         type: list
         entry_schema:
           type: string
+      role_name:
+        type: string
+        required: no
+        default: indigo-dc.ams_config
     artifacts:
       ams_config_role:
         file: indigo-dc.ams_config,v1.0.0-dodas-rc7
@@ -572,7 +597,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, ams_config_role, file ] }
+            role_name: { get_property: [ SELF, role_name ] }
             ams_config_node: "execute"
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
@@ -637,6 +662,10 @@ node_types:
         type: string
       ams_repo_public_key_url:
         type: string
+      role_name:
+        type: string
+        required: no
+        default: indigo-dc.ams_config
     artifacts:
       ams_config_role:
         file: indigo-dc.ams_config,v1.0.0-dodas-rc7
@@ -646,7 +675,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, ams_config_role, file ] }
+            role_name: { get_property: [ SELF, role_name ] }
             ams_config_node: "wn"
             mesos_masters_list: { get_property: [ SELF, master_ips ] }
             consul_servers: { get_property: [ SELF, master_ips ] }
