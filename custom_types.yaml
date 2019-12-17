@@ -1503,7 +1503,7 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_create.yml
           inputs:
             name: { get_property: [ SELF, name ] }
-            manifest_file: { get_property: [ SELF, values_file ] }
+            manifest_file: { get_property: [ SELF, manifest_file ] }
             externalIP: { get_property: [ SELF, externalIP ] }
 
   tosca.nodes.indigo.k3s:
