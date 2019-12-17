@@ -1484,6 +1484,10 @@ node_types:
   tosca.nodes.indigo.KubeCreate:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
+      name:
+        type: string
+        description: name of the helm deployment
+        required: yes
       manifest_file:
         type: string
         required: yes
@@ -1499,6 +1503,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_create.yml
           inputs:
+            name: { get_property: [ SELF, name ] }
             manifest_file: { get_property: [ SELF, values_file ] }
             externalIP: { get_property: [ SELF, externalIP ] }
 
