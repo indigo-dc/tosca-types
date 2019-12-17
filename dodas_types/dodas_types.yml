@@ -5,6 +5,7 @@ imports:
 
 # Index
   # - KUBERNETES APPLICATION TOOLS
+  # - Experimental: K3s
   # - Legacy: CMS CLUSTER TYPES
   # - Legacy: AMS CLUSTER TYPES
 
@@ -42,6 +43,7 @@ node_types:
         required: yes
     artifacts:
       helm_config_role:
+        description: dciangot.ansible_role_helmtest
         file: dciangot.ansible_role_helmtest
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -49,7 +51,7 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name:  { get_artifact: [ SELF, helm_config_role, file ] }
+            role_name:  { get_artifact: [ SELF, helm_config_role, description ] }
             name: { get_property: [ SELF, name ] }
             chart: { get_property: [ SELF, chart ] }
             values_file: { get_property: [ SELF, values_file ] }
@@ -73,6 +75,7 @@ node_types:
     artifacts:
       # TO BE REMOVED and substitute in ansible artifacts
       kubecreate_config_role:
+        description: cloud-pg.ansible_role_kubecreate
         file: cloud-pg.ansible_role_kubecreate
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
@@ -80,10 +83,39 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
-            role_name: { get_artifact: [ SELF, kubecreate_config_role, file ] }
+            role_name: { get_artifact: [ SELF, kubecreate_config_role, description ] }
             name: { get_property: [ SELF, name ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
             externalIP: { get_property: [ SELF, externalIP ] }
+
+  # Experimental: K3s
+  ############################################################
+  # - tosca.nodes.indigo.k3s
+
+  tosca.nodes.indigo.k3s:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      master_ip:
+        type: string
+        required: yes
+      mode:
+        type: string
+        required: yes
+      nfs_master_ip:
+        required: yes
+        type: string
+    artifacts:
+      k3s_config_role:
+        file: cloud-pg.ansible_role_k3s
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/k3s.yaml
+          inputs:
+            master_ip: { get_property: [ SELF, master_ip ] }
+            nfs_master_ip: { get_property: [ SELF, nfs_master_ip ] }
+            mode: { get_property: [ SELF, mode ] }
 
 
   # Legacy: CMS CLUSTER TYPES
