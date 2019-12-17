@@ -1506,7 +1506,7 @@ node_types:
       Standard:
         start:
           #implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-course/artifacts/lrms/kubernetes/kube_create.yml
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/k8s-example/artifacts/ansible/ansible.yaml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/helm_example/artifacts/ansible/ansible.yaml
           inputs:
             role_name:  { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
