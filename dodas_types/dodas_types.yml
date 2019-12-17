@@ -1,0 +1,631 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+imports:
+  - https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/custom_types.yaml
+
+# Index
+  # - KUBERNETES APPLICATION TOOLS
+  # - Legacy: CMS CLUSTER TYPES
+  # - Legacy: AMS CLUSTER TYPES
+
+node_types:
+
+  # KUBERNETES APPLICATION TOOLS
+  ############################################################
+  # - tosca.nodes.indigo.HelmInstall
+  # - tosca.nodes.indigo.KubeCreate
+
+
+  tosca.nodes.indigo.HelmInstall:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      name:
+        type: string
+        description: name of the helm deployment
+        required: yes
+      chart:
+        type: string
+        description: chart name
+        required: yes
+      repos:
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
+      values_file:
+        type: string
+        description: values.yaml file content
+        required: yes
+      externalIP:
+        type: string
+        required: yes
+    artifacts:
+      helm_config_role:
+        file: dciangot.ansible_role_helmtest
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
+          inputs:
+            role_name:  { get_artifact: [ SELF, helm_config_role, file ] }
+            name: { get_property: [ SELF, name ] }
+            chart: { get_property: [ SELF, chart ] }
+            values_file: { get_property: [ SELF, values_file ] }
+            repos: { get_property: [ SELF, repos ] }
+            externalIP: { get_property: [ SELF, externalIP ] }
+
+
+  tosca.nodes.indigo.KubeCreate:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      name:
+        type: string
+        description: name of the helm deployment
+        required: yes
+      manifest_file:
+        type: string
+        required: yes
+      externalIP:
+        type: string
+        required: yes
+    artifacts:
+      # TO BE REMOVED and substitute in ansible artifacts
+      kubecreate_config_role:
+        file: cloud-pg.ansible_role_kubecreate
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
+          inputs:
+            role_name: { get_artifact: [ SELF, kubecreate_config_role, file ] }
+            name: { get_property: [ SELF, name ] }
+            manifest_file: { get_property: [ SELF, manifest_file ] }
+            externalIP: { get_property: [ SELF, externalIP ] }
+
+
+  # Legacy: CMS CLUSTER TYPES
+  ############################################################
+  # - tosca.nodes.indigo.CmsWnConfig
+  # - tosca.nodes.indigo.CmsServices
+
+  tosca.nodes.indigo.CmsWnConfig:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      cms_local_site:
+        type: string
+        required: yes
+      cms_stageoutsite:
+        type: string
+        required: yes
+      cms_stageoutprotocol:
+        type: string
+        required: yes
+      cms_phedexnode:
+        type: string
+        required: yes
+      cms_stageoutcommand:
+        type: string
+        required: yes
+      cms_fallback_phedexnode:
+        type: string
+        required: no
+        default: 'T2_IT_myt2'
+      cms_fallback_lfn_prefix:
+        type: string
+        required: no
+        default: 'srm://t2-srm-02.lnl.infn.it:8443/srm/managerv2?SFN=xxxxxxx'
+      cms_fallback_command:
+        type: string
+        required: no
+        default: 'gfal2'
+      cms_xrd_readserver:
+        type: string
+        required: no
+        default: 'xrootd.ba.infn.it'
+      cms_input_path:
+        type: string
+        required: no
+        default: 'my/oneclient/path'
+      cms_input_protocol:
+        type: string
+        required: no
+        default: 'xrootd'
+      mysquid_host:
+        type: string
+        required: yes
+      proxycache_host:
+        type: string
+        required: yes
+      monitordb_ip:
+        type: string
+        required: no
+      elasticsearch_secret:
+        type: string
+        required: no
+    artifacts:
+      cms_config_role:
+        file: indigo-dc.cms_config,v1.0.1-dodas-rc5
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/cms_wn_configure.yml
+          inputs:
+            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
+            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
+            cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
+            cms_config_stageoutprotocol: { get_property: [ SELF, cms_stageoutprotocol ] }
+            cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand ] }
+            cms_config_phedexnode: { get_property: [ SELF, cms_phedexnode ] }
+            cms_config_fallback_phedexnode: { get_property: [ SELF,cms_fallback_phedexnode ] }
+            cms_config_fallback_lfn_prefix: { get_property: [ SELF,cms_fallback_lfn_prefix ] }
+            cms_config_fallback_command: { get_property: [ SELF,cms_fallback_command ] }
+            cms_xrd_readserver: { get_property: [ SELF, cms_xrd_readserver ] }
+            cms_input_path: { get_property: [ SELF, cms_input_path ] }
+            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
+            cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
+            monitordb_ip: { get_property: [ SELF, monitordb_ip ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosSlave
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+  tosca.nodes.indigo.CmsServices:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      cms_local_site:
+        type: string
+        required: yes
+      cms_squid_image:
+        type: string
+        required: no
+        default: "spiga/frontiersquidv1"
+      cms_wn_image:
+        type: string
+        default: "dodasts/cms"
+        required: no
+      cms_proxycache_image:
+        type: string
+        required: no
+        default: "dodasts/ttscache"
+      cms_input_protocol:
+        type: string
+        required: no
+        default: 'xrootd'
+      mysquid_host:
+        type: string
+        required: yes
+      proxycache_host:
+        type: string
+        required: yes
+      iam_access_token:
+        type: string
+        description: INDIGO IAM access token
+        required: yes
+      iam_client_id:
+        type: string
+        description: INDIGO IAM client id
+        required: yes
+      iam_client_secret:
+        type: string
+        description: INDIGO IAM client secret
+        required: yes
+      marathon_username:
+        type: string
+        required: no
+        default: 'admin'
+      marathon_password:
+        type: string
+        required: no
+        default: 'admin'
+      cms_proxycache_token_manager:
+        type: string
+        required: no
+        default: 'ZOOKEEPER'
+      watts_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      iam_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-iam.cloud.cnaf.infn.it/'
+      iam_credential_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it/api/v2/iam/credential'
+      audience:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      local_cache_expiration_time: 
+        type: integer
+        required: no
+        default: 86400
+      lock_file_age:
+        type: integer
+        required: no
+        default: 20
+      cache_dir: 
+        type: string
+        required: no
+        default: '/tmp'
+      oneclient_token: 
+        type: string
+        required: no
+        default: 'dummy'
+      oneprovider_name: 
+        type: string
+        required: no
+        default: 'dummy'
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+    artifacts:
+      cms_config_role:
+        file: indigo-dc.cms_config,v1.0.1-dodas-rc5
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/cms_services_start.yml
+          inputs:
+            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
+            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            cms_config_iam_token: { get_property: [ SELF, iam_access_token ] }
+            cms_config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            cms_config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
+            cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
+            cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
+            cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
+            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
+            marathon_user: { get_property: [ SELF, marathon_username ] }
+            marathon_pass: { get_property: [ SELF, marathon_password ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
+            proxy_cache_manager: { get_property: [ SELF, cms_proxycache_token_manager ] }
+            proxy_tts: { get_property: [ SELF, watts_endpoint ] }
+            proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
+            proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
+            proxy_audience: { get_property: [ SELF, audience ] }
+            proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
+            proxy_lock_file_age: { get_property: [ SELF, lock_file_age ] }
+            proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
+            oneclient_token: { get_property: [ SELF, oneclient_token ] }
+            oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+
+
+  # Legacy: AMS CLUSTER TYPES
+  ############################################################
+  # - tosca.nodes.indigo.HTCondorServices
+  # - tosca.nodes.indigo.AmsCondorMasterConfig
+  # - tosca.nodes.indigo.AmsCondorExecuteConfig
+  # - tosca.nodes.indigo.AmsCondorWnConfig
+
+
+  tosca.nodes.indigo.HTCondorServices:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      htcondor_config_condor_image:
+        type: string
+        required: no
+      config_mode:
+        type: string
+        required: yes
+      htcondor_config_condor_host:
+        type: string
+        required: no
+      htcondor_config_schedd_ip_pub:
+        type: string
+        required: yes
+      htcondor_config_ccb_address:
+        type: string
+        required: no
+      htcondor_config_high_port:
+        type: string
+        required: no
+      htcondor_config_low_port:
+        type: string
+        required: no
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+      lb_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+      proxycache_host:
+        type: string
+        required: yes
+      iam_access_token:
+        type: string
+        description: INDIGO IAM access token
+        required: yes
+      iam_client_id:
+        type: string
+        description: INDIGO IAM client id
+        required: yes
+      iam_client_secret:
+        type: string
+        description: INDIGO IAM client secret
+        required: yes
+      marathon_username:
+        type: string
+        required: no
+        default: 'admin'
+      marathon_password:
+        type: string
+        required: no
+        default: 'admin'
+      proxycache_token_manager:
+        type: string
+        required: no
+        default: 'ZOOKEEPER'
+      watts_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      iam_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-iam.cloud.cnaf.infn.it/'
+      iam_credential_endpoint:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it/api/v2/iam/credential'
+      audience:
+        type: string
+        required: no
+        default: 'https://dodas-tts.cloud.cnaf.infn.it'
+      local_cache_expiration_time: 
+        type: integer
+        required: no
+        default: 86400
+      lock_file_age:
+        type: integer
+        required: no
+        default: 20
+      cache_dir: 
+        type: string
+        required: no
+        default: '/tmp'
+      proxycache_image:
+        type: string
+        required: no
+        default: "dodasts/ttscache"
+    artifacts:
+      htcondor_config_role:
+        file: indigo-dc.htcondor_config,v1.0.0-dodas-rc4
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/htcondor_master_config.yml
+          inputs:
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
+            zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] } 
+            lb_peers: { get_property: [ SELF, lb_ips ] }
+            htcondor_config_schedd_ip_pub: { get_property: [ SELF, htcondor_config_schedd_ip_pub ] }
+            ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
+            high_port: { get_property: [ SELF, htcondor_config_high_port ] }
+            low_port:  { get_property: [ SELF, htcondor_config_low_port ] }
+            config_mode: { get_property: [ SELF, config_mode ] }
+            htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
+            proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            proxy_cache_manager: { get_property: [ SELF, proxycache_token_manager ] }
+            proxy_tts: { get_property: [ SELF, watts_endpoint ] }
+            proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
+            proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
+            proxy_audience: { get_property: [ SELF, audience ] }
+            proxy_local_cache_expiration_time: { get_property: [ SELF, local_cache_expiration_time ] }
+            proxy_lock_file_age: { get_property: [ SELF, lock_file_age ] }
+            proxy_cache_dir: { get_property: [ SELF, cache_dir ] }
+            config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            config_iam_token: { get_property: [ SELF, iam_access_token ] }
+            config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
+            config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
+            config_proxycache_image: { get_property: [ SELF, proxycache_image ]}
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+  tosca.nodes.indigo.AmsCondorMasterConfig:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_username:
+        type: string
+        required: yes
+      marathon_password:
+        type: string
+        required: yes
+      ams_default_squid:
+        type: string
+        required: yes
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+    artifacts:
+      ams_config_role:
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc7
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/ams_master_config.yml
+          inputs:
+            mesos_masters_list: { get_property: [ SELF, master_ips ] }
+            consul_servers: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
+            zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+
+  tosca.nodes.indigo.AmsCondorExecuteConfig:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_username:
+        type: string
+        required: yes
+      marathon_password:
+        type: string
+        required: yes
+      proxycache_host:
+        type: string
+        required: yes
+      config_proxycache_serviceport:
+        type: string
+        required: true
+        default: '8080'
+      htcondor_config_ccb_address:
+        type: string
+        required: no
+      htcondor_config_condor_host:
+        type: string
+        required: no
+      htcondor_config_condor_image:
+        type: string
+        required: no
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+    artifacts:
+      ams_config_role:
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc7
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/ams_execute_config.yaml
+          inputs:
+            mesos_masters_list: { get_property: [ SELF, master_ips ] }
+            consul_servers: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
+            zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            proxycache_host: { get_property: [ SELF, proxycache_host ] }
+            config_proxycache_serviceport: { get_property: [ SELF, config_proxycache_serviceport ] }
+            ccb_address:  { get_property: [ SELF, htcondor_config_ccb_address ] }
+            condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
+            htcondor_config_condor_image: { get_property: [ SELF, htcondor_config_condor_image ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosMaster
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]
+
+  tosca.nodes.indigo.AmsCondorWnConfig:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      marathon_username:
+        type: string
+        required: yes
+      marathon_password:
+        type: string
+        required: yes
+      ams_default_squid:
+        type: string
+        required: yes
+      number_of_wn_instances:
+        type: integer
+        required: yes
+      number_of_slaves:
+        type: integer
+        required: yes
+      cpu_x_wn:
+        type: float
+        required: yes
+      ram_x_wn:
+        type: float
+        required: yes
+      docker_cpu_x_wn:
+        type: float
+        required: yes
+      docker_ram_x_wn:
+        type: float
+        required: yes
+      master_ips:
+        required: yes
+        type: list
+        entry_schema:
+          type: string
+      ams_repo_server_url:
+        type: string
+      ams_repo_public_key_path:
+        type: string
+      ams_repo_repository_name:
+        type: string
+      ams_repo_public_key:
+        type: string
+      ams_repo_public_key_url:
+        type: string
+    artifacts:
+      ams_config_role:
+        file: indigo-dc.ams_config,v1.0.0-dodas-rc7
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/dodas-1.1.0/artifacts/mesos/ams_wn_config.yml
+          inputs:
+            mesos_masters_list: { get_property: [ SELF, master_ips ] }
+            consul_servers: { get_property: [ SELF, master_ips ] }
+            zookeeper_host_list: { get_property: [ SELF, master_ips ] }
+            zookeeper_peers: { get_property: [ SELF, master_ips ] }
+            marathon_username: { get_property: [ SELF, marathon_username ] }
+            marathon_password: { get_property: [ SELF, marathon_password ] }
+            ams_default_squid: { get_property: [ SELF, ams_default_squid ] }
+            ams_number_of_wn_instances: { get_property: [ SELF, number_of_wn_instances ] }
+            ams_number_of_slaves: { get_property: [ SELF, number_of_slaves ] }
+            ams_cpu_x_wn: { get_property: [ SELF, cpu_x_wn ] }
+            ams_ram_x_wn: { get_property: [ SELF, ram_x_wn ] }
+            ams_docker_cpu_x_wn: { get_property: [ SELF, docker_cpu_x_wn ] }
+            ams_docker_ram_x_wn: { get_property: [ SELF, docker_ram_x_wn ] }
+            ams_repo_server_url: { get_property: [ SELF, ams_repo_server_url ] }
+            ams_repo_public_key_path: { get_property: [ SELF, ams_repo_public_key_path ] }
+            ams_repo_repository_name: { get_property: [ SELF, ams_repo_repository_name ] }
+            ams_repo_public_key: { get_property: [ SELF, ams_repo_public_key ] }
+            ams_repo_public_key_url: { get_property: [ SELF, ams_repo_public_key_url ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.indigo.MesosSlave
+          relationship: tosca.relationships.HostedOn
+          node: tosca.nodes.SoftwareComponent
+          occurrences: [1, 1]

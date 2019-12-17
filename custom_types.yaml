@@ -1358,7 +1358,6 @@ node_types:
           node: tosca.nodes.SoftwareComponent
           occurrences: [1, 1]
 
-
   tosca.nodes.indigo.TensorflowOnMesos:
     derived_from: tosca.nodes.SoftwareComponent
     metadata:
@@ -1436,7 +1435,6 @@ node_types:
         required: no
         type: boolean
         default: true
-
 
   tosca.nodes.indigo.LRMS.FrontEnd.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -1556,126 +1554,6 @@ node_types:
   tosca.nodes.indigo.MesosMaster:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd.Mesos
 
-  tosca.nodes.indigo.CmsServices:
-    derived_from: tosca.nodes.SoftwareComponent
-    metadata:
-      icon: /images/cms.png
-    properties:
-      cms_local_site:
-        type: string
-        required: yes
-      cms_squid_image:
-        type: string
-        required: no
-        default: "spiga/frontiersquidv1"
-      cms_wn_image:
-        type: string
-        default: "cloudpg/dodas-cms:cern"
-        required: no
-      cms_proxycache_image:
-        type: string
-        required: no
-        default: "cloudpg/ttscache"
-      cms_input_protocol:
-        type: string
-        required: no
-        default: 'xrootd'
-      mysquid_host:
-        type: string
-        required: yes
-      proxycache_host:
-        type: string
-        required: yes
-      iam_access_token:
-        type: string
-        description: INDIGO IAM access token
-        required: yes
-      iam_client_id:
-        type: string
-        description: INDIGO IAM client id
-        required: yes
-      iam_client_secret:
-        type: string
-        description: INDIGO IAM client secret
-        required: yes
-      marathon_username:
-        type: string
-        required: no
-        default: 'admin'
-      marathon_password:
-        type: string
-        required: no
-        default: 'admin'
-      cms_proxycache_token_manager:
-        type: string
-        required: no
-        default: 'ZOOKEEPER'
-      watts_endpoint:
-        type: string
-        required: no
-        default: 'https://dodas-tts.cloud.cnaf.infn.it'
-      iam_endpoint:
-        type: string
-        required: no
-        default: 'https://dodas-iam.cloud.cnaf.infn.it/'
-      iam_credential_endpoint:
-        type: string
-        required: no
-        default: 'https://dodas-tts.cloud.cnaf.infn.it/api/v2/iam/credential'
-      audience:
-        type: string
-        required: no
-        default: 'https://dodas-tts.cloud.cnaf.infn.it'
-      oneclient_token: 
-        type: string
-        required: no
-        default: 'dummy'
-      oneprovider_name: 
-        type: string
-        required: no
-        default: 'dummy'
-      master_ips:
-        required: yes
-        type: list
-        entry_schema:
-          type: string
-    artifacts:
-      cms_config_role:
-        file: indigo-dc.cms_config
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_services_start.yml
-          inputs:
-            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
-            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
-            cms_config_iam_token: { get_property: [ SELF, iam_access_token ] }
-            cms_config_iam_client_id: { get_property: [ SELF, iam_client_id ] }
-            cms_config_iam_client_secret: { get_property: [ SELF, iam_client_secret ] }
-            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
-            cms_config_squid_image: { get_property: [ SELF, cms_squid_image ] }
-            cms_config_wn_image: { get_property: [ SELF, cms_wn_image ] }
-            cms_config_proxycache_image: { get_property: [ SELF, cms_proxycache_image ]}
-            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
-            marathon_user: { get_property: [ SELF, marathon_username ] }
-            marathon_pass: { get_property: [ SELF, marathon_password ] }
-            zookeeper_host_list: { get_property: [ SELF, master_ips ] }            
-            proxy_cache_manager: { get_property: [ SELF, cms_proxycache_token_manager ] }
-            proxy_tts: { get_property: [ SELF, watts_endpoint ] }
-            proxy_iam_endpoint: { get_property: [ SELF, iam_endpoint ] }
-            proxy_credential_endpoint: { get_property: [ SELF, iam_credential_endpoint ] }
-            proxy_audience: { get_property: [ SELF, audience ] }
-            oneclient_token: { get_property: [ SELF, oneclient_token ] }
-            oneprovider_name: { get_property: [ SELF, oneprovider_name ] }
-    requirements:
-      - host:
-          capability: tosca.capabilities.indigo.MesosMaster
-          relationship: tosca.relationships.HostedOn
-          node: tosca.nodes.SoftwareComponent
-          occurrences: [1, 1]
-
-
   tosca.nodes.indigo.LRMS.WorkerNode.Mesos:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     metadata:
@@ -1729,106 +1607,6 @@ node_types:
 
   tosca.nodes.indigo.MesosSlave:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode.Mesos
-
-  tosca.nodes.indigo.CmsOneclient:
-    derived_from: tosca.nodes.SoftwareComponent
-    properties:
-      oneclient_pkg:
-        type: string
-        required: yes
-    artifacts:
-      oneclient_role:
-        file: indigo-dc.oneclient
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/oneclient/artifacts/onedata/cms_oneclient.yml
-          inputs:
-            oneclient_pkg: { get_property: [ SELF, oneclient_pkg ] }
-
-  tosca.nodes.indigo.CmsWnConfig:
-    derived_from: tosca.nodes.SoftwareComponent
-    metadata:
-      icon: /images/cms.png
-    properties:
-      cms_local_site:
-        type: string
-        required: yes
-      cms_stageoutsite:
-        type: string
-        required: yes
-      cms_stageoutprotocol:
-        type: string
-        required: yes
-      cms_phedexnode:
-        type: string
-        required: yes
-      cms_stageoutcommand:
-        type: string
-        required: yes
-      cms_fallback_phedexnode:
-        type: string
-        required: no
-        default: 'T2_IT_myt2'
-      cms_fallback_lfn_prefix:
-        type: string
-        required: no
-        default: 'srm://t2-srm-02.lnl.infn.it:8443/srm/managerv2?SFN=xxxxxxx'
-      cms_fallback_command:
-        type: string
-        required: no
-        default: 'gfal2'
-      cms_input_path:
-        type: string
-        required: no
-        default: 'my/oneclient/path'
-      cms_input_protocol:
-        type: string
-        required: no
-        default: 'xrootd'
-      mysquid_host:
-        type: string
-        required: yes
-      proxycache_host:
-        type: string
-        required: yes
-      monitordb_ip:
-        type: string
-        required: no
-      elasticsearch_secret:
-        type: string
-        required: no
-    artifacts:
-      cms_config_role:
-        file: indigo-dc.cms_config
-        type: tosca.artifacts.AnsibleGalaxy.role
-    interfaces:
-      Standard:
-        configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/cms_wn_configure.yml
-          inputs:
-            cms_config_mysquid_host: { get_property: [ SELF, mysquid_host ] }
-            cms_config_proxycache_host: { get_property: [ SELF, proxycache_host ] }
-            cms_config_cms_local_site: { get_property: [ SELF, cms_local_site ] }
-            cms_config_stageoutsite: { get_property: [ SELF, cms_stageoutsite ] }
-            cms_config_stageoutprotocol: { get_property: [ SELF, cms_stageoutprotocol ] }
-            cms_config_stageoutcommand: { get_property: [ SELF, cms_stageoutcommand ] }
-            cms_config_phedexnode: { get_property: [ SELF, cms_phedexnode ] }
-            cms_config_fallback_phedexnode: { get_property: [ SELF,cms_fallback_phedexnode ] }
-            cms_config_fallback_lfn_prefix: { get_property: [ SELF,cms_fallback_lfn_prefix ] }
-            cms_config_fallback_command: { get_property: [ SELF,cms_fallback_command ] }
-            cms_input_path: { get_property: [ SELF, cms_input_path ] }
-            cms_input_protocol: { get_property: [ SELF, cms_input_protocol ] }
-            cms_config_elastic_secret: { get_property: [ SELF, elasticsearch_secret ] }
-            monitordb_ip: { get_property: [ SELF, monitordb_ip ] }
-    requirements:
-      - host:
-          capability: tosca.capabilities.indigo.MesosSlave
-          relationship: tosca.relationships.HostedOn
-          node: tosca.nodes.SoftwareComponent
-          occurrences: [1, 1]
-
 
   tosca.nodes.indigo.MesosLoadBalancer:
     derived_from: tosca.nodes.SoftwareComponent
