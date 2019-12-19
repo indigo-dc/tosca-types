@@ -52,10 +52,10 @@ node_types:
         type: string
         required: no
         default: ""
-
       externalIP:
         type: string
-        required: yes
+        required: no
+        default: 0
       role_name:
         type: string
         required: no
@@ -86,7 +86,12 @@ node_types:
       name:
         type: string
         description: name of the helm deployment
-        required: yes
+        required: no
+        default: ""
+      namespace:
+        type: string
+        required: no
+        default: default
       url:
         type: string
         required: no
@@ -101,7 +106,8 @@ node_types:
         default: ""
       externalIP:
         type: string
-        required: yes
+        required: no
+        default: 0
       role_name:
         type: string
         required: no
