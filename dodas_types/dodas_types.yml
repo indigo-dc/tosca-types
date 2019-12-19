@@ -38,12 +38,12 @@ node_types:
         type: string
         description: values.yaml file content
         required: no
-        default:
+        default: ""
       values_url:
         type: string
         description: values.yaml file url
         required: no
-        default:
+        default: ""
       kubeconfig_path:
         type: string
         required: no
@@ -95,11 +95,11 @@ node_types:
       url:
         type: string
         required: no
-        default:
+        default: ""
       manifest_file:
         type: string
         required: no
-        default:
+        default: ""
       inline_options:
         type: string
         required: no
@@ -123,6 +123,7 @@ node_types:
           inputs:
             role_name: { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
+            namespace:   { get_property: [ SELF, namespace ] }
             url: { get_property: [ SELF, url ] }
             inline_options: { get_property: [ SELF, inline_options ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
