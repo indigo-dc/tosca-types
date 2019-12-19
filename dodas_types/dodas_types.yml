@@ -37,7 +37,22 @@ node_types:
       values_file:
         type: string
         description: values.yaml file content
-        required: yes
+        required: no
+        default:
+      values_url:
+        type: string
+        description: values.yaml file url
+        required: no
+        default:
+      kubeconfig_path:
+        type: string
+        required: no
+        default: /etc/kubernetes/admin.conf
+      inline_options:
+        type: string
+        required: no
+        default: ""
+
       externalIP:
         type: string
         required: yes
@@ -58,6 +73,9 @@ node_types:
             name: { get_property: [ SELF, name ] }
             chart: { get_property: [ SELF, chart ] }
             values_file: { get_property: [ SELF, values_file ] }
+            values_url: { get_property: [ SELF, values_url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
+            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
             repos: { get_property: [ SELF, repos ] }
             externalIP: { get_property: [ SELF, externalIP ] }
 
@@ -69,9 +87,18 @@ node_types:
         type: string
         description: name of the helm deployment
         required: yes
+      url:
+        type: string
+        required: no
+        default:
       manifest_file:
         type: string
-        required: yes
+        required: no
+        default:
+      inline_options:
+        type: string
+        required: no
+        default: ""
       externalIP:
         type: string
         required: yes
@@ -90,6 +117,8 @@ node_types:
           inputs:
             role_name: { get_property: [ SELF, role_name ] }
             name: { get_property: [ SELF, name ] }
+            url: { get_property: [ SELF, url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
             externalIP: { get_property: [ SELF, externalIP ] }
 
