@@ -2486,6 +2486,7 @@ node_types:
           inputs:
             INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
 
+
   tosca.nodes.indigo.DEEPaaScont:
     derived_from: tosca.nodes.SoftwareComponent
     metadata:
@@ -2537,6 +2538,7 @@ node_types:
             deepaas_rclone_user: { get_property: [ SELF, rclone_user ] }
             deepaas_rclone_pass: { get_property: [ SELF, rclone_password ] }
 
+
 policy_types:
   tosca.policies.indigo.SlaPlacement:
     derived_from: tosca.policies.Placement
@@ -2557,3 +2559,4 @@ policy_types:
       subscription_id:
         required: false
         type: string
+
