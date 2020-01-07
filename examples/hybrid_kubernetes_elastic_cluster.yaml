@@ -19,32 +19,41 @@ topology_template:
     fe_cpus:
       type: integer
       description: Numer of CPUs for the front-end node
-      default: 1
+      default: 2
       required: yes
 
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
-      default: 1 GB
+      default: 3 GB
       required: yes
 
     wn_cpus:
       type: integer
       description: Numer of CPUs for the WNs
-      default: 1
+      default: 2
       required: yes
 
     wn_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
-      default: 1 GB
+      default: 3 GB
       required: yes
 
     hybrid:
       type: boolean
       description: Flag to specify that this cluster will work in an hybrid environment
-      default: false
+      default: true
       required: false
+
+    admin_username:
+      type: string
+      description: Username of the admin user
+      default: kubeuser
+    admin_token:
+      type: string
+      description: Access Token for the admin user
+      default: not_very_secret_token
 
   node_templates:
 
@@ -61,9 +70,10 @@ topology_template:
         - wn: wn_node
 
     lrms_front_end:
-      type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
       properties:
-        wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+        admin_username:  { get_input: admin_username }
+        admin_token: { get_input: admin_token }
         hybrid: { get_input: hybrid }
       requirements:
         - host: lrms_server
@@ -73,8 +83,15 @@ topology_template:
       capabilities:
         endpoint:
           properties:
-            dns_name: slurmserver
+            dns_name: kubeserver
             network_name: PUBLIC
+            ports:
+              openvpn:
+                protocol: udp
+                source: 1194
+              dashboard:
+                protocol: tcp
+                source: 30443
         host:
           properties:
             num_cpus: { get_input: fe_cpus }
@@ -86,7 +103,7 @@ topology_template:
               version: 16.04
 
     wn_node:
-      type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
+      type: tosca.nodes.indigo.LRMS.WorkerNode.Kubernetes
       properties:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
@@ -120,4 +137,16 @@ topology_template:
       value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
       value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
+    dashboard_url:
+      value: { concat: [ 'https://', get_attribute: [ lrms_server, public_address, 0 ], ':30443/' ] }
 
+  policies:
+    - deploy_on_ifca:
+        type: tosca.policies.indigo.SlaPlacement
+        properties: { sla_id: 5cf12da6cb0e8f527dfb3c97 }
+        targets: [ lrms_wn ]
+
+#    - deploy_on_recas:
+#        type: tosca.policies.indigo.SlaPlacement
+#        properties: { sla_id: 5bfbc091a9a88f528bf5114b }
+#        targets: [ lrms_server ]

@@ -21,36 +21,80 @@
         state: directory
       when: "enable_nfs_share == true"
 
-  roles:
-    - role: indigo-dc.nfs
-      nfs_mode: 'server'
-      nfs_exports: [{path: "/data", export: "{{ vnode_prefix }}*.localdomain(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
+  tasks:
+    - name: Call NFS role as server
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'server'
+        nfs_exports: [{path: "/data", export: "{{ vnode_prefix }}*.localdomain(fsid=0,rw,async,no_root_squash,no_subtree_check,insecure)"}]
       when: "enable_nfs_share == true"
 
-    - role: indigo-dc.consul
-      consul_mode: "server"
-      consul_servers: "{{ mesos_masters_list_ips }}"
-      consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
-      consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+    - block:
+
+      - name: Call IndigoVR role as Centralpoint
+        include_role:
+          name: indigo-dc.indigovr
+        vars:
+          INDIGOVR_NODE_TYPE: centralpoint
+          INDIGOVR_MTU: 1400
+
+      - name: Refresh setup data to get new ansible_tun0 item
+        setup:
+
+      - name: Set facts in case of Hybrid cluster
+        set_fact:
+          mesos_masters_list_ips: "{{ groups['mesos_master_server']|map('extract', hostvars,'ansible_tun0')|list|map(attribute='ipv4.address')|list }}"
+          consul_address: "{{ ansible_tun0.ipv4.address }}"
+
+      when: fe_hybrid_cluster
+
+    - name: Set facts
+      set_fact:
+        consul_address: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      when: not fe_hybrid_cluster
+
+    - name: Call consul role as server
+      include_role:
+        name: indigo-dc.consul
+      vars:
+        consul_mode: "server"
+        consul_servers: "{{ mesos_masters_list_ips }}"
+        consul_advertise: '{{ consul_address }}'
+        consul_bind_addr: '{{ consul_address }}'
       when: (enable_consul_sd == true)
 
-    - role: indigo-dc.zookeeper
-      zookeeper_host_list: "{{ mesos_masters_list_ips }}"
+    - name: Call zookeeper role
+      include_role:
+        name: indigo-dc.zookeeper
+      vars:
+        zookeeper_host_list: "{{ mesos_masters_list_ips }}"
 
-    - role: indigo-dc.mesos
-      mesos_install_mode: "master"
-      zookeeper_peers: "{{ mesos_masters_list_ips }}"
-      mesos_masters_list: "{{ mesos_masters_list_ips }}"
+    - name: Call mesos role as master
+      include_role:
+        name: indigo-dc.mesos
+      vars:
+        mesos_install_mode: "master"
+        zookeeper_peers: "{{ mesos_masters_list_ips }}"
+        mesos_masters_list: "{{ mesos_masters_list_ips }}"
+        mesos_ip: '0.0.0.0'
 
-    - role: indigo-dc.marathon
-      zookeeper_peers: "{{ mesos_masters_list_ips }}"
-      marathon_username: "{{ marathon_user }}"
-      marathon_password: "{{ marathon_pass }}"
+    - name: Call marathon role
+      include_role:
+        name: indigo-dc.marathon
+      vars:
+        zookeeper_peers: "{{ mesos_masters_list_ips }}"
+        marathon_username: "{{ marathon_user }}"
+        marathon_password: "{{ marathon_pass }}"
+        marathon_hostname: '0.0.0.0'
    
-    - role: indigo-dc.chronos
-      zookeeper_peers: "{{ mesos_masters_list_ips }}"
-      chronos_username: "{{ chronos_user }}"
-      chronos_password: "{{ chronos_pass }}"
+    - name: Call chronos role
+      include_role:
+        name: indigo-dc.chronos
+      vars:
+        zookeeper_peers: "{{ mesos_masters_list_ips }}"
+        chronos_username: "{{ chronos_user }}"
+        chronos_password: "{{ chronos_pass }}"
       when: "enable_chronos == true"
 
       

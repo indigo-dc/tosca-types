@@ -4,22 +4,67 @@
   vars:
     docker_bridge_ip_cidr: "172.0.17.1/24"
   
-  roles:
-    - role: indigo-dc.docker
+  tasks:
+    - name: Call Docker role
+      include_role:
+        name: indigo-dc.docker
 
-    - role: indigo-dc.consul
-      consul_mode: "agent"
-      consul_servers: "{{ mesos_masters_list_ips }}"
-      consul_advertise: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
-      consul_bind_addr: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+    - block:
+
+      - name: Call IndigoVR role as standalone
+        include_role:
+          name: indigo-dc.indigovr
+        vars:
+          INDIGOVR_NODE_TYPE: standalone
+          INDIGOVR_CENTRALPOINT_IP: '{{ public_front_end_ip }}'
+          INDIGOVR_MTU: 1400
+
+      - name: Refresh setup data to get new ansible_tun0 item
+        setup:
+
+      - name: Add host VPN IP in master
+        replace:
+          dest: /etc/hosts
+          regexp: ".*{{ansible_hostname}}.localdomain.*$"
+          replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
+        delegate_facts: True
+        delegate_to: '{{ public_front_end_ip }}'
+
+      - name: Set facts in case of Hybrid cluster
+        set_fact:
+          mesos_masters_list_ips: "{{ groups['mesos_master_server']|map('extract', hostvars,'ansible_tun0')|list|map(attribute='ipv4.address')|list }}"
+          consul_address: "{{ ansible_tun0.ipv4.address }}"
+
+      when: wn_hybrid_cluster
+
+    - name: Set facts
+      set_fact:
+        consul_address: '{{ IM_NODE_PRIVATE_IP if IM_NODE_PRIVATE_IP is defined else ansible_default_ipv4.address }}'
+      when: not wn_hybrid_cluster
+
+    - name: Call consul role as agent
+      include_role:
+        name: indigo-dc.consul
+      vars:
+        consul_mode: "agent"
+        consul_servers: "{{ mesos_masters_list_ips }}"
+        consul_advertise: '{{ consul_address }}'
+        consul_bind_addr: '{{ consul_address }}'
       when: (enable_consul_sd == true )
 
-    - role: indigo-dc.mesos
-      mesos_install_mode: "slave"
-      zookeeper_peers: "{{ mesos_masters_list_ips }}"
-      mesos_masters_list: "{{ mesos_masters_list_ips }}"
+    - name: Call mesos role as slave
+      include_role:
+        name: indigo-dc.mesos
+      vars:
+        mesos_install_mode: "slave"
+        zookeeper_peers: "{{ mesos_masters_list_ips }}"
+        mesos_masters_list: "{{ mesos_masters_list_ips }}"
 
-    - role: indigo-dc.nfs
-      nfs_mode: 'client'
-      nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ front_end_ip }}", opts: "nolock" }]
+    - name: Call NFS role as client
+      include_role:
+        name: indigo-dc.nfs
+      vars:
+        nfs_mode: 'client'
+        nfs_client_imports: [{ local: "/data", remote: "/data", server_host: "{{ mesos_masters_list_ips[0] }}", opts: "nolock" }]
       when: "enable_nfs_share == true"
+

@@ -87,6 +87,9 @@ topology_template:
 
   policies:
     - deploy_on_aws:
-        type: tosca.policies.Placement
-        properties: { sla_id: SLA_provider-AWS-us-east-1_indigo-dc,  username: {get_input: access_key}, password: {get_input: secret_key}}
+        type: tosca.policies.indigo.CredentialsAwareSlaPlacement
+        properties:
+          sla_id: SLA_provider-AWS-us-east-1_indigo-dc
+          username: {get_input: access_key}
+          password: {get_input: secret_key}
         targets: [ onedata_client_node ]

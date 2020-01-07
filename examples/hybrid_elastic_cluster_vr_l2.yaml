@@ -25,28 +25,65 @@ topology_template:
     fe_mem:
       type: scalar-unit.size
       description: Amount of Memory for the front-end node
-      default: 1 GB
+      default: 2 GB
       required: yes
 
     wn_cpus:
       type: integer
       description: Numer of CPUs for the WNs
-      default: 1
+      default: 2
       required: yes
 
     wn_mem:
       type: scalar-unit.size
       description: Amount of Memory for the WNs
-      default: 1 GB
+      default: 3 GB
       required: yes
 
     hybrid:
       type: boolean
       description: Flag to specify that this cluster will work in an hybrid environment
-      default: false
+      default: true
       required: false
 
   node_templates:
+
+    pub_network:
+      type: tosca.nodes.network.Network
+      properties:
+        network_type: public
+        network_name: public-cesnet-78-128-251
+
+    server_pub_port:
+      type: tosca.nodes.network.Port
+      properties:
+        order: 1
+      requirements:
+        - binding: lrms_server
+        - link: pub_network
+
+    network1:
+      type: tosca.nodes.network.Network
+      properties:
+        cidr: '192.168.10.0/24'
+        gateway_ip: '192.168.0.0/16,lrms_server'
+        network_type: private
+
+    server_port:
+      type: tosca.nodes.network.Port
+      properties:
+        order: 0
+      requirements:
+        - binding: lrms_server
+        - link: network1
+
+    wn_port:
+      type: tosca.nodes.network.Port
+      properties:
+        order: 0
+      requirements:
+        - binding: lrms_wn
+        - link: network1
 
     elastic_cluster_front_end:
       type: tosca.nodes.indigo.ElasticCluster
@@ -60,6 +97,12 @@ topology_template:
         - lrms: lrms_front_end
         - wn: wn_node
 
+    indigovr_cp:
+      type: tosca.nodes.indigo.VR.CentralPoint
+      requirements:
+        - host:
+            node: lrms_server
+
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
       properties:
@@ -67,6 +110,7 @@ topology_template:
         hybrid: { get_input: hybrid }
       requirements:
         - host: lrms_server
+        - dependency: indigovr_cp
 
     lrms_server:
       type: tosca.nodes.indigo.Compute
@@ -74,7 +118,10 @@ topology_template:
         endpoint:
           properties:
             dns_name: slurmserver
-            network_name: PUBLIC
+            ports:
+              openvpn:
+                protocol: udp
+                source: 1194
         host:
           properties:
             num_cpus: { get_input: fe_cpus }
@@ -82,15 +129,14 @@ topology_template:
         os:
           properties:
               type: linux
-              distribution: ubuntu
-              version: 16.04
+              image: ost://identity.cloud.muni.cz/2a5bbbf5-c135-4cd8-896e-8690fb82a7e9
+
 
     wn_node:
       type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
       properties:
         front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
         public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
-        hybrid: { get_input: hybrid }
       capabilities:
         wn:
           properties:
@@ -98,13 +144,14 @@ topology_template:
             min_instances: 0
       requirements:
         - host: lrms_wn
-            
+        - dependency: indigovr_cp
+
     lrms_wn:
       type: tosca.nodes.indigo.Compute
       capabilities:
         scalable:
           properties:
-            count: 0
+            count: 1
         host:
           properties:
             num_cpus: { get_input: wn_cpus }
@@ -112,12 +159,10 @@ topology_template:
         os:
           properties:
               type: linux
-              distribution: ubuntu
-              version: 16.04
+              image: ost://identity.cloud.muni.cz/2a5bbbf5-c135-4cd8-896e-8690fb82a7e9
 
   outputs:
     cluster_ip:
       value: { get_attribute: [ lrms_server, public_address, 0 ] }
     cluster_creds:
       value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }
-
