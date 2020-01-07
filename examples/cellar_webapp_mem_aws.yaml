@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/stable/v4.0/custom_types.yaml
 
 description: >
   TOSCA test for launching the Wine Cellar Application (PHP Version)
@@ -13,7 +13,7 @@ topology_template:
   inputs:
     download_url:
       type: string
-      default: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/webapps/cellar-webapp-mem.tgz
+      default: https://raw.githubusercontent.com/indigo-dc/tosca-types/stable/v4.0/artifacts/webapps/cellar-webapp-mem.tgz
     access_key:
       type: string
       default: AKXX
@@ -32,7 +32,7 @@ topology_template:
       interfaces:
         Standard:
           configure:
-            implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/webapps/cellar-mem.yml
+            implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/stable/v4.0/artifacts/webapps/cellar-mem.yml
             inputs:
               download_url: { get_input: download_url }
 
