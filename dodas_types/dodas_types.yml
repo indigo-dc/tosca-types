@@ -142,9 +142,6 @@ node_types:
       mode:
         type: string
         required: yes
-      nfs_mode:
-        type: string
-        required: yes
       node_label:
         type: string
         required: no
@@ -160,7 +157,6 @@ node_types:
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
-            nfs_mode: { get_property: [ SELF, nfs_mode ] }
             node_label: { get_property: [ SELF, node_label ] }
 
 
