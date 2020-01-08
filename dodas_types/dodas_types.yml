@@ -142,6 +142,9 @@ node_types:
       mode:
         type: string
         required: yes
+      nfs_mode:
+        type: string
+        required: yes
     artifacts:
       k3s_config_role:
         file: cloud-pg.ansible_role_k3s
@@ -153,6 +156,7 @@ node_types:
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
+            nfs_mode: { get_property: [ SELF, nfs_mode ] }
 
 
   # Legacy: CMS CLUSTER TYPES
