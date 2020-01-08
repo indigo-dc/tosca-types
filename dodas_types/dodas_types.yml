@@ -505,7 +505,6 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
             role_name: { get_property: [ SELF, role_name ] }
-            config_mode: "master"
             marathon_username: { get_property: [ SELF, marathon_username ] }
             marathon_password: { get_property: [ SELF, marathon_password ] }
             condor_host: { get_property: [ SELF, htcondor_config_condor_host ] }
