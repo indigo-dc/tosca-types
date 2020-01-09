@@ -53,9 +53,9 @@ node_types:
         required: no
         default: ""
       externalParams:
-        type: list
+        type: string
         required: no
-        default: []
+        default: "" 
       role_name:
         type: string
         required: no
