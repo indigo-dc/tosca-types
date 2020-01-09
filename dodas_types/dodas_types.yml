@@ -104,10 +104,10 @@ node_types:
         type: string
         required: no
         default: ""
-      externalIP:
-        type: string
+      externalParams:
+        type: list
         required: no
-        default: 0
+        default: []
       role_name:
         type: string
         required: no
@@ -127,7 +127,7 @@ node_types:
             url: { get_property: [ SELF, url ] }
             inline_options: { get_property: [ SELF, inline_options ] }
             manifest_file: { get_property: [ SELF, manifest_file ] }
-            externalIP: { get_property: [ SELF, externalIP ] }
+            externalParams: { get_property: [ SELF, externalParams ] }
 
   # Experimental: K3s
   ############################################################
