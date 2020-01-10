@@ -1,0 +1,32 @@
+tosca_definitions_version: tosca_simple_yaml_1_2
+
+imports:
+  - https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_types.yml 
+
+
+node_types:
+
+  tosca.nodes.indigo.HelmInstall.HTCondor:
+    derived_from: tosca.nodes.indigo.HelmInstall
+    properties:
+      condor_host:
+        type: string
+        required: yes
+      ccb_address:
+        type: string
+        required: yes
+      schedd_netinterface:
+        type: string
+        required: yes
+      k8s_master_ip:
+        type: string
+        required: yes
+    interfaces:
+      Standard:
+        start:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
+          inputs:
+            condor_host: { get_property: [ SELF, condor_host ] }
+            ccb_address: { get_property: [ SELF, ccb_address ] }
+            schedd_netinterface: { get_property: [ SELF, schedd_netinterface ] }
+            k8s_master_ip: { get_property: [ SELF, k8s_master_ip ] }
