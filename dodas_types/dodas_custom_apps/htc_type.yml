@@ -25,8 +25,7 @@ node_types:
           type: map
           entry_schema:
             type: string
-        default:
-          - { name: dodas, url: "https://dodas-ts.github.io/helm_charts" }
+        default: [{ name: dodas, url: "https://dodas-ts.github.io/helm_charts" }]
       values_file:
         type: string
         description: values.yaml file content
