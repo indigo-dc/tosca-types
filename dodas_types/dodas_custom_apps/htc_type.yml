@@ -9,47 +9,6 @@ node_types:
   tosca.nodes.indigo.HelmInstall.HTCondor:
     derived_from: tosca.nodes.indigo.HelmInstall
     properties:
-      name:
-        type: string
-        description: name of the helm deployment
-        required: no
-        default: "htcondor"
-      chart:
-        type: string
-        description: chart name
-        required: no
-        default: "dodas/htcondor"
-      repos:
-        type: list
-        entry_schema:
-          type: map
-          entry_schema:
-            type: string
-      values_file:
-        type: string
-        description: values.yaml file content
-        required: no
-        default: |
-          condorHost: {{ condor_host }}
-          ccbHost: {{ ccb_address }}
-          proxyCacheHost: {{ k8s_master_ip }}
-      values_url:
-        type: string
-        description: values.yaml file url
-        required: no
-        default: ""
-      kubeconfig_path:
-        type: string
-        required: no
-        default: /etc/kubernetes/admin.conf
-      inline_options:
-        type: string
-        required: no
-        default: ""
-      role_name:
-        type: string
-        required: no
-        default: dciangot.ansible_role_helmtest
       condor_host:
         type: string
         required: yes
