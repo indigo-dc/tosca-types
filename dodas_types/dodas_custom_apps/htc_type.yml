@@ -9,6 +9,49 @@ node_types:
   tosca.nodes.indigo.HelmInstall.HTCondor:
     derived_from: tosca.nodes.indigo.HelmInstall
     properties:
+      name:
+        type: string
+        description: name of the helm deployment
+        required: no
+        default: "htcondor"
+      chart:
+        type: string
+        description: chart name
+        required: no
+        default: "dodas/htcondor"
+      repos:
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
+        default:
+          - { name: dodas, url: "https://dodas-ts.github.io/helm_charts" }
+      values_file:
+        type: string
+        description: values.yaml file content
+        required: no
+        default: |
+          condorHost: {{ condor_host }}
+          ccbHost: {{ ccb_address }}
+          proxyCacheHost: {{ k8s_master_ip }}
+      values_url:
+        type: string
+        description: values.yaml file url
+        required: no
+        default: ""
+      kubeconfig_path:
+        type: string
+        required: no
+        default: /etc/kubernetes/admin.conf
+      inline_options:
+        type: string
+        required: no
+        default: ""
+      role_name:
+        type: string
+        required: no
+        default: dciangot.ansible_role_helmtest
       condor_host:
         type: string
         required: yes
@@ -26,6 +69,14 @@ node_types:
         start:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
+            role_name:  { get_property: [ SELF, role_name ] }
+            name: { get_property: [ SELF, name ] }
+            chart: { get_property: [ SELF, chart ] }
+            values_file: { get_property: [ SELF, values_file ] }
+            values_url: { get_property: [ SELF, values_url ] }
+            inline_options: { get_property: [ SELF, inline_options ] }
+            kubeconfig_path: { get_property: [ SELF, kubeconfig_path ] }
+            repos: { get_property: [ SELF, repos ] }
             condor_host: { get_property: [ SELF, condor_host ] }
             ccb_address: { get_property: [ SELF, ccb_address ] }
             schedd_netinterface: { get_property: [ SELF, schedd_netinterface ] }
