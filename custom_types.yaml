@@ -2006,6 +2006,11 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     metadata:
       icon: /images/kubernetesWN.png
+    properties:
+      kubelet_extra_args:
+        required: no
+        type: string
+        default: ""
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2023,6 +2028,7 @@ node_types:
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
