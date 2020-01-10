@@ -2043,6 +2043,12 @@ node_types:
         required: no
         type: string
         default: some_insecure_token
+      nfs_exports:
+        type: list
+        entry_schema:
+          type: map
+          entry_schema:
+            type: string
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2065,6 +2071,7 @@ node_types:
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
+            nfs_exports: { get_property: [ SELF, nfs_exports] }
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
