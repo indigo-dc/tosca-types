@@ -2017,7 +2017,7 @@ node_types:
         default: 1.16.4
     artifacts:
       kube_role:
-        file: cloud-pg.kubernetes,2.0.0-dodas-rc19
+        file: cloud-pg.kubernetes,v2.0.0-dodas-rc20
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
@@ -2058,7 +2058,7 @@ node_types:
         default: true
     artifacts:
       kube_role:
-        file: cloud-pg.kubernetes,2.0.0-dodas-rc19
+        file: cloud-pg.kubernetes,v2.0.0-dodas-rc20
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs
