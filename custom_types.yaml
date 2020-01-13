@@ -2048,10 +2048,10 @@ node_types:
         required: no
         type: string
         default: some_insecure_token
-      kube_version:
-        required: no
-        type: string
-        default: 1.14.1
+      #kube_version:
+      #  required: no
+      #  type: string
+      #  default: 1.14.1
       kube_deploy_dashboard:
         required: no
         type: boolean
@@ -2078,7 +2078,7 @@ node_types:
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
-            kube_version:  { get_property: [ SELF, kube_version] }
+            #kube_version:  { get_property: [ SELF, kube_version] }
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
