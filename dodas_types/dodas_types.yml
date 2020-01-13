@@ -143,7 +143,11 @@ node_types:
       node_label:
         type: string
         required: no
-        default: unlabelled=true 
+        default: unlabelled=true
+      role_name:
+        type: string
+        required: no
+        default: cloud-pg.ansible_role_k3s
     artifacts:
       k3s_config_role:
         file: cloud-pg.ansible_role_k3s
@@ -151,7 +155,7 @@ node_types:
     interfaces:
       Standard:
         start:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/k3s.yaml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/ansible.yaml
           inputs:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
