@@ -2051,11 +2051,11 @@ node_types:
       kube_version:
         required: no
         type: string
-        default: 1.16.4
+        default: 1.14.1
       kube_deploy_dashboard:
         required: no
         type: boolean
-        default: false
+        default: true
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
