@@ -140,6 +140,10 @@ node_types:
       mode:
         type: string
         required: yes
+      k3s_version:
+        type: string
+        required: no
+        default: v1.17.0+k3s.1
       node_label:
         type: string
         required: no
@@ -161,4 +165,5 @@ node_types:
             mode: { get_property: [ SELF, mode ] }
             node_label: { get_property: [ SELF, node_label ] }
             role_name: { get_property: [ SELF, role_name ] }
+            k3s_version: { get_property: [ SELF, k3s_version ]  }
 
