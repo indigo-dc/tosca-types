@@ -160,3 +160,5 @@ node_types:
             master_ip: { get_property: [ SELF, master_ip ] }
             mode: { get_property: [ SELF, mode ] }
             node_label: { get_property: [ SELF, node_label ] }
+            role_name: { get_property: [ SELF, role_name ] }
+
