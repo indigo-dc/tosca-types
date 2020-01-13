@@ -2011,6 +2011,10 @@ node_types:
         required: no
         type: string
         default: ""
+      kube_version:
+        required: no
+        type: string
+        default: 1.16.4
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2029,6 +2033,7 @@ node_types:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args] }
+            kube_version:  { get_property: [ SELF, kube_version] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -2043,6 +2048,14 @@ node_types:
         required: no
         type: string
         default: some_insecure_token
+      kube_version:
+        required: no
+        type: string
+        default: 1.16.4
+      kube_deploy_dashboard:
+        required: no
+        type: boolean
+        default: false
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes
@@ -2065,6 +2078,7 @@ node_types:
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
+            kube_version:  { get_property: [ SELF, kube_version] }
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
