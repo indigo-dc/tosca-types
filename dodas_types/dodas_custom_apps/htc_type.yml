@@ -6,8 +6,8 @@ imports:
 
 node_types:
 
-  tosca.nodes.indigo.HelmInstall.HTCondor:
-    derived_from: tosca.nodes.indigo.HelmInstall
+  tosca.nodes.DODAS.HelmInstall.HTCondor:
+    derived_from: tosca.nodes.DODAS.HelmInstall
     properties:
       condor_host:
         type: string

@@ -5,17 +5,17 @@ imports:
 
 # Index
   # - KUBERNETES APPLICATION TOOLS
-  # - Experimental: K3s
+  # -ORCHESTRATORS: k3s and k8s
 
 node_types:
 
   # KUBERNETES APPLICATION TOOLS
   ############################################################
-  # - tosca.nodes.indigo.HelmInstall
-  # - tosca.nodes.indigo.KubeCreate
+  # - tosca.nodes.DODAS.HelmInstall
+  # - tosca.nodes.DODAS.KubeCreate
 
 
-  tosca.nodes.indigo.HelmInstall:
+  tosca.nodes.DODAS.HelmInstall:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       name:
@@ -77,8 +77,7 @@ node_types:
             repos: { get_property: [ SELF, repos ] }
             #externalParams: { get_property: [ SELF, externalParams ] }
 
-
-  tosca.nodes.indigo.KubeCreate:
+  tosca.nodes.DODAS.KubeCreate:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       name:
@@ -127,11 +126,13 @@ node_types:
             manifest_file: { get_property: [ SELF, manifest_file ] }
             externalParams: { get_property: [ SELF, externalParams ] }
 
-  # Experimental: K3s
+  # ORCHESTRATORS
   ############################################################
-  # - tosca.nodes.indigo.k3s
+  # - tosca.nodes.DODAS.k3s
+  # - tosca.nodes.DODAS.WorkerNode.Kubernetes
+  # - tosca.nodes.DODAS.FrontEnd.Kubernetes
 
-  tosca.nodes.indigo.k3s:
+  tosca.nodes.DODAS.k3s:
     derived_from: tosca.nodes.SoftwareComponent
     properties:
       master_ip:
@@ -166,4 +167,92 @@ node_types:
             node_label: { get_property: [ SELF, node_label ] }
             role_name: { get_property: [ SELF, role_name ] }
             k3s_version: { get_property: [ SELF, k3s_version ]  }
+
+  tosca.nodes.DODAS.WorkerNode.Kubernetes:
+    derived_from: tosca.nodes.indigo.LRMS.WorkerNode
+    metadata:
+      icon: /images/kubernetesWN.png
+    properties:
+      admin_username:
+        required: no
+        type: string
+        default: kubeuser
+      admin_token:
+        required: no
+        type: string
+        default: some_insecure_token
+      kubelet_extra_args:
+        required: no
+        type: string
+        default: ""
+      kube_version:
+        required: no
+        type: string
+        default: 1.16.4
+    artifacts:
+      kube_role:
+        file: cloud-pg.kubernetes
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/kube_wn_install.yml
+          inputs:
+            kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
+            wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args] }
+            kube_version:  { get_property: [ SELF, kube_version] }
+            kube_admin_username:  { get_property: [ SELF, admin_username] }
+            kube_admin_token:  { get_property: [ SELF, admin_token] }
+
+  tosca.nodes.DODAS.FrontEnd.Kubernetes:
+    derived_from: tosca.nodes.indigo.LRMS.FrontEnd
+    metadata:
+      icon: /images/kubernetesFE.png
+    properties:
+      admin_username:
+        required: no
+        type: string
+        default: kubeuser
+      admin_token:
+        required: no
+        type: string
+        default: some_insecure_token
+      #kube_version:
+      #  required: no
+      #  type: string
+      #  default: 1.14.1
+      kube_deploy_dashboard:
+        required: no
+        type: boolean
+        default: true
+    artifacts:
+      kube_role:
+        file: cloud-pg.kubernetes
+        type: tosca.artifacts.AnsibleGalaxy.role
+      nfs_role:
+        file: indigo-dc.nfs
+        type: tosca.artifacts.AnsibleGalaxy.role
+      openvpn_role:
+        file: indigo-dc.openvpn
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+        lrms:
+          type: tosca.capabilities.indigo.LRMS.Kubernetes
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/refactor_dodas/dodas_types/dodas_artifacts/kube_fe_install.yml
+          inputs:
+            kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
+            fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
+            kube_admin_username:  { get_property: [ SELF, admin_username] }
+            kube_admin_token:  { get_property: [ SELF, admin_token] }
+            #kube_version:  { get_property: [ SELF, kube_version] }
 
