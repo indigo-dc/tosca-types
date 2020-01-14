@@ -2007,6 +2007,14 @@ node_types:
     metadata:
       icon: /images/kubernetesWN.png
     properties:
+      admin_username:
+        required: no
+        type: string
+        default: kubeuser
+      admin_token:
+        required: no
+        type: string
+        default: some_insecure_token
       kubelet_extra_args:
         required: no
         type: string
@@ -2034,6 +2042,8 @@ node_types:
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kubelet_extra_args: { get_property: [ SELF, kubelet_extra_args] }
             kube_version:  { get_property: [ SELF, kube_version] }
+            kube_admin_username:  { get_property: [ SELF, admin_username] }
+            kube_admin_token:  { get_property: [ SELF, admin_token] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
