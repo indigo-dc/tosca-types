@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    es_config:
+      network.bind_host: "{{ bind_host }}"
+      discovery.type: "{{ discovery_type }}"
+    es_enable_xpack: "{{ enable_security }}"
+    es_api_basic_auth_username: elastic
+    es_api_basic_auth_password: "{{ elastic_password  }}"
+    es_users:
+      native:
+        kibana:
+          password: "{{ kibana_system_password }}"
+  roles:
+    - role: elastic.elasticsearch
