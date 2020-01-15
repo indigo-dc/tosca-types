@@ -1,0 +1,96 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/add-ek/custom_types.yaml
+
+description: >
+  Start Elasticsearch + Kibana on a Virtual Machine
+
+metadata:
+  display_name: Start Elasticsearch + Kibana (single node)
+  icon: https://2.bp.blogspot.com/-TfNbI0vJD-U/W7hpt3-HG0I/AAAAAAAAfn8/BZA5n7hNPlIGY5BM6igPIJvuzNkOk8Q3QCLcBGAs/s640/image-3.jpg
+
+topology_template:
+
+  inputs:
+    num_cpus:
+      type: integer
+      description: Number of virtual cpus for the VM
+      default: 2
+      constraints:
+      - valid_values: [ 2, 4 ]
+    mem_size:
+      type: scalar-unit.size
+      description: Amount of memory for the VM
+      default: 4 GB
+      constraints:
+      - valid_values: [ 4 GB, 8 GB ]
+
+    es_version:
+      type: string
+      default: 7.4.1
+      description: Elasticsearch version
+
+    es_bind_address:
+      type: string
+      default: 0.0.0.0
+      description: Bind address for Elasticsearch service
+
+    es_password:
+      type: string
+      required: true
+      description: Password for user elastic
+
+    kibana_password:
+      type: string
+      required: true
+      description: Password for kibana system user
+
+  node_templates:
+
+    elasticsearch:
+      type: tosca.nodes.indigo.Elasticsearch
+      properties:
+        es_version:  { get_input: es_version }
+        bind_address: { get_input: es_bind_address }
+        elastic_password: { get_input: es_password }
+        kibana_system_password: { get_input: kibana_password }
+      requirements:
+        - host: kibana_es_server
+
+    kibana:
+      type: tosca.nodes.indigo.Kibana
+      properties:
+        kibana_version:  { get_input: es_version }
+        elasticsearch_password: { get_input: kibana_password }
+      requirements:
+        - host: kibana_es_server
+        - dependency: elasticsearch
+
+    kibana_es_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            network_name: PUBLIC
+            ports:
+              kibana:
+                protocol: tcp
+                source: 5601
+        host:
+          properties:
+            num_cpus: { get_input: num_cpus }
+            mem_size: { get_input: mem_size }
+        os:
+          properties:
+            distribution: ubuntu
+            type: linux
+            version: 16.04
+
+  outputs:
+    kibana_endpoint:
+      value: { concat: [ 'http://', get_attribute: [ kibana_es_server, public_address, 0 ], ':5601' ] }
+    node_ip:
+      value: { get_attribute: [ kibana_es_server, public_address, 0 ] }
+    node_creds:
+      value: { get_attribute: [ kibana_es_server, endpoint, credential, 0 ] }
