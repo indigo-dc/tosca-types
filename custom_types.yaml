@@ -1005,7 +1005,7 @@ node_types:
         file: indigo-dc.slurm,master
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs,master
+        file: indigo-dc.nfs,nfs4
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
         file: indigo-dc.indigovr,mtu_1400
@@ -1092,7 +1092,7 @@ node_types:
         file: indigo-dc.slurm,master
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
-        file: indigo-dc.nfs,master
+        file: indigo-dc.nfs,nfs4
         type: tosca.artifacts.AnsibleGalaxy.role
       openvpn_role:
         file: indigo-dc.indigovr,mtu_1400
