@@ -29,6 +29,14 @@
       delegate_facts: True
       delegate_to: '{{ slurm_front_end_ip }}'
 
+    - name: Add host VPN IP in master
+      replace:
+        dest: /etc/hosts
+        regexp: "^ansible_default_ipv4.address.*$"
+        replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
+      delegate_facts: True
+      delegate_to: '{{ slurm_front_end_ip }}'
+
     - name: Add Master VPN IP in host
       replace:
         dest: /etc/hosts
