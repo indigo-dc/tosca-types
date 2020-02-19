@@ -2281,6 +2281,26 @@ node_types:
         required: no
         type: string
         default: some_insecure_token
+      install_kubeapps:
+        required: no
+        type: boolean
+        default: false
+      install_metrics:
+        required: no
+        type: boolean
+        default: true
+      install_nfs_client:
+        required: no
+        type: boolean
+        default: true
+      install_ingress:
+        required: no
+        type: boolean
+        default: true
+      version:
+        required: no
+        type: string
+        default: "1.15.7"
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes,master
@@ -2303,6 +2323,11 @@ node_types:
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
+            kube_install_kubeapps: { get_property: [ SELF, install_kubeapps ] }
+            kube_install_metrics:  { get_property: [ SELF, install_metrics ] }
+            kube_install_nfs_client:  { get_property: [ SELF, install_nfs_client ] }
+            kube_install_ingress:  { get_property: [ SELF, install_ingress ] }
+            kube_version:  { get_property: [ SELF, version ] }
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2444,6 +2469,42 @@ node_types:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/indigovr/vrouter_install.yml
           inputs:
             INDIGOVR_CENTRALPOINT_IP: { get_attribute: [ SELF, central_point, ip_address ] }
+
+  tosca.nodes.indigo.OSCAR:
+    derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      minio_secretkey:
+        type: string
+        description: Secret key to access Minio
+        required: false
+        default: minio123
+    artifacts:
+      faas_role:
+        file: grycap.kubefaas
+        type: tosca.artifacts.AnsibleGalaxy.role
+      minio_role:
+        file: grycap.kubeminio
+        type: tosca.artifacts.AnsibleGalaxy.role
+      registry_role:
+        file: grycap.kuberegistry
+        type: tosca.artifacts.AnsibleGalaxy.role
+      oscar_role:
+        file: grycap.kubeoscar
+        type: tosca.artifacts.AnsibleGalaxy.role
+    capabilities:
+      endpoint:
+        type: tosca.capabilities.Endpoint
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/oscar/oscar_install.yml
+          inputs:
+            oscar_minio_secretkey: { get_property: [ SELF, minio_secretkey ] }
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
+          relationship: tosca.relationships.HostedOn
 
 policy_types:
   tosca.policies.indigo.SlaPlacement:
