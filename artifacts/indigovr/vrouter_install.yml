@@ -4,3 +4,4 @@
   roles:
   - role: indigo-dc.indigovr
     INDIGOVR_NODE_TYPE: vrouter
+    INDIGOVR_MTU: 1400
