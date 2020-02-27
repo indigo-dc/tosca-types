@@ -12,11 +12,11 @@
 
   tasks:
   - block:
-    - name: Call IndigoVR role as Centralpoint
-      include_role:
-        name: indigo-dc.indigovr
-      vars:
-        INDIGOVR_NODE_TYPE: centralpoint
+#    - name: Call IndigoVR role as Centralpoint
+#      include_role:
+#        name: indigo-dc.indigovr
+#      vars:
+#        INDIGOVR_NODE_TYPE: centralpoint
 
     - name: Add Master VPN IP in host
       replace:

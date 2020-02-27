@@ -11,12 +11,12 @@
     ignore_errors: yes
 
   - block:
-    - name: Call IndigoVR role as standalone
-      include_role:
-        name: indigo-dc.indigovr
-      vars:
-        INDIGOVR_NODE_TYPE: standalone
-        INDIGOVR_CENTRALPOINT_IP: '{{ slurm_public_front_end_ip }}'
+#    - name: Call IndigoVR role as standalone
+#      include_role:
+#        name: indigo-dc.indigovr
+#      vars:
+#        INDIGOVR_NODE_TYPE: standalone
+#        INDIGOVR_CENTRALPOINT_IP: '{{ slurm_public_front_end_ip }}'
 
     - name: Refresh setup data to get new ansible_tun0 item
       setup:
