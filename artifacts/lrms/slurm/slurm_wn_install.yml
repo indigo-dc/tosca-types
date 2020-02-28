@@ -28,6 +28,7 @@
         replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
       delegate_facts: True
       delegate_to: '{{ slurm_front_end_ip }}'
+      register: result1
 
     - name: Add host VPN IP in master
       replace:
@@ -36,17 +37,21 @@
         replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
       delegate_facts: True
       delegate_to: '{{ slurm_front_end_ip }}'
-      register: result
+      register: result2
 
-    - name: NFS restart Debian
-      service: name=nfs-kernel-server state=restarted
-      delegate_to: '{{ slurm_front_end_ip }}'
-      when: result is changed and ansible_os_family == "Debian"
+    - block:
 
-    - name: NFS restart RedHat
-      service: name=nfs-server state=restarted
-      delegate_to: '{{ slurm_front_end_ip }}'
-      when: result is changed and ansible_os_family == "RedHat"
+      - name: NFS restart Debian
+        service: name=nfs-kernel-server state=restarted
+        delegate_to: '{{ slurm_front_end_ip }}'
+        when: ansible_os_family == "Debian"
+
+      - name: NFS restart RedHat
+        service: name=nfs-server state=restarted
+        delegate_to: '{{ slurm_front_end_ip }}'
+        when: ansible_os_family == "RedHat"
+
+      when: result1 is changed or result2 is changed
 
     - name: Add Master VPN IP in host
       replace:
