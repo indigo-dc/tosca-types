@@ -2615,11 +2615,3 @@ node_types:
             kibana_elasticsearch_username: { get_property: [ SELF, elasticsearch_username ] }
             kibana_elasticsearch_password: { get_property: [ SELF, elasticsearch_password ] }            
 
-policy_types:
-  tosca.policies.indigo.SlaPlacement:
-    derived_from: tosca.policies.Placement
-    properties:
-      sla_id:
-        required: true
-        type: string
-
