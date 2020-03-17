@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/stable/v4.0.1/custom_types.yaml
 
 description: >
   TOSCA test for launching compute node mounting a onedata space
@@ -61,7 +61,7 @@ topology_template:
               interfaces:
                 Configure:
                   pre_configure_source:
-                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/onedata/oneclient_install.yml
+                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/stable/v4.0.1/oneclient_install.yml
                     inputs:
                       onedata_location: { get_property: [ SELF, location ] }
                       onedata_token: { get_property: [ TARGET, credential, token ] }
