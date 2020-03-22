@@ -86,7 +86,7 @@
         zookeeper_peers: "{{ mesos_masters_list_ips }}"
         marathon_username: "{{ marathon_user }}"
         marathon_password: "{{ marathon_pass }}"
-        marathon_hostname: '0.0.0.0'
+        marathon_hostname: '{{ IM_NODE_PUBLIC_IP if IM_NODE_PUBLIC_IP is defined else ansible_default_ipv4.address }}'
    
     - name: Call chronos role
       include_role:
@@ -95,6 +95,7 @@
         zookeeper_peers: "{{ mesos_masters_list_ips }}"
         chronos_username: "{{ chronos_user }}"
         chronos_password: "{{ chronos_pass }}"
+        chronos_hostname: '{{ IM_NODE_PUBLIC_IP if IM_NODE_PUBLIC_IP is defined else ansible_default_ipv4.address }}'
       when: "enable_chronos == true"
 
       
