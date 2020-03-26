@@ -52,7 +52,9 @@ topology_template:
       type: tosca.nodes.network.Network
       properties:
         network_type: public
-        network_name: public-muni-147-251-124
+        #network_name: public-muni-147-251-124-GROUP
+        #network_name: public-cesnet-78-128-251-GROUP
+        network_name: public-cesnet-78-128-250-PERSONAL
 
     server_pub_port:
       type: tosca.nodes.network.Port
@@ -115,8 +117,7 @@ topology_template:
     indigovr_cp:
       type: tosca.nodes.indigo.VR.CentralPoint
       requirements:
-        - host:
-            node: lrms_server
+        - host: lrms_server
 
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
@@ -158,8 +159,8 @@ topology_template:
             min_instances: 0
       requirements:
         - host: lrms_wn
-        - dependency: indigovr_router2
         - dependency: indigovr_cp
+        - dependency: indigovr_router2
 
     lrms_wn:
       type: tosca.nodes.indigo.Compute
