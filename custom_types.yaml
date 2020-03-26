@@ -1013,13 +1013,10 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1034,13 +1031,10 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_wn_install.yml
           inputs:
             slurm_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -1100,16 +1094,13 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Slurm
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
@@ -1125,16 +1116,13 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Slurm
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
@@ -1558,13 +1546,10 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/mesos_master_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_master_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, mesos_masters_list ] }
             mesos_authenticate_http: { get_property: [ SELF, mesos_authenticate_http ] }
@@ -1748,13 +1733,10 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/mesos_slave_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_slave_install.yml
           inputs:
             mesos_masters_list_ips: { get_property: [ SELF, master_ips ] }
             enable_nfs_share: { get_property: [ SELF, enable_nfs_share ] }
@@ -1903,13 +1885,10 @@ node_types:
       marathon_lb_role:
         file: indigo-dc.marathon-lb,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mesos/mesos_lb_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mesos/mesos_lb_install.yml
           inputs:
             enable_consul_sd: { get_property: [ SELF, enable_consul_sd ] }
             master_ips: { get_property: [ SELF, master_ips ] }
@@ -2297,13 +2276,10 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/kubernetes/kube_wn_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/kubernetes/kube_wn_install.yml
           inputs:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
@@ -2322,6 +2298,26 @@ node_types:
         required: no
         type: string
         default: some_insecure_token
+      install_kubeapps:
+        required: no
+        type: boolean
+        default: false
+      install_metrics:
+        required: no
+        type: boolean
+        default: true
+      install_nfs_client:
+        required: no
+        type: boolean
+        default: true
+      install_ingress:
+        required: no
+        type: boolean
+        default: true
+      version:
+        required: no
+        type: string
+        default: "1.15.7"
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes,master
@@ -2329,21 +2325,23 @@ node_types:
       nfs_role:
         file: indigo-dc.nfs,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      openvpn_role:
-        file: indigo-dc.indigovr,master
-        type: tosca.artifacts.AnsibleGalaxy.role
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Kubernetes
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/lrms/kubernetes/kube_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/kubernetes/kube_fe_install.yml
           inputs:
             kube_front_end_ip: { get_attribute: [ HOST, private_address, 0 ] }
             fe_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_admin_username:  { get_property: [ SELF, admin_username] }
             kube_admin_token:  { get_property: [ SELF, admin_token] }
+            kube_install_kubeapps: { get_property: [ SELF, install_kubeapps ] }
+            kube_install_metrics:  { get_property: [ SELF, install_metrics ] }
+            kube_install_nfs_client:  { get_property: [ SELF, install_nfs_client ] }
+            kube_install_ingress:  { get_property: [ SELF, install_ingress ] }
+            kube_version:  { get_property: [ SELF, version ] }
 
   tosca.nodes.indigo.JupyterHub:
     derived_from: tosca.nodes.SoftwareComponent
@@ -2635,4 +2633,3 @@ policy_types:
       subscription_id:
         required: false
         type: string
-

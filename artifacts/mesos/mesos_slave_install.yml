@@ -11,14 +11,6 @@
 
     - block:
 
-      - name: Call IndigoVR role as standalone
-        include_role:
-          name: indigo-dc.indigovr
-        vars:
-          INDIGOVR_NODE_TYPE: standalone
-          INDIGOVR_CENTRALPOINT_IP: '{{ public_front_end_ip }}'
-          INDIGOVR_MTU: 1400
-
       - name: Refresh setup data to get new ansible_tun0 item
         setup:
 

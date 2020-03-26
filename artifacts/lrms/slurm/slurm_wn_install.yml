@@ -11,13 +11,6 @@
     ignore_errors: yes
 
   - block:
-    - name: Call IndigoVR role as standalone
-      include_role:
-        name: indigo-dc.indigovr
-      vars:
-        INDIGOVR_NODE_TYPE: standalone
-        INDIGOVR_CENTRALPOINT_IP: '{{ slurm_public_front_end_ip }}'
-        INDIGOVR_MTU: 1400
 
     - name: Refresh setup data to get new ansible_tun0 item
       setup:
@@ -29,6 +22,30 @@
         replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
       delegate_facts: True
       delegate_to: '{{ slurm_front_end_ip }}'
+      register: result1
+
+    - name: Add host VPN IP in master
+      replace:
+        dest: /etc/hosts
+        regexp: "^ansible_default_ipv4.address.*$"
+        replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
+      delegate_facts: True
+      delegate_to: '{{ slurm_front_end_ip }}'
+      register: result2
+
+    - block:
+
+      - name: NFS restart Debian
+        service: name=nfs-kernel-server state=restarted
+        delegate_to: '{{ slurm_front_end_ip }}'
+        when: ansible_os_family == "Debian"
+
+      - name: NFS restart RedHat
+        service: name=nfs-server state=restarted
+        delegate_to: '{{ slurm_front_end_ip }}'
+        when: ansible_os_family == "RedHat"
+
+      when: result1 is changed or result2 is changed
 
     - name: Add Master VPN IP in host
       replace:
@@ -41,7 +58,8 @@
         name: indigo-dc.nfs
       vars:
         nfs_mode: 'client'
-        nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "192.168.255.1" }]
+        nfs_client_imports: [{ local: "/home", remote: "/", server_host: "192.168.255.1" }]
+        nfs_only_v4: true
 
     - name: Call SLURM role as WN
       include_role:
@@ -57,7 +75,8 @@
         name: indigo-dc.nfs
       vars:
         nfs_mode: 'client'
-        nfs_client_imports: [{ local: "/home", remote: "/home", server_host: "{{ slurm_front_end_ip }}" }]
+        nfs_client_imports: [{ local: "/home", remote: "/", server_host: "{{ slurm_front_end_ip }}" }]
+        nfs_only_v4: true
 
     - name: Call SLURM role as WN
       include_role:

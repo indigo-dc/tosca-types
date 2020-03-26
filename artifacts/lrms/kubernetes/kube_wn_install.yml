@@ -21,6 +21,30 @@
         replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
       delegate_facts: True
       delegate_to: '{{ kube_public_front_end_ip }}'
+      register: result1
+
+    - name: Add host VPN IP in master
+      replace:
+        dest: /etc/hosts
+        regexp: "^ansible_default_ipv4.address.*$"
+        replace: "{{ansible_tun0.ipv4.address}} {{ansible_hostname}}.localdomain {{ansible_hostname}}"
+      delegate_facts: True
+      delegate_to: '{{ kube_public_front_end_ip }}'
+      register: result2
+
+    - block:
+
+      - name: NFS restart Debian
+        service: name=nfs-kernel-server state=restarted
+        delegate_to: '{{ kube_public_front_end_ip }}'
+        when: ansible_os_family == "Debian"
+
+      - name: NFS restart RedHat
+        service: name=nfs-server state=restarted
+        delegate_to: '{{ kube_public_front_end_ip }}'
+        when: ansible_os_family == "RedHat"
+
+      when: result1 is changed or result2 is changed
 
     - name: Add Master VPN IP in host
       replace:
@@ -34,6 +58,7 @@
       vars:
         nfs_mode: 'client'
         nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "192.168.255.1" }]
+        nfs_only_v4: true
 
     - name: Call Kubernetes role as WN
       include_role:
@@ -51,6 +76,7 @@
       vars:
         nfs_mode: 'client'
         nfs_client_imports: [{ local: "/pv", remote: "/pv", server_host: "{{ kube_front_end_ip }}" }]
+        nfs_only_v4: true
 
     - name: Call Kubernetes role as WN
       include_role:

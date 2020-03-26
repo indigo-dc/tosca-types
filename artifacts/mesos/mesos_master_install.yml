@@ -32,13 +32,6 @@
 
     - block:
 
-      - name: Call IndigoVR role as Centralpoint
-        include_role:
-          name: indigo-dc.indigovr
-        vars:
-          INDIGOVR_NODE_TYPE: centralpoint
-          INDIGOVR_MTU: 1400
-
       - name: Refresh setup data to get new ansible_tun0 item
         setup:
 
@@ -87,6 +80,8 @@
         marathon_username: "{{ marathon_user }}"
         marathon_password: "{{ marathon_pass }}"
         marathon_hostname: '{{ IM_NODE_PUBLIC_IP if IM_NODE_PUBLIC_IP is defined else ansible_default_ipv4.address }}'
+#        marathon_hostname: '0.0.0.0'
+
    
     - name: Call chronos role
       include_role:
