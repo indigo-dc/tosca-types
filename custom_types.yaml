@@ -2219,10 +2219,6 @@ node_types:
   tosca.nodes.indigo.Qcg.Job:
     derived_from: tosca.nodes.indigo.Batch.Job
     properties:
-      directory:
-        required: no
-        type: string
-        description: Work directory for the Job
       schema:
         required: no
         type: string
@@ -2231,6 +2227,32 @@ node_types:
         required: no
         type: string
         description: User's note for the Job
+      arguments:
+        required: no
+        type: list
+        entry_schema:
+          type: string
+        description: list of arguments for the executable
+      directory:
+        required: no
+        type: string
+        description: Work directory for the Job
+      stdout:
+        required: no
+        type: string
+        description: file name to place standard output stream
+      stderr:
+        required: no
+        type: string
+        description: file name to place standard error stream
+      std_outerr:
+        required: no
+        type: string
+        description: file name to place standard output and error streams
+      stdin:
+        required: no
+        type: string
+        description: file name with the standard input stream
       total_cores:
         required: no
         type: integer
@@ -2251,13 +2273,17 @@ node_types:
         required: no
         type: integer
         description: available memory per single core
+      gpus:
+        required: no
+        type: integer
+        description: number of gpus
       queue:
         required: no
         type: string
         description: "queue/partition name"
       wall_clock:
         required: no
-        type: string
+        type: float
         description: maximum total execution time
 
 
