@@ -1,0 +1,51 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  https://raw.githubusercontent.com/indigo-dc/tosca-types/qcg_integration/custom_types.yaml
+
+
+description: TOSCA example for submitting a job to a QCG
+
+metadata:
+  display_name: HPC Job
+  tag: qcg
+
+topology_template:
+
+  inputs:
+    total_cores:
+      type: integer
+      required: no
+      default: 2
+    total_nodes:
+      type: integer
+      required: no
+      default: 1
+    cores_per_node:
+      type: integer
+      required: no
+      default: 1
+    queue:
+      type: string
+      required: no
+      default: standard
+    wall_clock:
+      type: string
+      required: no
+      default: "3:00:00"
+
+  node_templates:
+
+    qcg_job:
+      type: tosca.nodes.indigo.Qcg.Job
+      properties:
+        note: "Script to submit a deep-oc application"
+        schema: "https://qcg-deep.apps.paas-dev.psnc.pl/api/schema/"
+        executable: "curl -s https://gist.githubusercontent.com/mperniola/b06de5d7e7c6cfaab72b2257c14d2ab4/raw/eaae1991832abcb9286ad95cc34e8eb1e4cc38f3/test-script.sh | /bin/bash"
+        total_cores: { get_input: total_cores }
+        total_nodes: { get_input: total_nodes }
+        cores_per_node: { get_input: cores_per_node }
+        queue: { get_input: queue }
+        wall_clock: { get_input: wall_clock }
+        environment:
+          SOME_VAR: some_value
