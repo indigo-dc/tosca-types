@@ -1,7 +1,7 @@
 tosca_definitions_version: tosca_simple_yaml_1_0
 
 imports:
-  https://raw.githubusercontent.com/indigo-dc/tosca-types/qcg_integration/custom_types.yaml
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/qcg_integration/custom_types.yaml
 
 
 description: TOSCA example for submitting a job to a QCG
@@ -30,9 +30,9 @@ topology_template:
       required: no
       default: standard
     wall_clock:
-      type: string
+      type: float
       required: no
-      default: "3:00:00"
+      default: 100
 
   node_templates:
 
