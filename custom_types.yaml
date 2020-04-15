@@ -2231,6 +2231,35 @@ node_types:
         required: no
         type: string
         description: User's note for the Job
+      total_cores:
+        required: no
+        type: integer
+        description: total number of cores
+      total_nodes:
+        required: no
+        type: integer
+        description: total number of nodes
+      cores_per_node:
+        required: no
+        type: integer
+        description: number of cores per single node
+      memory_per_node:
+        required: no
+        type: integer
+        description: available memory per single node
+      memory_per_core:
+        required: no
+        type: integer
+        description: available memory per single core
+      queue:
+        required: no
+        type: string
+        description: "queue/partition name"
+      wall_clock:
+        required: no
+        type: string
+        description: maximum total execution time
+
 
 # https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
   tosca.nodes.indigo.Grid.Job:
