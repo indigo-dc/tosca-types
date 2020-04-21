@@ -71,6 +71,9 @@ capability_types:
       gpu_model:
         type: string
         required: false
+      infiniband_support:
+        type: boolean
+        required: false
       sgx:
         type: boolean
         required: no
