@@ -2440,7 +2440,7 @@ node_types:
         type: string
         description: Cluster network
         required: no
-        default: "10.10.0.0"
+        default: "192.168.0.0"
     artifacts:
       indigovr_role:
         file: indigo-dc.indigovr,master
