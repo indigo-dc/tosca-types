@@ -1089,7 +1089,7 @@ node_types:
         default: -1
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm,master
+        file: indigo-dc.slurm,devel
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs,master

@@ -7,13 +7,13 @@
   - name: "Add nodes mapping in hosts file"
     lineinfile: dest=/etc/hosts regexp='.*{{ item.1 }}.*$' line="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain" state=present
     with_indexed_items: '{{ wn_ips }}'
-  - name: "Add nodes mapping in hosts file"
-    lineinfile: dest=/etc/hosts regexp='.*{{ vnode_prefix }}{{ item.0 + 1 }}.localdomain.*$' line="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain" state=present
+  - name: "Replace nodes mapping in hosts file"
+    replace: dest=/etc/hosts regexp='.*{{ vnode_prefix }}{{ item.0 + 1 }}.*$' replace="{{ item.1 }} {{ vnode_prefix }}{{ item.0 + 1 }} {{ vnode_prefix }}{{ item.0 + 1 }}.localdomain"
     with_indexed_items: '{{ wn_ips }}'
   - name: "Add master mapping in hosts file"
     lineinfile: dest=/etc/hosts regexp='.*{{ front_end_ip }}.*$' line="{{ front_end_ip }} slurmserver slurmserver.localdomain" state=present
-  - name: "Add master mapping in hosts file"
-    lineinfile: dest=/etc/hosts regexp='.*slurmserver.localdomain.*$' line="{{ front_end_ip }} slurmserver slurmserver.localdomain" state=present
+  - name: "Replace master mapping in hosts file"
+    lineinfile: dest=/etc/hosts regexp='.*slurmserver.localdomain.*$' replace="{{ front_end_ip }} slurmserver slurmserver.localdomain"
 
   tasks:
   - block:
