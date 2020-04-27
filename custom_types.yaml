@@ -1011,7 +1011,7 @@ node_types:
       icon: /images/slurm.png
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm,master
+        file: indigo-dc.slurm,devel
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs,master
@@ -1092,7 +1092,7 @@ node_types:
         default: -1
     artifacts:
       slurm_role:
-        file: indigo-dc.slurm,master
+        file: indigo-dc.slurm,devel
         type: tosca.artifacts.AnsibleGalaxy.role
       nfs_role:
         file: indigo-dc.nfs,master
@@ -1103,7 +1103,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/slurm/slurm_fe_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/devel/artifacts/lrms/slurm/slurm_fe_install.yml
           inputs:
             wn_num: { get_property: [ SELF, wn_num ] }
             wn_ips: { get_property: [ SELF, wn_ips ] }
