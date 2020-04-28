@@ -22,7 +22,6 @@ topology_template:
       type: string
       required: no
       default: 'deepaas-cli get_metadata'
-      #default: deepaas-cli --deepaas_method_output=/mnt/onedata/demo/data/predict.json predict --file=/mnt/onedata/demo/data/St_Bernard_wiki_3.jpg
     recreate_container:
       type: boolean
       default: false
@@ -34,19 +33,18 @@ topology_template:
     onedata_space_name:
       type: string
       required: yes
-      #default: demo
+    data_path:
+      type: string
+      required: no
+      default: ''
     onedata_mountpoint:
       type: string
       required: no
       default: "/mnt/onedata"
-    stdout:
+    std_outerr:
       type: string
       required: no
-      default: 'stdout.txt'
-    stderr:
-      type: string
-      required: no
-      default: 'stderr.txt'
+      default: 'log.txt'
     total_cores:
       type: integer
       required: no
@@ -83,8 +81,7 @@ topology_template:
         note: "Script to submit a deep-oc application"
         #schema: "https://qcg-deep.apps.paas-dev.psnc.pl/api/schema/"
         executable: "curl -s https://raw.githubusercontent.com/maricaantonacci/deep-hpc/master/deep-slurm-qcg.sh | bash"
-        stdout: { get_input: stdout }
-        stderr: { get_input: stderr }
+        std_outerr: { get_input: std_outerr }
         directory: "${HOME}"
         total_cores: { get_input: total_cores }
         total_nodes: { get_input: total_nodes }
@@ -99,3 +96,4 @@ topology_template:
           ONECLIENT_PROVIDER_HOST: "oneprovider-beta-2.cloud.ba.infn.it"
           ONEDATA_VOLUME: { get_input: onedata_mountpoint }
           UDOCKER_RUN_COMMAND: { get_input: run_command }
+          APP_IN_OUT_BASE_DIR: { concat: [ get_input: onedata_mountpoint , "/", get_input: onedata_space_name, "/", get_input: data_path ] }
