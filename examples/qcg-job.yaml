@@ -13,6 +13,40 @@ metadata:
 topology_template:
 
   inputs:
+
+    docker_image:
+      type: string
+      default: deephdc/deep-oc-dogs_breed_det:cpu
+      required: no
+    run_command:
+      type: string
+      required: no
+      default: 'deepaas-cli get_metadata'
+      #default: deepaas-cli --deepaas_method_output=/mnt/onedata/demo/data/predict.json predict --file=/mnt/onedata/demo/data/St_Bernard_wiki_3.jpg
+    recreate_container:
+      type: boolean
+      default: false
+      required: no
+    container_name:
+      type: string
+      default: deep-oc-dogs_breed-cpu
+      required: no
+    onedata_space_name:
+      type: string
+      required: yes
+      #default: demo
+    onedata_mountpoint:
+      type: string
+      required: no
+      default: "/mnt/onedata"
+    stdout:
+      type: string
+      required: no
+      default: 'stdout.txt'
+    stderr:
+      type: string
+      required: no
+      default: 'stderr.txt'
     total_cores:
       type: integer
       required: no
@@ -24,28 +58,44 @@ topology_template:
     cores_per_node:
       type: integer
       required: no
-      default: 1
+      default: 2
     queue:
       type: string
       required: no
       default: standard
-    wall_clock:
-      type: float
-      required: no
-      default: 100
+#    wall_clock:
+#      type: float
+#      required: no
+#      default: 100
 
   node_templates:
+
+    onedata_space:
+      type: tosca.nodes.indigo.OnedataSpace
+      properties:
+        onezone: 'https://onezone-beta.cloud.ba.infn.it'
+        space: { get_input: onedata_space_name }
+        oneproviders: [ 'oneprovider-beta-2.cloud.ba.infn.it' ]
 
     qcg_job:
       type: tosca.nodes.indigo.Qcg.Job
       properties:
         note: "Script to submit a deep-oc application"
-        schema: "https://qcg-deep.apps.paas-dev.psnc.pl/api/schema/"
-        executable: "curl -s https://gist.githubusercontent.com/mperniola/b06de5d7e7c6cfaab72b2257c14d2ab4/raw/eaae1991832abcb9286ad95cc34e8eb1e4cc38f3/test-script.sh | /bin/bash"
+        #schema: "https://qcg-deep.apps.paas-dev.psnc.pl/api/schema/"
+        executable: "curl -s https://raw.githubusercontent.com/maricaantonacci/deep-hpc/master/deep-slurm-qcg.sh | bash"
+        stdout: { get_input: stdout }
+        stderr: { get_input: stderr }
+        directory: "${HOME}"
         total_cores: { get_input: total_cores }
         total_nodes: { get_input: total_nodes }
         cores_per_node: { get_input: cores_per_node }
         queue: { get_input: queue }
-        wall_clock: { get_input: wall_clock }
+        #wall_clock: { get_input: wall_clock }
         environment:
-          SOME_VAR: some_value
+          DOCKER_IMAGE: { get_input: docker_image }
+          UDOCKER_RECREATE: { get_input: recreate_container }
+          UDOCKER_CONTAINER: { get_input: container_name }
+          ONECLIENT_ACCESS_TOKEN: { get_attribute : [ onedata_space, token ] }
+          ONECLIENT_PROVIDER_HOST: "oneprovider-beta-2.cloud.ba.infn.it"
+          ONEDATA_VOLUME: { get_input: onedata_mountpoint }
+          UDOCKER_RUN_COMMAND: { get_input: run_command }
