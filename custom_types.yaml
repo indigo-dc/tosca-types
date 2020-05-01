@@ -2283,7 +2283,8 @@ node_types:
         description: "queue/partition name"
       wall_clock:
         required: no
-        type: float
+        type: string
+        # format hh:mm:ss
         description: maximum total execution time
 
 
