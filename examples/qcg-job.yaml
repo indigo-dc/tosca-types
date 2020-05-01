@@ -16,39 +16,77 @@ topology_template:
 
     docker_image:
       type: string
+      description: Docker image to deploy from Docker Hub
       default: deephdc/deep-oc-dogs_breed_det:cpu
       required: no
     run_command:
       type: string
+      description: Command to run inside the container
       required: no
       default: 'deepaas-cli get_metadata'
     recreate_container:
       type: boolean
+      description: If true, enforce creating container, even if it already exists
       default: false
       required: no
-    container_name:
+    udocker_extra_options:
       type: string
-      default: deep-oc-dogs_breed-cpu
-      required: no
-    onedata_space_name:
-      type: string
-      required: yes
-    data_path:
-      type: string
+      description: Any other possible option for udocker (e.g. "-v /tmp:/tmp" to mount host /tmp at /tmp inside the container)
       required: no
       default: ''
-    onedata_mountpoint:
+    onedata_zone:
       type: string
+      description: OneData zone (e.g. https://onezone-beta.cloud.ba.infn.it, https://onezone.cloud.cnaf.infn.it)
+      required: yes
+      default: "https://onezone-beta.cloud.ba.infn.it"
+    onedata_provider:
+      type: string
+      description: OneData provider to use (e.g. oneprovider-beta-2.cloud.ba.infn.it; oprov.ifca.es, oneprovider.fedcloud.eu, cloud-90-147-75-163.cloud.ba.infn.it)
+      required: yes
+      default: "oneprovider-beta-2.cloud.ba.infn.it"
+    onedata_space_name:
+      type: string
+      description: Name of OneData space
+      required: yes
+    onedata_mount_point:
+      type: string
+      description: Mount point for OneData inside the container (ONEDATA_MOUNT_POINT)
       required: no
       default: "/mnt/onedata"
+    rclone_conf_host:
+      type: string
+      description: Full path to rclone.conf on the host
+      required: no
+      default: ""
+    rclone_conf_container:
+      type: string
+      description: Where rclone.conf is expected inside the container (full path)
+      required: no
+      default: "/srv/.rclone/rclone.conf"
+    app_in_out_base_dir:
+      type: string
+      description: Base directory inside container for input and output data (e.g. data, models)
+      required: no
+      default: ''
+    jupyter_password:
+      type: string
+      description: Password for JupyterLab (at least 9 characters!)
+      required: no
+      default: ""
     std_outerr:
       type: string
+      description: HPC job output (located in user's HOME)
       required: no
       default: 'log.txt'
     total_cores:
       type: integer
       required: no
       default: 2
+    num_gpus:
+      type: integer
+      description: Number of required GPUs
+      required: no
+      default: 0
     total_nodes:
       type: integer
       required: no
@@ -59,41 +97,47 @@ topology_template:
       default: 2
     queue:
       type: string
+      description: Name of the HPC partition (e.g. standard, tesla)
       required: no
       default: standard
 #    wall_clock:
-#      type: float
+#      type: string
 #      required: no
-#      default: 100
+#      default: "04:00:00"
 
   node_templates:
 
     onedata_space:
       type: tosca.nodes.indigo.OnedataSpace
       properties:
-        onezone: 'https://onezone-beta.cloud.ba.infn.it'
+        onezone: { get_input: onedata_zone }
         space: { get_input: onedata_space_name }
-        oneproviders: [ 'oneprovider-beta-2.cloud.ba.infn.it' ]
+        oneproviders: [ { get_input: onedata_provider } ]
 
     qcg_job:
       type: tosca.nodes.indigo.Qcg.Job
       properties:
         note: "Script to submit a deep-oc application"
         #schema: "https://qcg-deep.apps.paas-dev.psnc.pl/api/schema/"
-        executable: "curl -s https://raw.githubusercontent.com/maricaantonacci/deep-hpc/master/deep-slurm-qcg.sh | bash"
+        executable: "curl -s https://raw.githubusercontent.com/deephdc/deep-hpc/qcg/deep-slurm-qcg.sh | bash"
         std_outerr: { get_input: std_outerr }
         directory: "${HOME}"
         total_cores: { get_input: total_cores }
         total_nodes: { get_input: total_nodes }
         cores_per_node: { get_input: cores_per_node }
+        gpus: { get_input: num_gpus }
         queue: { get_input: queue }
         #wall_clock: { get_input: wall_clock }
         environment:
           DOCKER_IMAGE: { get_input: docker_image }
           UDOCKER_RECREATE: { get_input: recreate_container }
-          UDOCKER_CONTAINER: { get_input: container_name }
+          UDOCKER_EXTRA_OPTIONS: { get_input: udocker_extra_options }
           ONECLIENT_ACCESS_TOKEN: { get_attribute : [ onedata_space, token ] }
           ONECLIENT_PROVIDER_HOST: "oneprovider-beta-2.cloud.ba.infn.it"
-          ONEDATA_VOLUME: { get_input: onedata_mountpoint }
+          ONEDATA_MOUNT_POINT: { get_input: onedata_mount_point }
+          RCLONE_CONF_HOST: { get_input: rclone_conf_host }
+          RCLONE_CONF_CONTAINER: { get_input: rclone_conf_container }
+          APP_IN_OUT_BASE_DIR: { get_input: app_in_out_base_dir }
           UDOCKER_RUN_COMMAND: { get_input: run_command }
-          APP_IN_OUT_BASE_DIR: { concat: [ get_input: onedata_mountpoint , "/", get_input: onedata_space_name, "/", get_input: data_path ] }
+          NUM_GPUS: { get_input: num_gpus }
+          jupyterPASSWORD: {get_input: jupyter_password}
