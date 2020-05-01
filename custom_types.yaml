@@ -71,6 +71,9 @@ capability_types:
       gpu_model:
         type: string
         required: false
+      infiniband_support:
+        type: boolean
+        required: false
       sgx:
         type: boolean
         required: no
@@ -2491,6 +2494,12 @@ node_types:
 
   tosca.nodes.indigo.VR.CentralPoint:
     derived_from: tosca.nodes.SoftwareComponent
+    properties:
+      indigovr_subnet:
+        type: string
+        description: Cluster network
+        required: no
+        default: "192.168.0.0"
     artifacts:
       indigovr_role:
         file: indigo-dc.indigovr,master
@@ -2503,6 +2512,8 @@ node_types:
       Standard:
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/indigovr/central_point_install.yml
+          inputs:
+            INDIGOVR_SUBNET: { get_property: [ SELF, indigovr_subnet ] }
 
   tosca.nodes.indigo.VR.Client:
     derived_from: tosca.nodes.SoftwareComponent
