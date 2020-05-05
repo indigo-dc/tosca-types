@@ -16,9 +16,9 @@ topology_template:
 
     run_command:
       type: string
-      description: Command to run inside the container
+      description: Command to run
       required: no
-      default: 'deepaas-cli get_metadata'
+      default: 'printenv'
     std_outerr:
       type: string
       description: HPC job output (located in user's HOME)
@@ -71,7 +71,7 @@ topology_template:
       type: tosca.nodes.indigo.Qcg.Job
       properties:
         note: "Script to submit a test application"
-        executable: "printenv"
+        executable: { get_input: run_command }
         std_outerr: { get_input: std_outerr }
         directory: "${HOME}"
         total_cores: { get_input: total_cores }
@@ -82,4 +82,3 @@ topology_template:
         wall_clock: { get_input: wall_clock }
         environment:
           NUM_GPUS: { get_input: num_gpus }
-          
