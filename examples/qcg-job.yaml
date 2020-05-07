@@ -77,6 +77,8 @@ topology_template:
         total_cores: { get_input: total_cores }
         total_nodes: { get_input: total_nodes }
         cores_per_node: { get_input: cores_per_node }
+        memory_per_core: { get_input: memory_per_core }
+        memory_per_node: { get_input: memory_per_node }
         gpus: { get_input: num_gpus }
         queue: { get_input: queue }
         wall_clock: { get_input: wall_clock }
