@@ -1,0 +1,64 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  RStudio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management.
+
+metadata:
+  display_name: RStudio
+
+topology_template:
+
+  inputs:
+
+    cpus:
+      type: float
+      description: Amount of CPUs for this service
+      required: yes
+      default: 1.0
+    
+    mem:
+      type: scalar-unit.size
+      description: Amount of Memory for this service
+      required: yes 
+      default: 1 GB
+  
+    rstudio_password:
+      type: string
+      description: Password for rstudio user
+      required: yes
+
+  node_templates:
+
+    marathon:
+      type: tosca.nodes.indigo.Container.Application.Docker.Marathon
+      properties:
+        environment_variables: 
+          PASSWORD: { get_input: rstudio_password }
+        uris: []
+      artifacts:
+        image:
+          file: rocker/rstudio
+          type: tosca.artifacts.Deployment.Image.Container.Docker
+      requirements:
+        - host: docker_runtime
+
+    docker_runtime:
+      type: tosca.nodes.indigo.Container.Runtime.Docker
+      capabilities:
+        host:
+          properties:
+            num_cpus: { get_input: cpus}
+            mem_size: { get_input: mem}
+            publish_ports:
+               - protocol: tcp
+                 source: 8787
+            volumes: [ { concat: [ 'marathon:', '/home/rstudio' , ':rw:dvdi:rexray'] } ]
+
+  outputs:
+    label:
+      value: "RStudio"
+    endpoint: 
+      value:  { concat: [ "http://", { get_attribute : [ marathon, load_balancer_ips, 0 ] }, ':', { get_attribute : [ docker_runtime, host, publish_ports, 0, target ] } ] }
