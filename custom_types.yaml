@@ -861,6 +861,11 @@ node_types:
     metadata:
       icon: /images/ec3.png
     properties:
+      enabled:
+        type: boolean
+        default: true
+        description: enable/disable the elasticity manager
+        required: false
       secret_token:
         type: string
         description: Token to access CLUES web interface
@@ -943,8 +948,9 @@ node_types:
     interfaces:
       Standard:
         create:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/ec3/ec3_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/elasticity/artifacts/ec3/ec3_install.yml
           inputs:
+            enabled: { get_property: [ SELF, enabled ] }
             clues_secret_token: { get_property: [ SELF, secret_token ] }
             clues_queue_system: { get_property: [ SELF, lrms, type ] }
             ec3_max_instances: { get_property: [ SELF, wn, max_instances] }

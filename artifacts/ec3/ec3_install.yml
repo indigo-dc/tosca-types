@@ -3,6 +3,7 @@
   connection: local
   roles:
   - role: grycap.im
-    when: clues_powermanager_plugin == "im"
+    when: enabled|bool and clues_powermanager_plugin == "im"
   - role: indigo-dc.clues
     indigo_orchestrator_url: "{{ orchestrator_url }}"
+    when: enabled|bool
