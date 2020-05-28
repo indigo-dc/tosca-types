@@ -2289,6 +2289,13 @@ node_types:
         type: string
         # format hh:mm:ss
         description: maximum total execution time
+      batch_system_options:
+        required: no
+        type: list
+        entry_schema:
+          type: string
+        description: batch system extra options
+        
 
 
 # https://wiki.italiangrid.it/twiki/bin/view/CREAM/JdlGuide
