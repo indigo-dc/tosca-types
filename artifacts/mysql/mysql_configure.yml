@@ -3,13 +3,17 @@
   connection: local
   tasks:
   - name: Enable remote access
-    lineinfile: dest=/etc/mysql/my.cnf regexp='bind-address' line='bind-address=0.0.0.0'
+    ini_file: path=/etc/mysql/my.cnf section=mysqld option=bind-address value=0.0.0.0
     when: ansible_os_family == "Debian"
-    
+
   - name: Enable remote access
-    lineinfile: dest=/etc/my.cnf regexp='bind-address' line='bind-address=0.0.0.0'
+    ini_file: path=/etc/mysql/mysql.conf.d/mysqld.cnf section=mysqld option=bind-address value=0.0.0.0
+    when: ansible_os_family == "Debian"
+
+  - name: Enable remote access
+    ini_file: path=/etc/my.cnf section=mysqld option=bind-address value=0.0.0.0
     when: ansible_os_family == "RedHat"
-    
+
   - name: Start MySQL service
     service: name=mariadb state=restarted enabled=yes
     when: ansible_os_family == "RedHat"
