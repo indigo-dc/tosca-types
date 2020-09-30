@@ -258,7 +258,7 @@ node_types:
         valid_source_types: [ tosca.nodes.Database.MySQL ]
     interfaces:
       Standard:
-        create: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_install.yml
+        create: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_install.yml
         configure:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_configure.yml
           inputs:
