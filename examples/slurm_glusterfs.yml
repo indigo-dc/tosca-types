@@ -1,0 +1,162 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+description: >
+  TOSCA test for launching a Virtual Cluster.
+
+topology_template:
+  inputs:
+    wn_num:
+      type: integer
+      description: Maximum number of WNs in the elastic cluster
+      default: 5
+      required: yes
+    fe_cpus:
+      type: integer
+      description: Numer of CPUs for the front-end node
+      default: 1
+      required: yes
+    fe_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the front-end node
+      default: 1 GB
+      required: yes
+    wn_cpus:
+      type: integer
+      description: Numer of CPUs for the WNs
+      default: 1
+      required: yes
+    wn_mem:
+      type: scalar-unit.size
+      description: Amount of Memory for the WNs
+      default: 1 GB
+      required: yes
+
+    gluster_mount_path:
+      type: string
+      description: Path where GlusterFS volume will be mounted
+      default: /mnt/gluster
+      required: no
+    gluster_replicas:
+      type: integer
+      description: Number of replicas of the GlusterFS volume
+      default: 2
+      required: no
+
+  node_templates:
+
+    glusterfs_volume:
+      type: tosca.nodes.indigo.GlusterFSVolume
+      properties:
+        wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+        fe_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        brick_dir: /data
+        brick_name: volname
+        replicas: 2
+
+    lrms_front_end:
+      type: tosca.nodes.indigo.LRMS.FrontEnd.Slurm
+      properties:
+        wn_ips: { get_attribute: [ lrms_wn, private_address ] }
+      requirements:
+        - host: lrms_server
+
+    lrms_server:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        endpoint:
+          properties:
+            dns_name: slurmserver
+            network_name: PUBLIC
+            ports:
+              http_port:
+                protocol: tcp
+                source: 80
+              ftp_port:
+                protocol: tcp
+                source: 21
+        host:
+          properties:
+            num_cpus: { get_input: fe_cpus }
+            mem_size: { get_input: fe_mem }
+        os:
+          properties:
+            type: linux
+      artifacts:
+        glusterfs_role:
+          file: geerlingguy.glusterfs
+          type: tosca.artifacts.AnsibleGalaxy.role
+      requirements:
+        - local_storage:
+            node: glusterfs_volume
+            capability: tosca.capabilities.Attachment
+            relationship:
+              type: tosca.relationships.AttachesTo
+              properties:
+                location: { get_input: gluster_mount_path }
+              interfaces:
+                Standard:
+                  pre_configure_source:
+                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/gluster/artifacts/glusterfs/glusterfs_install.yml
+                    inputs:
+                      gluster_brick_dir:  { get_property: [ TARGET, brick_dir ] }
+                      gluster_brick_name:  { get_property: [ TARGET, brick_name ] }
+                      gluster_mount_dir:  { get_property: [ SELF, location ] }
+                      gluster_wn_ips: { get_property: [ TARGET, wn_ips ] }
+                      gluster_fe_ip: { get_property: [ TARGET, fe_ip ] }
+                      gluster_options: { get_property: [ TARGET, options ] }
+                      gluster_replicas: { get_property: [ TARGET, replicas ] }
+
+    wn_node:
+      type: tosca.nodes.indigo.LRMS.WorkerNode.Slurm
+      properties:
+        front_end_ip: { get_attribute: [ lrms_server, private_address, 0 ] }
+        public_front_end_ip: { get_attribute: [ lrms_server, public_address, 0 ] }
+      requirements:
+        - host: lrms_wn
+
+    lrms_wn:
+      type: tosca.nodes.indigo.Compute
+      capabilities:
+        scalable:
+          properties:
+            count: { get_input: wn_num }
+        host:
+          properties:
+            num_cpus: { get_input: wn_cpus }
+            mem_size: { get_input: wn_mem }
+        os:
+          properties:
+            type: linux
+      artifacts:
+        glusterfs_role:
+          file: geerlingguy.glusterfs
+          type: tosca.artifacts.AnsibleGalaxy.role
+      requirements:
+        - local_storage:
+            node: glusterfs_volume
+            capability: tosca.capabilities.Attachment
+            relationship:
+              type: tosca.relationships.AttachesTo
+              properties:
+                location: { get_input: gluster_mount_path }
+              interfaces:
+                Standard:
+                  pre_configure_source:
+                    implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/gluster/artifacts/glusterfs/glusterfs_install.yml
+                    inputs:
+                      gluster_brick_dir:  { get_property: [ TARGET, brick_dir ] }
+                      gluster_brick_name:  { get_property: [ TARGET, brick_name ] }
+                      gluster_mount_dir:  { get_property: [ SELF, location ] }
+                      gluster_wn_ips: { get_property: [ TARGET, wn_ips ] }
+                      gluster_fe_ip: { get_property: [ TARGET, fe_ip ] }
+                      gluster_options: { get_property: [ TARGET, options ] }
+                      gluster_replicas: { get_property: [ TARGET, replicas ] }
+
+  outputs:
+    cluster_ip:
+      value: { get_attribute: [ lrms_server, public_address, 0 ] }
+    cluster_creds:
+      value: { get_attribute: [ lrms_server, endpoint, credential, 0 ] }

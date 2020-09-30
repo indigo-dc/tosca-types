@@ -2687,6 +2687,50 @@ node_types:
             kibana_elasticsearch_username: { get_property: [ SELF, elasticsearch_username ] }
             kibana_elasticsearch_password: { get_property: [ SELF, elasticsearch_password ] }            
 
+  tosca.nodes.indigo.GlusterFSVolume:
+    derived_from: tosca.nodes.BlockStorage
+    properties:
+      size:
+        # to overwrite BlockStorage size property to set it as not required
+        type: scalar-unit.size
+        required: false
+      wn_ips:
+        type: list
+        entry_schema:
+          type: string
+        description: List of IPs of the GlusteFS nodes (WNs)
+        required: false
+        default: []
+      fe_ip:
+        type: list
+        entry_schema:
+          type: string
+        description: IP of the GlusteFS nodes (FE)
+        required: false
+        default: []
+      brick_dir:
+        type: string
+        description: Set the gluster brid dir
+        required: true
+        default: /data
+      brick_name:
+        type: string
+        description: Set the gluster brid name
+        required: false
+        default: brick_name
+      replicas:
+        type: integer
+        description: Numner of replicas
+        required: false
+        default: 2
+      options:
+        type: map
+        entry_schema:
+          type: string
+        description: A dictionary/hash with options/settings for the volume.
+        required: false
+        default: {}
+
 policy_types:
   tosca.policies.indigo.SlaPlacement:
     derived_from: tosca.policies.Placement
