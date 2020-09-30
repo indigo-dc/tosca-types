@@ -260,7 +260,7 @@ node_types:
       Standard:
         create: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_install.yml
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/mysql/mysql_configure.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/mysql/mysql_configure.yml
           inputs:
             root_password: { get_property: [ SELF, root_password ] }
             port: { get_property: [ SELF, port ] }
