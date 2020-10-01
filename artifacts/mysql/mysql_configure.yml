@@ -23,5 +23,5 @@
     when: ansible_os_family == "Debian"
 
   - name: update mysql root password for all root accounts
-    mysql_user: name=root password={{root_password}}
+    mysql_user: name=root password={{root_password}} login_unix_socket=/var/run/mysqld/mysqld.sock
     ignore_errors: yes
