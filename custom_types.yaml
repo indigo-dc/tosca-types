@@ -9,9 +9,9 @@ description: Contains the custom types definition as defined by the INDIGO & DEE
 data_types:
   tosca.datatypes.Root:
     description: The TOSCA root Data Type all other TOSCA base Data Types derive from.
-  tosca.datatypes.indigo.Users:
+  tosca.datatypes.indigo.User:
     derived_from: tosca.datatypes.Root
-    description: Create users
+    description: The Tosca User type is a complex TOSCA data Type used when describing a user account, allowing to set the user name, the user GUID (optional) and user SSH public key (optional). 
     properties:
       os_user_name:
         type: string
@@ -373,7 +373,7 @@ node_types:
         type: list
         description: Users creation
         entry_schema:
-          type: tosca.datatypes.indigo.Users
+          type: tosca.datatypes.indigo.User
         default: []
         required: false
     artifacts:
