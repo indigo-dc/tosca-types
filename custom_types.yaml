@@ -6,6 +6,26 @@ metadata:
   template_version: 5.0.0
 description: Contains the custom types definition as defined by the INDIGO & DEEP team
 
+data_types:
+  tosca.datatypes.Root:
+    description: The TOSCA root Data Type all other TOSCA base Data Types derive from.
+  tosca.datatypes.indigo.User:
+    derived_from: tosca.datatypes.Root
+    description: The Tosca User type is a complex TOSCA data Type used when describing a user account, allowing to set the user name, the user GUID (optional) and user SSH public key (optional). 
+    properties:
+      os_user_name:
+        type: string
+        description: The username
+        required: false
+      os_user_guid:
+        type: integer
+        description: The optional user guid
+        required: false
+      os_user_ssh_public_key:
+        type: string
+        description: The optional user ssh public key
+        required: false
+
 capability_types:
 
   tosca.capabilities.indigo.OperatingSystem:
@@ -349,18 +369,29 @@ node_types:
         type: string
         required: no
         default: Linux      668c875e-9a39-4dc0-a710-17c41376c1e0
+      os_users:
+        type: list
+        description: Users creation
+        entry_schema:
+          type: tosca.datatypes.indigo.User
+        default: []
+        required: false
     artifacts:
       zabbix_agent_role:
         file: indigo-dc.zabbix-agent,master
         type: tosca.artifacts.AnsibleGalaxy.role
+      os_users_role:
+        file: indigo-dc.os_users
+        type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/zabbix/zabbix_agent_install.yml
+          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/zabbix/zabbix_agent_install.yml
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
             zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
+            os_users: { get_property: [ SELF, os_users] }
 
   tosca.nodes.indigo.GalaxyPortal:
     derived_from: tosca.nodes.WebServer
