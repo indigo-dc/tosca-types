@@ -21,6 +21,10 @@ data_types:
         type: integer
         description: The optional user guid
         required: false
+      os_user_add_to_sudoers:
+        type: boolean
+        description: Add user to sudoers
+        required: false
       os_user_ssh_public_key:
         type: string
         description: The optional user ssh public key
@@ -386,7 +390,7 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/zabbix/zabbix_agent_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/zabbix/zabbix_agent_install.yml
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
