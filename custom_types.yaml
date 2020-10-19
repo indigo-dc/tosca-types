@@ -341,7 +341,7 @@ node_types:
           type: string
       ctxt_log:
         type: string
-    properties
+    properties:
       os_users:
         type: list
         description: Users creation
