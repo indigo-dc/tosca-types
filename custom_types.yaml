@@ -360,9 +360,6 @@ node_types:
         type: tosca.capabilities.indigo.Container
         valid_source_types: [tosca.nodes.SoftwareComponent]
     artifacts:
-      zabbix_agent_role:
-        file: indigo-dc.zabbix-agent,master
-        type: tosca.artifacts.AnsibleGalaxy.role
       os_users_role:
         file: indigo-dc.os_users
         type: tosca.artifacts.AnsibleGalaxy.role
@@ -392,9 +389,6 @@ node_types:
     artifacts:
       zabbix_agent_role:
         file: indigo-dc.zabbix-agent,master
-        type: tosca.artifacts.AnsibleGalaxy.role
-      os_users_role:
-        file: indigo-dc.os_users
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
