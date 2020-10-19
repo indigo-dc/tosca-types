@@ -351,7 +351,7 @@ node_types:
         required: false
     capabilities:
       scalable:
-        type: :tosca.capabilities.indigo.Scalable
+        type: tosca.capabilities.indigo.Scalable
       os:
          type: tosca.capabilities.indigo.OperatingSystem
       endpoint:
