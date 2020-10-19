@@ -405,6 +405,88 @@ node_types:
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
             zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
 
+  tosca.nodes.indigo.GalaxyPortal:
+    derived_from: tosca.nodes.WebServer
+    metadata:
+      icon: /images/galaxy.png
+    properties:
+      admin_email:
+        type: string
+        description: email of the admin user
+        default: admin@admin.com
+        required: false
+      admin_api_key:
+        type: string
+        description: key to access the API with admin role
+        default: not_very_secret_api_key
+        required: false
+      user:
+        type: string
+        description: username to launch the galaxy daemon
+        default: galaxy
+        required: false
+      install_path:
+        type: string
+        description: path to install the galaxy tool
+        default: /home/galaxy/galaxy
+        required: false
+      export_dir:
+        type: string
+        description: path to store galaxy data
+        default: /export
+        required: false
+      version:
+        type: string
+        description: galaxy version to install
+        default: master
+        required: false
+      instance_description:
+        type: string
+        description: galaxy instance description
+        default: "INDIGO Galaxy test"
+      instance_key_pub:
+        type: string
+        description: galaxy instance ssh public key
+        default: your_ssh_public_key
+      flavor:
+        type: string
+        description: name of the Galaxy flavor
+        required: false
+        default: galaxy-no-tools
+      reference_data:
+        type: boolean
+        description: Install Reference data
+        default: true
+        required: false
+    requirements:
+      - lrms:
+          capability: tosca.capabilities.indigo.LRMS
+          node: tosca.nodes.indigo.LRMS.FrontEnd
+          relationship: tosca.relationships.HostedOn
+    artifacts:
+      nfs_role:
+        file: indigo-dc.nfs,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+      galaxy_role:
+        file: indigo-dc.galaxycloud,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_install.yml
+          inputs:
+            galaxy_install_path: { get_property: [ SELF, install_path ] }
+            galaxy_user: { get_property: [ SELF, user ] }
+            galaxy_admin: { get_property: [ SELF, admin_email ] }
+            galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
+            galaxy_lrms: { get_property: [ SELF, lrms, type ] }
+            galaxy_version: { get_property: [ SELF, version ] }
+            galaxy_instance_description: { get_property: [ SELF, instance_description ] }
+            galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
+            export_dir: { get_property: [ SELF, export_dir ] }
+            galaxy_flavor: { get_property: [ SELF, flavor ] }
+            get_refdata: { get_property: [ SELF, reference_data ] }
+
   tosca.nodes.indigo.GalaxyPortalAndStorage:
     derived_from: tosca.nodes.indigo.GalaxyPortal
     properties:
