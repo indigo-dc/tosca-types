@@ -327,7 +327,7 @@ node_types:
             db_access_host: { get_property: [ SELF, access_host ] }
 
   tosca.nodes.indigo.Compute:
-    derived_from: tosca.nodes.indigo.MonitoredCompute
+    derived_from: tosca.nodes.Compute
     metadata:
       icon: /images/compute.png
     attributes:
@@ -341,34 +341,7 @@ node_types:
           type: string
       ctxt_log:
         type: string
-    capabilities:
-      scalable:
-        type: tosca.capabilities.indigo.Scalable
-      os:
-         type: tosca.capabilities.indigo.OperatingSystem
-      endpoint:
-        type: tosca.capabilities.indigo.Endpoint
-      host:
-        type: tosca.capabilities.indigo.Container
-        valid_source_types: [tosca.nodes.SoftwareComponent]
-
-  tosca.nodes.indigo.MonitoredCompute:
-    derived_from: tosca.nodes.Compute
-    properties:
-      # Set the current data of the zabbix server
-      # but it can also specified in the TOSCA document
-      zabbix_server:
-        type: string
-        required: no
-        default: orchestrator.cloud.cnaf.infn.it
-      zabbix_server_port:
-        type: tosca.datatypes.network.PortDef
-        required: no
-        default: 10051
-      zabbix_server_metadata:
-        type: string
-        required: no
-        default: Linux      668c875e-9a39-4dc0-a710-17c41376c1e0
+    properties
       os_users:
         type: list
         description: Users creation
@@ -376,6 +349,16 @@ node_types:
           type: tosca.datatypes.indigo.User
         default: []
         required: false
+    capabilities:
+      scalable:
+        type: :tosca.capabilities.indigo.Scalable
+      os:
+         type: tosca.capabilities.indigo.OperatingSystem
+      endpoint:
+        type: tosca.capabilities.indigo.Endpoint
+      host:
+        type: tosca.capabilities.indigo.Container
+        valid_source_types: [tosca.nodes.SoftwareComponent]
     artifacts:
       zabbix_agent_role:
         file: indigo-dc.zabbix-agent,master
@@ -386,94 +369,41 @@ node_types:
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/zabbix/zabbix_agent_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/fix/compute_node/artifacts/os/configure_users.yml
           inputs:
-            zabbix_server: { get_property: [ SELF, zabbix_server ] }
-            zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
-            zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
             os_users: { get_property: [ SELF, os_users] }
 
-  tosca.nodes.indigo.GalaxyPortal:
-    derived_from: tosca.nodes.WebServer
+
+  tosca.nodes.indigo.ZabbixAgent:
+    derived_from: tosca.nodes.SoftwareComponent
     metadata:
-      icon: /images/galaxy.png
+      icon: /images/zabbix.png
     properties:
-      admin_email:
+      zabbix_server:
         type: string
-        description: email of the admin user
-        default: admin@admin.com
-        required: false
-      admin_api_key:
+        required: yes
+      zabbix_server_port:
+        type: tosca.datatypes.network.PortDef
+        required: no
+        default: 10051
+      zabbix_server_metadata:
         type: string
-        description: key to access the API with admin role
-        default: not_very_secret_api_key
-        required: false
-      user:
-        type: string
-        description: username to launch the galaxy daemon
-        default: galaxy
-        required: false
-      install_path:
-        type: string
-        description: path to install the galaxy tool
-        default: /home/galaxy/galaxy
-        required: false
-      export_dir:
-        type: string
-        description: path to store galaxy data
-        default: /export
-        required: false
-      version:
-        type: string
-        description: galaxy version to install
-        default: master
-        required: false
-      instance_description:
-        type: string
-        description: galaxy instance description
-        default: "INDIGO Galaxy test"
-      instance_key_pub:
-        type: string
-        description: galaxy instance ssh public key
-        default: your_ssh_public_key
-      flavor:
-        type: string
-        description: name of the Galaxy flavor
-        required: false
-        default: galaxy-no-tools
-      reference_data:
-        type: boolean
-        description: Install Reference data
-        default: true
-        required: false
-    requirements:
-      - lrms:
-          capability: tosca.capabilities.indigo.LRMS
-          node: tosca.nodes.indigo.LRMS.FrontEnd
-          relationship: tosca.relationships.HostedOn
+        required: yes
     artifacts:
-      nfs_role:
-        file: indigo-dc.nfs,master
+      zabbix_agent_role:
+        file: indigo-dc.zabbix-agent,master
         type: tosca.artifacts.AnsibleGalaxy.role
-      galaxy_role:
-        file: indigo-dc.galaxycloud,master
+      os_users_role:
+        file: indigo-dc.os_users
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/v4.0.0/artifacts/galaxy/galaxy_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/fix/compute_node/artifacts/zabbix/zabbix_agent_install.yml
           inputs:
-            galaxy_install_path: { get_property: [ SELF, install_path ] }
-            galaxy_user: { get_property: [ SELF, user ] }
-            galaxy_admin: { get_property: [ SELF, admin_email ] }
-            galaxy_admin_api_key: { get_property: [ SELF, admin_api_key ] }
-            galaxy_lrms: { get_property: [ SELF, lrms, type ] }
-            galaxy_version: { get_property: [ SELF, version ] }
-            galaxy_instance_description: { get_property: [ SELF, instance_description ] }
-            galaxy_instance_key_pub:  { get_property: [ SELF, instance_key_pub ] }
-            export_dir: { get_property: [ SELF, export_dir ] }
-            galaxy_flavor: { get_property: [ SELF, flavor ] }
-            get_refdata: { get_property: [ SELF, reference_data ] }
+            zabbix_server: { get_property: [ SELF, zabbix_server ] }
+            zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
+            zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
 
   tosca.nodes.indigo.GalaxyPortalAndStorage:
     derived_from: tosca.nodes.indigo.GalaxyPortal
