@@ -327,7 +327,7 @@ node_types:
             db_access_host: { get_property: [ SELF, access_host ] }
 
   tosca.nodes.indigo.Compute:
-    derived_from: tosca.nodes.indigo.MonitoredCompute
+    derived_from: tosca.nodes.Compute
     metadata:
       icon: /images/compute.png
     attributes:
@@ -341,6 +341,14 @@ node_types:
           type: string
       ctxt_log:
         type: string
+    properties:
+      os_users:
+        type: list
+        description: Users creation
+        entry_schema:
+          type: tosca.datatypes.indigo.User
+        default: []
+        required: false
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
@@ -351,47 +359,45 @@ node_types:
       host:
         type: tosca.capabilities.indigo.Container
         valid_source_types: [tosca.nodes.SoftwareComponent]
-
-  tosca.nodes.indigo.MonitoredCompute:
-    derived_from: tosca.nodes.Compute
-    properties:
-      # Set the current data of the zabbix server
-      # but it can also specified in the TOSCA document
-      zabbix_server:
-        type: string
-        required: no
-        default: orchestrator.cloud.cnaf.infn.it
-      zabbix_server_port:
-        type: tosca.datatypes.network.PortDef
-        required: no
-        default: 10051
-      zabbix_server_metadata:
-        type: string
-        required: no
-        default: Linux      668c875e-9a39-4dc0-a710-17c41376c1e0
-      os_users:
-        type: list
-        description: Users creation
-        entry_schema:
-          type: tosca.datatypes.indigo.User
-        default: []
-        required: false
     artifacts:
-      zabbix_agent_role:
-        file: indigo-dc.zabbix-agent,master
-        type: tosca.artifacts.AnsibleGalaxy.role
       os_users_role:
         file: indigo-dc.os_users
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
         configure:
-          implementation: https://raw.githubusercontent.com/mtangaro/tosca-types/master/artifacts/zabbix/zabbix_agent_install.yml
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/fix/compute_node/artifacts/os/configure_users.yml
+          inputs:
+            os_users: { get_property: [ SELF, os_users] }
+
+
+  tosca.nodes.indigo.ZabbixAgent:
+    derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/zabbix.png
+    properties:
+      zabbix_server:
+        type: string
+        required: yes
+      zabbix_server_port:
+        type: tosca.datatypes.network.PortDef
+        required: no
+        default: 10051
+      zabbix_server_metadata:
+        type: string
+        required: yes
+    artifacts:
+      zabbix_agent_role:
+        file: indigo-dc.zabbix-agent,master
+        type: tosca.artifacts.AnsibleGalaxy.role
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/fix/compute_node/artifacts/zabbix/zabbix_agent_install.yml
           inputs:
             zabbix_server: { get_property: [ SELF, zabbix_server ] }
             zabbix_server_port: { get_property: [ SELF, zabbix_server_port ] }
             zabbix_server_metadata: { get_property: [ SELF, zabbix_server_metadata ] }
-            os_users: { get_property: [ SELF, os_users] }
 
   tosca.nodes.indigo.GalaxyPortal:
     derived_from: tosca.nodes.WebServer
