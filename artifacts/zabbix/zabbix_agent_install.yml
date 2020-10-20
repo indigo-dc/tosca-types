@@ -12,4 +12,3 @@
     zabbix_agent_server_port: "{{ zabbix_server_port }}"
     zabbix_agent_metadata: "{{ zabbix_server_metadata }}"
     zabbix_agent_hostname_prefix: "{{hostname_prefix}}"
-  - role: indigo-dc.os_users
