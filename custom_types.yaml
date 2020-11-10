@@ -2768,6 +2768,30 @@ node_types:
         required: false
         default: {}
 
+  tosca.nodes.indigo.Kubernetes.HelmChart:
+    derived_from: tosca.nodes.Root
+    properties:
+      repository:
+        type: string
+        description: The Helm repository
+        required: true
+      name:
+        type: string
+        description: The chart name
+        required: true
+      version:
+        type: string
+        description: The chart version
+        required: true
+      values:
+        type: map
+        description: A dictionary/hash of values.
+        required: false
+        entry_schema:
+          description: The values to use
+          type: string
+        default: {}
+
 policy_types:
   tosca.policies.indigo.SlaPlacement:
     derived_from: tosca.policies.Placement
