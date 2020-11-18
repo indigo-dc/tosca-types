@@ -21,6 +21,10 @@ data_types:
         type: integer
         description: The optional user guid
         required: false
+      os_user_add_to_sudoers:
+        type: boolean
+        description: Add user to sudoers
+        required: false
       os_user_ssh_public_key:
         type: string
         description: The optional user ssh public key
