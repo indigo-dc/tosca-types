@@ -2431,6 +2431,9 @@ node_types:
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Kubernetes
+        host:
+          type: tosca.capabilities.Container
+          valid_source_types: [ tosca.nodes.indigo.Kubernetes.HelmChart ]
     interfaces:
       Standard:
         configure:
@@ -2769,11 +2772,15 @@ node_types:
         default: {}
 
   tosca.nodes.indigo.Kubernetes.HelmChart:
-    derived_from: tosca.nodes.Root
+    derived_from: tosca.nodes.SoftwareComponent
     properties:
-      repository:
+      repository_name:
         type: string
-        description: The Helm repository
+        description: The Helm repository name
+        required: true
+      repository_url:
+        type: string
+        description: The Helm repository URL
         required: true
       name:
         type: string
@@ -2782,7 +2789,8 @@ node_types:
       version:
         type: string
         description: The chart version
-        required: true
+        required: false
+        default: latest
       values:
         type: map
         description: A dictionary/hash of values.
@@ -2791,6 +2799,21 @@ node_types:
           description: The values to use
           type: string
         default: {}
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
+          relationship: tosca.relationships.HostedOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/helm_charts_micafer/artifacts/lrms/kubernetes/helm_chart.yml
+          inputs:
+            helm_repo_name: { get_property: [ SELF, repository_name ] }
+            helm_repo_url: { get_property: [ SELF, repository_url ] }
+            helm_app_name: { get_property: [ SELF, name ] }
+            helm_version: { get_property: [ SELF, version ] }
+            helm_values: { get_property: [ SELF, values ] }
 
 policy_types:
   tosca.policies.indigo.SlaPlacement:
