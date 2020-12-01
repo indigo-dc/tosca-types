@@ -17,7 +17,7 @@
 
       - name: Create values file
         copy:
-          content: {{ helm_values | to_yaml }}
+          content: "{{ helm_values | to_yaml }}"
           dest: /tmp/{{ helm_app_name }}-values.yaml
 
       - name: Deploy {{ helm_app_name }} app
