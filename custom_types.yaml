@@ -2372,6 +2372,11 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     metadata:
       icon: /images/kubernetesWN.png
+    properties:
+      version:
+        required: no
+        type: string
+        default: "1.15.7"
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes,master
@@ -2387,6 +2392,7 @@ node_types:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
+            kube_version:  { get_property: [ SELF, version ] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
