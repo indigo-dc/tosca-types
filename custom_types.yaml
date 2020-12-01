@@ -1195,6 +1195,9 @@ node_types:
       command:
         required: no
         type: string
+      user:
+        required: no
+        type: string
       uris:
         required: no
         type: list
