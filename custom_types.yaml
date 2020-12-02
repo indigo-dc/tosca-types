@@ -2770,6 +2770,16 @@ node_types:
 
   tosca.nodes.indigo.Kubernetes.HelmChart:
     derived_from: tosca.nodes.Root
+    attributes:
+      worker_nodes_ips:
+        type: list
+        entry_schema:
+          type: string
+      service_ports:
+        type: map
+        description: The port mapped  to the services of the chart
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
     properties:
       repository:
         type: string
