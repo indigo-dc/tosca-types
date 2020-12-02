@@ -46,7 +46,7 @@ topology_template:
   node_templates:
 
     im_chart:
-      type: tosca.nodes.indigo.Kubernetes.HelmChart
+      type: tosca.nodes.indigo.HelmChart
       properties:
         repository_name: grycap
         repository_url: https://grycap.github.io/helm-charts/
@@ -55,7 +55,6 @@ topology_template:
         values: {'im.version': '1.9.3'}
       requirements:
         - host: lrms_front_end
-
 
     lrms_front_end:
       type: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes

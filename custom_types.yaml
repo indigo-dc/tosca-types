@@ -2439,7 +2439,7 @@ node_types:
           type: tosca.capabilities.indigo.LRMS.Kubernetes
         host:
           type: tosca.capabilities.Container
-          valid_source_types: [ tosca.nodes.indigo.Kubernetes.HelmChart ]
+          valid_source_types: [ tosca.nodes.indigo.Helm.Chart ]
     interfaces:
       Standard:
         configure:
@@ -2777,8 +2777,10 @@ node_types:
         required: false
         default: {}
 
-  tosca.nodes.indigo.Kubernetes.HelmChart:
+  tosca.nodes.indigo.Helm.Chart:
     derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/helm.png
     properties:
       repository_name:
         type: string
