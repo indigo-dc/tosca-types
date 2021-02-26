@@ -2780,6 +2780,18 @@ node_types:
         default: {}
 
 policy_types:
+
+  tosca.policies.indigo.Placement:
+    derived_from: tosca.policies.Placement
+    properties:
+      cloud_id:
+        required: true
+        type: string
+      availability_zone:
+        required: false
+        type: string
+        default: 
+
   tosca.policies.indigo.SlaPlacement:
     derived_from: tosca.policies.Placement
     properties:
