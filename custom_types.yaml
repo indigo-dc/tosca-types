@@ -2777,7 +2777,7 @@ policy_types:
   tosca.policies.indigo.Placement:
     derived_from: tosca.policies.Placement
     properties:
-      clud_id:
+      cloud_id:
         required: true
         type: string
       availability_zone:
