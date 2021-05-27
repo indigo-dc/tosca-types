@@ -396,7 +396,7 @@ node_types:
         file: indigo-dc.nfs
         type: tosca.artifacts.AnsibleGalaxy.role
       galaxy_role:
-        file: indigo-dc.galaxycloud
+        file: indigo-dc.galaxycloud,master
         type: tosca.artifacts.AnsibleGalaxy.role
     interfaces:
       Standard:
