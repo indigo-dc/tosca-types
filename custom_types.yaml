@@ -758,6 +758,9 @@ node_types:
       galaxy_os_role:
         file: indigo-dc.galaxycloud-os
         type: tosca.artifacts.AnsibleGalaxy.role
+      pip_role:
+        file: geerlingguy.pip,2.0.0
+        type: tosca.artifacts.AnsibleGalaxy.role
       docker_role:
         file: laniakea.docker,master
         type: tosca.artifacts.AnsibleGalaxy.role
