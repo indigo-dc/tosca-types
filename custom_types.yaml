@@ -2779,6 +2779,37 @@ node_types:
         required: false
         default: {}
 
+  tosca.nodes.indigo.Kubernetes.HelmChart:
+    derived_from: tosca.nodes.Root
+    attributes:
+      worker_nodes_ips:
+        type: list
+        entry_schema:
+          type: string
+      service_ports:
+        type: map
+        description: The port mapped  to the services of the chart
+        entry_schema:
+          type: tosca.datatypes.network.PortSpec
+    properties:
+      repository:
+        type: string
+        description: The Helm repository
+        required: true
+      name:
+        type: string
+        description: The chart name
+        required: true
+      version:
+        type: string
+        description: The chart version
+        required: true
+      values:
+        type: string
+        description: A YAML formatted string providing the chart values 
+        required: false
+        default: ""
+
   tosca.nodes.indigo.network.Network:
     derived_from: tosca.nodes.network.Network
     properties:
