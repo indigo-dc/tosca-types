@@ -1,0 +1,35 @@
+---
+- hosts: localhost
+  connection: local
+  vars:
+    helm_params: 'dummy=0'
+  tasks:
+
+  - name: "Check if {{ helm_app_name }} is already deployed"
+    command: helm status {{ helm_app_name | lower }} -n {{ helm_app_name | lower }}
+    register: deployed
+    failed_when: deployed.rc != 0 and deployed.rc != 1
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+
+  - block:
+      - name: Add helm repo {{ helm_repo_name }}
+        command: helm repo add {{ helm_repo_name }} {{ helm_repo_url }}
+
+      - name: Update helm repositories
+        command: helm repo update
+
+      - name: Create params fact
+        set_fact:
+          helm_params: "{{ helm_params }},{{ item.key }}={{ item.value }}"
+        with_dict: "{{ helm_values }}"
+
+      - name: Deploy {{ helm_app_name }} app
+        command: >
+          helm upgrade {{ helm_app_name | lower }} --install {{ helm_repo_name }}/{{ helm_app_name }} {{ '' if helm_version == 'latest' else ('--version ' + helm_version) }}
+          --namespace {{ helm_app_name | lower}} --create-namespace
+          --set {{ helm_params }}
+        environment:
+          KUBECONFIG: /etc/kubernetes/admin.conf
+
+    when: deployed.rc == 1

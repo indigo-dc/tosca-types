@@ -2383,6 +2383,11 @@ node_types:
     derived_from: tosca.nodes.indigo.LRMS.WorkerNode
     metadata:
       icon: /images/kubernetesWN.png
+    properties:
+      version:
+        required: no
+        type: string
+        default: "1.19.4"
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes,master
@@ -2398,6 +2403,7 @@ node_types:
             kube_front_end_ip: { get_property: [ SELF, front_end_ip ] }
             wn_hybrid_cluster:  { get_property: [ SELF, hybrid] }
             kube_public_front_end_ip: { get_property: [ SELF, public_front_end_ip ] }
+            kube_version:  { get_property: [ SELF, version ] }
 
   tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes:
     derived_from: tosca.nodes.indigo.LRMS.FrontEnd
@@ -2431,7 +2437,7 @@ node_types:
       version:
         required: no
         type: string
-        default: "1.15.7"
+        default: "1.19.4"
     artifacts:
       kube_role:
         file: indigo-dc.kubernetes,master
@@ -2442,6 +2448,9 @@ node_types:
     capabilities:
         lrms:
           type: tosca.capabilities.indigo.LRMS.Kubernetes
+        host:
+          type: tosca.capabilities.Container
+          valid_source_types: [ tosca.nodes.indigo.Helm.Chart ]
     interfaces:
       Standard:
         configure:
@@ -2779,6 +2788,53 @@ node_types:
         required: false
         default: {}
 
+  tosca.nodes.indigo.Helm.Chart:
+    derived_from: tosca.nodes.SoftwareComponent
+    metadata:
+      icon: /images/helm.png
+    properties:
+      repository_name:
+        type: string
+        description: The Helm repository name
+        required: true
+      repository_url:
+        type: string
+        description: The Helm repository URL
+        required: true
+      name:
+        type: string
+        description: The chart name
+        required: true
+      version:
+        type: string
+        description: The chart version
+        required: false
+        default: latest
+      values:
+        type: map
+        description: A dictionary/hash of values.
+        required: false
+        entry_schema:
+          description: The values to use
+          type: string
+        default: {}
+    requirements:
+      - host:
+          capability: tosca.capabilities.Container
+          node: tosca.nodes.indigo.LRMS.FrontEnd.Kubernetes
+          relationship: tosca.relationships.HostedOn
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/lrms/kubernetes/helm_chart.yml
+          inputs:
+            helm_repo_name: { get_property: [ SELF, repository_name ] }
+            helm_repo_url: { get_property: [ SELF, repository_url ] }
+            helm_app_name: { get_property: [ SELF, name ] }
+            helm_version: { get_property: [ SELF, version ] }
+            helm_values: { get_property: [ SELF, values ] }
+
+
   tosca.nodes.indigo.Kubernetes.HelmChart:
     derived_from: tosca.nodes.Root
     attributes:
@@ -2809,6 +2865,7 @@ node_types:
         description: A YAML formatted string providing the chart values 
         required: false
         default: ""
+
 
   tosca.nodes.indigo.network.Network:
     derived_from: tosca.nodes.network.Network
