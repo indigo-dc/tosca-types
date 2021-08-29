@@ -1,0 +1,37 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+imports:
+  - indigo_custom_types: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/custom_types.yaml
+
+
+topology_template:
+
+  inputs:
+    chart_version:
+      type: version
+      default: 7.1.9
+    chart_values:
+      type: string
+      default: |
+         accessKey:
+           password: MY_ACCESS_KEY
+         secretKey:
+           password: MY_SECRET_KEY
+         persistence:
+           enabled: false
+         service:
+           type: NodePort
+
+  node_templates:
+
+    helm:
+      type: tosca.nodes.indigo.Kubernetes.HelmChart
+      properties:
+        repository: https://charts.bitnami.com/bitnami
+        name: minio
+        version: { get_input: chart_version }
+        values: { get_input: chart_values }
+
+  outputs:
+    endpoint:
+      value:  { concat: [  "http://", { get_attribute : [ helm, worker_nodes_ips, 0 ] }, ':', { get_attribute : [ helm, service_ports, minio, minio, target ] } ] }
