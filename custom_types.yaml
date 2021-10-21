@@ -241,7 +241,7 @@ relationship_types:
   tosca.relationships.indigo.GlusterFS.AttachesTo:
     derived_from: tosca.relationships.AttachesTo
     interfaces:
-      Standard:
+      Configure:
         pre_configure_source:
           implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/glusterfs/glusterfs_install.yml
           inputs:
