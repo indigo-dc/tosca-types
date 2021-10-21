@@ -253,6 +253,19 @@ relationship_types:
             gluster_options: { get_property: [ TARGET, options ] }
             gluster_replicas: { get_property: [ TARGET, replicas ] }
 
+  tosca.relationships.indigo.OneDataStorage.AttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    interfaces:
+      Configure:
+        pre_configure_source:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/onedata/oneclient_install.yml
+          inputs:
+            onedata_location: { get_property: [ SELF, location ] }
+            onedata_token: { get_property: [ TARGET, credential, token ] }
+            oneprovider_host: { get_property: [ TARGET, oneprovider_host ] }
+            dataspace: { get_property: [ TARGET, dataspace ] }
+            onezone_endpoint: { get_property: [ TARGET, onezone_endpoint ] }
+
 node_types:
 
   # Standard types defined in TOSCA with interfaces to install
