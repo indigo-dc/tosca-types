@@ -238,6 +238,21 @@ relationship_types:
         required: false
         default:
 
+  tosca.relationships.indigo.GlusterFS.AttachesTo:
+    derived_from: tosca.relationships.AttachesTo
+    interfaces:
+      Standard:
+        pre_configure_source:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/glusterfs/glusterfs_install.yml
+          inputs:
+            gluster_brick_dir:  { get_property: [ TARGET, brick_dir ] }
+            gluster_brick_name:  { get_property: [ TARGET, brick_name ] }
+            gluster_mount_dir:  { get_property: [ SELF, location ] }
+            gluster_wn_ips: { get_property: [ TARGET, wn_ips ] }
+            gluster_fe_ip: { get_property: [ TARGET, fe_ip ] }
+            gluster_options: { get_property: [ TARGET, options ] }
+            gluster_replicas: { get_property: [ TARGET, replicas ] }
+
 node_types:
 
   # Standard types defined in TOSCA with interfaces to install
