@@ -202,6 +202,10 @@ capability_types:
           - min_length: 1
         entry_schema:
           type: tosca.datatypes.network.PortSpec
+      additional_ip:
+        description: The optional additional IP to set to the endpoint
+        type: string
+        required: false
     attributes:
       credential:
         type: list
@@ -2907,6 +2911,20 @@ node_types:
       proxy_credential:
         type: tosca.datatypes.Credential
         required: false
+
+
+  tosca.nodes.indigo.network.Port:
+    derived_from: tosca.nodes.network.Port 
+    properties:
+      dns_name:
+        description: The optional name to register with DNS
+        type: string
+        required: false
+      additional_ip:
+        description: The optional additional IP to set to the endpoint
+        type: string
+        required: false
+
 
 policy_types:
 
