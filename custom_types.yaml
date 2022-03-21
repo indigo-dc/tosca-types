@@ -230,7 +230,7 @@ capability_types:
         constraints:
           - min_length: 1
         entry_schema:
-          type: tosca.datatypes.network.PortSpec
+          type: tosca.datatypes.indigo.network.PortSpec
       additional_ip:
         description: The optional additional IP to set to the endpoint
         type: string
