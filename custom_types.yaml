@@ -51,6 +51,14 @@ data_types:
         entry_schema:
           type: tosca.datatypes.indigo.AnsibleTask
 
+  tosca.datatypes.indigo.network.PortSpec:
+    derived_from: tosca.datatypes.network.PortSpec
+    properties:
+      remote_cidr:
+        description: CIDR of the remote allowed IPs.
+        type: string
+
+
 capability_types:
 
   tosca.capabilities.indigo.OperatingSystem:
