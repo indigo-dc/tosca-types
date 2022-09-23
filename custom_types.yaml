@@ -219,6 +219,12 @@ capability_types:
         description: The optional name to register with DNS
         type: string
         required: false
+      additional_dns_names:
+        description: An optional list of DNS names to register to this endpoint
+        type: list
+        entry_schema:
+          type: string
+        required: false
       private_ip:
         description: Flag used to specify that this endpoint will require also a private IP although it is a public one.
         type: boolean
@@ -2954,8 +2960,14 @@ node_types:
         description: The optional name to register with DNS
         type: string
         required: false
+      additional_dns_names:
+        description: An optional list of DNS names to register to this port
+        type: list
+        entry_schema:
+          type: string
+        required: false
       additional_ip:
-        description: The optional additional IP to set to the endpoint
+        description: The optional additional IP to set to the port
         type: string
         required: false
 
