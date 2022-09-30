@@ -435,6 +435,11 @@ node_types:
           type: string
         default: {}
         required: false
+      instance_name:
+        type: string
+        description: Name to set the cloud instance associated to this Compute
+        default: ''
+        required: false
     capabilities:
       scalable:
         type: tosca.capabilities.indigo.Scalable
