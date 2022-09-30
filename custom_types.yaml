@@ -437,7 +437,7 @@ node_types:
         required: false
       instance_name:
         type: string
-        description: Name to set the cloud instance associated to this Compute
+        description: Name to associate to the Compute instance
         default: ''
         required: false
     capabilities:
