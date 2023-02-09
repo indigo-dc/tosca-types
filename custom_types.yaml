@@ -264,6 +264,10 @@ artifact_types:
     derived_from: tosca.artifacts.Root
     description: Ansible Galaxy role to be deployed in the target node
 
+  tosca.artifacts.AnsibleGalaxy.collection:
+    derived_from: tosca.artifacts.Root
+    description: Ansible Galaxy collection to be installed in the target node
+
   tosca.artifacts.Deployment.Image.Container.Docker:
     derived_from: tosca.artifacts.Deployment.Image
     description: Docker Container Image
@@ -2976,6 +2980,23 @@ node_types:
         type: string
         required: false
 
+  tosca.nodes.indigo.AnsibleRecipe:
+    derived_from: tosca.nodes.ec3.Application
+    properties:
+      tasks:
+        type: list
+        entry_schema:
+          type: map
+        description: The YAML Ansible task list
+        required: true
+        default: []
+    interfaces:
+      Standard:
+        configure:
+          implementation: https://raw.githubusercontent.com/indigo-dc/tosca-types/master/artifacts/ansible/ansible_tasks.yml
+          inputs:
+            ansible_tasks: { get_property: [ SELF, tasks ] }
+            ansible_name: { get_attribute: [ SELF, tosca_name ] }
 
 policy_types:
 

@@ -1,0 +1,13 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+
+  - name: Copy ansible tasks
+    copy:
+      content: "{{ ansible_tasks | to_nice_yaml }}"
+      dest: /tmp/{{ansible_name}}_tasks.yaml
+
+  - name: Include tasks
+    include_tasks:
+      file: /tmp/{{ansible_name}}_tasks.yaml
