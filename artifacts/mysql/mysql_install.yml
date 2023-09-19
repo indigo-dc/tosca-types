@@ -3,7 +3,7 @@
   connection: local
   tasks:
   - name: MySQL | Make sure the MySQL packages are installed
-    apt: pkg=mysql-server,python-mysqldb update_cache=yes
+    apt: pkg=mysql-server,python3-mysqldb update_cache=yes
     when: ansible_os_family == "Debian"
 
   - name: MySQL | Make sure the MySQL packages are installed
