@@ -2914,7 +2914,6 @@ node_types:
             helm_version: { get_property: [ SELF, version ] }
             helm_values: { get_property: [ SELF, values ] }
 
-
   tosca.nodes.indigo.Kubernetes.HelmChart:
     derived_from: tosca.nodes.Root
     attributes:
@@ -2946,7 +2945,6 @@ node_types:
         required: false
         default: ""
 
-
   tosca.nodes.indigo.network.Network:
     derived_from: tosca.nodes.network.Network
     properties:
@@ -2956,7 +2954,6 @@ node_types:
       proxy_credential:
         type: tosca.datatypes.Credential
         required: false
-
 
   tosca.nodes.indigo.network.Port:
     derived_from: tosca.nodes.network.Port 
@@ -2975,7 +2972,6 @@ node_types:
         description: The optional additional IP to set to the port
         type: string
         required: false
-
 
 policy_types:
 
