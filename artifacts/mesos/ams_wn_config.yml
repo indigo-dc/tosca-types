@@ -1,0 +1,6 @@
+---
+- hosts: localhost
+  connection: local
+  roles:
+    - role: indigo-dc.ams_config
+      ams_config_node: "wn"
