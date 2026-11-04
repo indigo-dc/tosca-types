@@ -2954,6 +2954,10 @@ node_types:
       proxy_credential:
         type: tosca.datatypes.Credential
         required: false
+      sg_name:
+        type: string
+        description: Name of an existing security group to use for this network
+        required: false
 
   tosca.nodes.indigo.network.Port:
     derived_from: tosca.nodes.network.Port 
